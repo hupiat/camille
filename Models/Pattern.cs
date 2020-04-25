@@ -7,18 +7,9 @@ namespace camille.Models
     [Table("Pattern")]
     public class Pattern : BaseElement
     {
-        public ICollection<PatternElement> Elements { get; set; }
-        public ICollection<Tag> Tags { get; set; }
+        public ICollection<PatternTag> PatternTags { get; set; } = new HashSet<PatternTag>();
 
-        public Pattern()
-        {
-        }
-
-        public Pattern(int id, string name) : base(id, name)
-        {
-            Elements = new List<PatternElement>();
-            Tags = new HashSet<Tag>();
-        }
+        public ICollection<PatternElementBond> Bonds { get; set; } = new HashSet<PatternElementBond>();
 
         public override bool Equals(object other)
         {

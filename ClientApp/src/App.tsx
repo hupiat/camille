@@ -1,11 +1,11 @@
 import React from "react";
-import NavMenu from "./components/NavMenu";
-
-import "./custom.css";
+import NavMenu from "./components/SearchAppBar";
+import Home from "./components/Home";
 
 export const App = () => (
 	<>
 		<NavMenu />
+		<Home />
 	</>
 );
 

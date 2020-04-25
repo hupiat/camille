@@ -13,10 +13,6 @@ namespace camille
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-
-            using var db = new PatternContext();
-            db.Database.EnsureDeleted();
-            db.Database.EnsureCreated();
         }
 
         public IConfiguration Configuration { get; }
@@ -32,6 +28,8 @@ namespace camille
             {
                 configuration.RootPath = "ClientApp/build";
             });
+
+            services.AddDbContext<PatternContext>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -40,6 +38,12 @@ namespace camille
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+
+                // Setting up database with test data
+                using var db = new PatternContext();
+                db.Database.EnsureDeleted();
+                db.Database.EnsureCreated();
+                PatternDataInitializer.Inject(db);
             }
             else
             {

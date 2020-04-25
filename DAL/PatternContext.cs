@@ -1,6 +1,6 @@
 ﻿using System;
-using camille.Models;
 using Microsoft.EntityFrameworkCore;
+using camille.Models;
 
 namespace camille.DAL
 {
@@ -8,18 +8,17 @@ namespace camille.DAL
     {
         public DbSet<Pattern> Patterns { get; set; }
         public DbSet<PatternElement> PatternElements { get; set; }
+        public DbSet<PatternElementBond> PatternElementsBonds { get; set; }
         public DbSet<Tag> Tags { get; set; }
+        public DbSet<PatternTag> PatternTags { get; set; }
 
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlServer("" +
-                "Server=localhost;" +
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) =>
+            optionsBuilder.UseSqlServer(
+                "Data source=localhost;" +
                 "Database=camille;" +
-                "user id=SA;" +
-                "password=Camille2020;" +
-                "persist security info=True;" +
-                "MultipleActiveResultSets=true");
-        }
+                "User id=SA;" +
+                "Password=Camille2020;" +
+                "Persist security info=True;" +
+                "MultipleActiveResultSets=True;");
     }
 }

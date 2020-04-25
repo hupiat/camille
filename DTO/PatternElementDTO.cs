@@ -1,21 +1,20 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 
-namespace camille.Models
+namespace camille.DTO
 {
-    [Table("Tag")]
-    public class Tag : BaseElement
+    public class PatternElementDTO : BaseElementDTO
     {
-        public ICollection<PatternTag> PatternTags { get; set; } = new HashSet<PatternTag>();
+        public ICollection<int> NextElementsIds { get; set; } = new HashSet<int>();
 
         public override bool Equals(object other)
         {
             if (other == null) return false;
 
-            if (!(other is Tag)) return false;
+            if (!(other is PatternElementDTO)) return false;
 
-            Tag o = other as Tag;
+            PatternElementDTO o = other as PatternElementDTO;
 
             return o.ID == ID;
         }

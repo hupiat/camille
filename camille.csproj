@@ -39,6 +39,8 @@
   <ItemGroup>
     <Folder Include="Models\" />
     <Folder Include="DAL\" />
+    <Folder Include="DTO\" />
+    <Folder Include="Mappers\" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="ClientApp\package-lock.json" />
