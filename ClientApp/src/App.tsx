@@ -30,7 +30,7 @@ export const App = () => {
 
 	return (
 		<ThemeProvider theme={theme}>
-			<SearchAppBar query={query} onSearch={setQuery} isVisible={isDrawing} />
+			<SearchAppBar query={query} onSearch={setQuery} isVisible={!isDrawing} />
 			<Home query={query} />
 		</ThemeProvider>
 	);
