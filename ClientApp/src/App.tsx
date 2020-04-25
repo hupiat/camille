@@ -16,9 +16,9 @@ let theme = createMuiTheme({
 			dark: "#512DA8",
 		},
 		secondary: {
-			main: "#880e4f",
-			light: "#bc477b",
-			dark: "#560027",
+			main: "#0d47a1",
+			light: "#5472d3",
+			dark: "#002171",
 		},
 	},
 });
@@ -37,7 +37,6 @@ export const App = () => {
 					vertical: "bottom",
 					horizontal: "center",
 				}}
-				draggable
 			>
 				<SearchAppBar
 					query={query}

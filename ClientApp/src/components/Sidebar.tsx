@@ -51,6 +51,7 @@ const Sidebar = ({ patterns, onDelete, isVisible }: IProps) => {
 
 		const snackbar = enqueueSnackbar(`SUPPRESSION : ${pattern.name}`, {
 			variant: "info",
+
 			autoHideDuration: DELAY_REMOVAL_MS,
 			onExited: async () => {
 				await fetch(`pattern?id=${pattern.id}`, {
