@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Pattern } from "../types/Patterns";
-import { Container, CircularProgress, makeStyles } from "@material-ui/core";
+import { CircularProgress, makeStyles, Box } from "@material-ui/core";
+import Sidebar from "./Sidebar";
 
 const useStyles = makeStyles({
 	loader: {
@@ -30,11 +31,19 @@ const Home = () => {
 	console.log(patterns);
 
 	return (
-		<Container>
+		<Box>
 			{!patterns.length && (
 				<CircularProgress size="10rem" className={classes.loader} />
 			)}
-		</Container>
+
+			{patterns.length ? (
+				<>
+					<Sidebar patterns={patterns} />
+				</>
+			) : (
+				""
+			)}
+		</Box>
 	);
 };
 

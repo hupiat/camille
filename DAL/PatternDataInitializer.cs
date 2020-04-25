@@ -7,7 +7,7 @@ namespace camille.DAL
 {
     public abstract class PatternDataInitializer
     {
-        private readonly static int PATTERNS = 1000;
+        private readonly static int PATTERNS = 100;
         private readonly static int MAX_ELEMENTS_BY_PATTERNS = 15;
 
         private readonly static ICollection<PatternElement> _elements = new HashSet<PatternElement>();
