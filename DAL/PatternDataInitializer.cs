@@ -8,7 +8,7 @@ namespace camille.DAL
     public abstract class PatternDataInitializer
     {
         private readonly static int PATTERNS = 100;
-        private readonly static int MAX_ELEMENTS_BY_PATTERNS = 15;
+        private readonly static int MAX_ELEMENTS_BY_PATTERN = 15;
 
         private readonly static ICollection<PatternElement> _elements = new HashSet<PatternElement>();
         private readonly static ICollection<Tag> _tags = new HashSet<Tag>();
@@ -34,7 +34,7 @@ namespace camille.DAL
 
                 };
 
-                int elementsLength = rand.Next(1, MAX_ELEMENTS_BY_PATTERNS);
+                int elementsLength = rand.Next(1, MAX_ELEMENTS_BY_PATTERN);
 
                 foreach (int _ in Enumerable.Range(0, elementsLength))
                 {

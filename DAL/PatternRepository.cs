@@ -65,5 +65,70 @@ namespace camille.DAL
 
             return tags;
         }
+
+        public void RemovePattern(int id)
+        {
+            Pattern pattern = _context.Patterns.Find(id);
+
+            foreach (PatternElement element in _context.PatternElements)
+            {
+                if (pattern.Bonds.Any(b => b.PatternElementId == element.ID))
+                {
+                    RemovePatternElement(element.ID);
+                }
+            }
+
+            foreach (Tag tag in _context.Tags)
+            {
+                if (pattern.PatternTags.Any(pt => pt.TagId == tag.ID))
+                {
+                    RemoveTag(tag.ID);
+                }
+            }
+
+            _context.Patterns.Remove(pattern);
+            _context.SaveChanges();
+        }
+
+        public void RemovePatternElement(int id)
+        {
+            _context.PatternElements.Remove(_context.PatternElements.Find(id));
+
+            ICollection<PatternElementBond> bonds = _context.PatternElementsBonds
+                .Where(b => b.PatternElementId == id)
+                .ToList();
+
+            foreach (PatternElementBond bond in bonds)
+            {
+                _context.PatternElementsBonds.Remove(bond);
+            }
+
+            ICollection<PatternElementBond> bondsRelated = _context.PatternElementsBonds
+                .Where(b => b.NextPatternElementId == id)
+                .ToList();
+
+            foreach (PatternElementBond bond in bondsRelated)
+            {
+                bond.NextPatternElementId = 0;
+            }
+
+            _context.SaveChanges();
+        }
+
+        public void RemoveTag(int id)
+        {
+            _context.Tags.Remove(_context.Tags.Find(id));
+
+            ICollection<PatternTag> patternTags = _context.PatternTags
+                .Where(pt => pt.TagId == id)
+                .ToList();
+
+            foreach (PatternTag patternTag in patternTags)
+            {
+                _context.PatternTags.Remove(patternTag);
+            }
+
+            _context.SaveChanges();
+        }
     }
 }

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, Dispatch } from "react";
 import { Pattern } from "../types/Patterns";
 import {
 	List,
@@ -6,8 +6,13 @@ import {
 	ListItemText,
 	makeStyles,
 	Slide,
+	ListItemSecondaryAction,
+	IconButton,
+	CircularProgress,
 } from "@material-ui/core";
-import { useSearchTrigger } from "./Helpers/hooks";
+import { Delete } from "@material-ui/icons";
+import { useSnackbar } from "notistack";
+import UndoButton from "./Buttons/UndoButton";
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -30,13 +35,45 @@ const useStyles = makeStyles((theme) => {
 
 interface IProps {
 	patterns: Pattern[];
+	onDelete: (pattern: Pattern) => void;
+	isVisible: boolean;
 }
 
-const Sidebar = ({ patterns }: IProps) => {
+const DELAY_REMOVAL_MS = 1500;
+
+const Sidebar = ({ patterns, onDelete, isVisible }: IProps) => {
 	const classes = useStyles();
+	const [pendingRemoval, setPendingRemoval] = useState<Pattern>();
+	const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+
+	const handleRemoval = (pattern: Pattern) => {
+		setPendingRemoval(pattern);
+
+		const snackbar = enqueueSnackbar(`SUPPRESSION : ${pattern.name}`, {
+			variant: "info",
+			autoHideDuration: DELAY_REMOVAL_MS,
+			onExited: async () => {
+				await fetch(`pattern?id=${pattern.id}`, {
+					method: "DELETE",
+				});
+				setPendingRemoval(undefined);
+				onDelete(pattern);
+			},
+			action: (
+				<UndoButton
+					onUndo={() => {
+						setPendingRemoval(undefined);
+						closeSnackbar(snackbar);
+					}}
+					onClose={() => closeSnackbar(snackbar)}
+					htmlColor="whitesmoke"
+				/>
+			),
+		});
+	};
 
 	return (
-		<Slide in={!!patterns.length} direction="right">
+		<Slide in={!!patterns.length && isVisible} direction="right">
 			<List className={classes.list}>
 				{patterns.map((p) => (
 					<ListItem button key={p.id}>
@@ -48,6 +85,21 @@ const Sidebar = ({ patterns }: IProps) => {
 							}}
 							className={classes.listItem}
 						/>
+						{pendingRemoval && pendingRemoval === p ? (
+							<CircularProgress style={{ color: "whitesmoke" }} size="1.5rem" />
+						) : (
+							!pendingRemoval && (
+								<ListItemSecondaryAction>
+									<IconButton
+										edge="end"
+										aria-label="delete"
+										onClick={() => handleRemoval(p)}
+									>
+										<Delete htmlColor="whitesmoke" />
+									</IconButton>
+								</ListItemSecondaryAction>
+							)
+						)}
 					</ListItem>
 				))}
 			</List>

@@ -1,11 +1,12 @@
 import React, { useState } from "react";
-import SearchAppBar from "./components/SearchAppBar";
+import { SnackbarProvider } from "notistack";
 import Home from "./components/Home";
 import {
 	createMuiTheme,
 	responsiveFontSizes,
 	ThemeProvider,
 } from "@material-ui/core/styles";
+import SearchAppBar from "./components/SearchAppBar";
 
 let theme = createMuiTheme({
 	palette: {
@@ -15,9 +16,9 @@ let theme = createMuiTheme({
 			dark: "#512DA8",
 		},
 		secondary: {
-			main: "#03A9F4",
-			light: "#B3E5FC",
-			dark: "#0288D1",
+			main: "#880e4f",
+			light: "#bc477b",
+			dark: "#560027",
 		},
 	},
 });
@@ -30,8 +31,21 @@ export const App = () => {
 
 	return (
 		<ThemeProvider theme={theme}>
-			<SearchAppBar query={query} onSearch={setQuery} isVisible={!isDrawing} />
-			<Home query={query} />
+			<SnackbarProvider
+				maxSnack={5}
+				anchorOrigin={{
+					vertical: "bottom",
+					horizontal: "center",
+				}}
+				draggable
+			>
+				<SearchAppBar
+					query={query}
+					onSearch={setQuery}
+					isVisible={!isDrawing}
+				/>
+				<Home query={query} isDrawing={isDrawing} setIsDrawing={setIsDrawing} />
+			</SnackbarProvider>
 		</ThemeProvider>
 	);
 };

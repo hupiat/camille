@@ -1,4 +1,4 @@
-import { useEffect, Dispatch } from "react";
+import { useEffect, Dispatch, useState } from "react";
 import { Pattern } from "../../types/Patterns";
 
 export const useDebouncedEffect = (callback: Function, deps: any[]) =>

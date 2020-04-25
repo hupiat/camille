@@ -21,5 +21,8 @@ namespace camille.Controllers
             _repository.FetchAllPatternElements(),
             _repository.FetchAllTags()
         );
+
+        [HttpDelete]
+        public void Delete(int id) => _repository.RemovePattern(id);
     }
 }
