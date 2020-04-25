@@ -1,5 +1,5 @@
-import React from "react";
-import NavMenu from "./components/SearchAppBar";
+import React, { useState } from "react";
+import SearchAppBar from "./components/SearchAppBar";
 import Home from "./components/Home";
 import {
 	createMuiTheme,
@@ -24,11 +24,16 @@ let theme = createMuiTheme({
 
 theme = responsiveFontSizes(theme);
 
-export const App = () => (
-	<ThemeProvider theme={theme}>
-		<NavMenu />
-		<Home />
-	</ThemeProvider>
-);
+export const App = () => {
+	const [isDrawing, setIsDrawing] = useState<boolean>(false);
+	const [query, setQuery] = useState<string>("");
+
+	return (
+		<ThemeProvider theme={theme}>
+			<SearchAppBar query={query} onSearch={setQuery} isVisible={isDrawing} />
+			<Home query={query} />
+		</ThemeProvider>
+	);
+};
 
 export default App;

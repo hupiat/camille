@@ -1,14 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import { Pattern } from "../types/Patterns";
 import {
 	List,
 	ListItem,
 	ListItemText,
-	Box,
 	makeStyles,
-	Button,
 	Slide,
 } from "@material-ui/core";
+import { useSearchTrigger } from "./Helpers/hooks";
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -40,7 +39,7 @@ const Sidebar = ({ patterns }: IProps) => {
 		<Slide in={!!patterns.length} direction="right">
 			<List className={classes.list}>
 				{patterns.map((p) => (
-					<ListItem key={p.id} button>
+					<ListItem button key={p.id}>
 						<ListItemText
 							primary={p.name}
 							secondary={p.tags.map((t) => t.name).join(", ")}
