@@ -1,2 +1,2 @@
 # camille
-Web software to draw and classify cognitive patterns
+Web software to draw and analyze cognitive patterns
