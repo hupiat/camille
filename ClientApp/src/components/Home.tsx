@@ -88,7 +88,7 @@ const Home = ({ query, isDrawing, setIsDrawing }: IProps) => {
 							/>
 						</Fab>
 
-						<Slide direction="up" in={isDrawing}>
+						<Slide direction="up" in={isDrawing} unmountOnExit>
 							<Fab
 								color="secondary"
 								aria-label="add"

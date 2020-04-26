@@ -3,8 +3,8 @@ import { makeStyles, Paper } from "@material-ui/core";
 
 const useStyles = makeStyles({
 	paper: {
-		width: "100%",
-		height: "100%",
+		width: "550px",
+		height: "500px",
 		cursor: "grab",
 		"&:active": {
 			cursor: "grabbing",

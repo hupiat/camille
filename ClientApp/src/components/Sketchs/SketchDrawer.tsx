@@ -1,8 +1,6 @@
 import React from "react";
 import SketchPatternElement from "./SketchPatternElement";
 
-const SketchDrawer = () => {
-	return <SketchPatternElement />;
-};
+const SketchDrawer = () => <SketchPatternElement />;
 
 export default SketchDrawer;
