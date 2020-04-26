@@ -1,8 +1,16 @@
-type BaseElement = {
+export type IdentifiedElement = {
 	id: number;
+};
+
+export type NamedElement = {
 	name: string;
+};
+
+export type DatedElement = {
 	dateCreation: Date;
 };
+
+export type BaseElement = IdentifiedElement & NamedElement & DatedElement;
 
 export type Tag = BaseElement;
 

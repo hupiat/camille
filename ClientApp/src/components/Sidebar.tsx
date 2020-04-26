@@ -15,6 +15,7 @@ import { useSnackbar } from 'notistack';
 import UndoButton from './Buttons/UndoButton';
 import { useRequest } from './Helpers/hooks';
 import SnackbarContentLayout from './Layouts/SnackbarContentLayout';
+import { toastOperationMessage } from './Helpers/strings';
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -59,7 +60,7 @@ const Sidebar = ({ patterns, onDelete, isVisible }: IProps) => {
 	const handleRemoval = (pattern: Pattern) => {
 		let willRequest = true;
 		setPendingRemoval(pattern);
-		const snackbar = enqueueSnackbar(`SUPPRESSION : ${pattern.name}`, {
+		const snackbar = enqueueSnackbar(toastOperationMessage('suppression', pattern), {
 			variant: 'info',
 			autoHideDuration: DELAY_REMOVAL_MS,
 			onExited: () => willRequest && triggerDeleteRequest(pattern),
