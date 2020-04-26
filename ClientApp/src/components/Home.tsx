@@ -5,13 +5,14 @@ import {
 	makeStyles,
 	Box,
 	Fab,
-	Snackbar,
+	Slide,
 } from "@material-ui/core";
 import Sidebar from "./Sidebar";
-import { useSearchTrigger } from "./Helpers/hooks";
+import { useSearchTrigger, useRequestEffect } from "./Helpers/hooks";
 import { Add } from "@material-ui/icons";
 import clsx from "clsx";
-import { useSnackbar } from "notistack";
+import FabLayout from "./Layouts/FabLayout";
+import SketchDrawer from "./Sketchs/SketchDrawer";
 
 const useStyles = makeStyles({
 	container: {
@@ -24,11 +25,6 @@ const useStyles = makeStyles({
 		right: 0,
 		marginLeft: "auto",
 		marginRight: "auto",
-	},
-	fab: {
-		position: "absolute",
-		right: "30px",
-		bottom: "20px",
 	},
 	fabIcon: {
 		transition: "all .4s ease-in-out",
@@ -49,15 +45,11 @@ const Home = ({ query, isDrawing, setIsDrawing }: IProps) => {
 	const [patterns, setPatterns] = useState<Pattern[]>([]);
 	const [patternsFiltered, setPatternsFiltered] = useState<Pattern[]>([]);
 
-	const fetchPatterns = async () => {
+	const isRequestPending = useRequestEffect<void>(async () => {
 		const response = await fetch("pattern");
 		const data = await response.json();
 		setPatterns(data);
 		setPatternsFiltered(data);
-	};
-
-	useEffect(() => {
-		fetchPatterns();
 	}, []);
 
 	useSearchTrigger(patterns, query, setPatternsFiltered);
@@ -69,7 +61,7 @@ const Home = ({ query, isDrawing, setIsDrawing }: IProps) => {
 
 	return (
 		<Box>
-			{!patterns.length && (
+			{isRequestPending && (
 				<CircularProgress
 					size="10rem"
 					className={classes.loader}
@@ -77,23 +69,35 @@ const Home = ({ query, isDrawing, setIsDrawing }: IProps) => {
 				/>
 			)}
 
-			{!!patterns.length && (
+			{!isRequestPending && (
 				<Box className={classes.container}>
 					<Sidebar
 						patterns={patternsFiltered}
 						onDelete={handleDelete}
 						isVisible={!isDrawing}
 					/>
-					<Fab
-						color="secondary"
-						aria-label="add"
-						className={classes.fab}
-						onClick={() => setIsDrawing(!isDrawing)}
-					>
-						<Add
-							className={clsx(classes.fabIcon, isDrawing && classes.rotate)}
-						/>
-					</Fab>
+					{isDrawing && <SketchDrawer />}
+					<FabLayout>
+						<Fab
+							color="secondary"
+							aria-label="add"
+							onClick={() => setIsDrawing(!isDrawing)}
+						>
+							<Add
+								className={clsx(classes.fabIcon, isDrawing && classes.rotate)}
+							/>
+						</Fab>
+
+						<Slide direction="up" in={isDrawing}>
+							<Fab
+								color="secondary"
+								aria-label="add"
+								onClick={() => setIsDrawing(!isDrawing)}
+							>
+								<Add />
+							</Fab>
+						</Slide>
+					</FabLayout>
 				</Box>
 			)}
 		</Box>

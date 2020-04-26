@@ -67,11 +67,11 @@ const useStyles = makeStyles((theme) => ({
 
 interface IProps {
 	query?: string;
-	onSearch: (query: string) => void;
 	isVisible: boolean;
+	onSearch: (query: string) => void;
 }
 
-const SearchAppBar = ({ query, onSearch, isVisible }: IProps) => {
+const SearchAppBar = ({ query, onSearch, isVisible = true }: IProps) => {
 	const classes = useStyles();
 	const [internalQuery, setInternalQuery] = useState<string>(query || "");
 

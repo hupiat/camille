@@ -1,4 +1,4 @@
-import React, { useState, Dispatch } from "react";
+import React, { useState } from "react";
 import { Pattern } from "../types/Patterns";
 import {
 	List,
@@ -9,10 +9,14 @@ import {
 	ListItemSecondaryAction,
 	IconButton,
 	CircularProgress,
+	Snackbar,
 } from "@material-ui/core";
 import { Delete } from "@material-ui/icons";
 import { useSnackbar } from "notistack";
 import UndoButton from "./Buttons/UndoButton";
+import CloseButton from "./Buttons/CloseButton";
+import { useRequest } from "./Helpers/hooks";
+import SnackbarContentLayout from "./Layouts/SnackbarContentLayout";
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -45,30 +49,32 @@ const Sidebar = ({ patterns, onDelete, isVisible }: IProps) => {
 	const classes = useStyles();
 	const [pendingRemoval, setPendingRemoval] = useState<Pattern>();
 	const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+	const [isRequestPending, triggerDeleteRequest] = useRequest<Pattern>(
+		async (pattern: Pattern) => {
+			await fetch(`pattern?id=${pattern.id}`, {
+				method: "DELETE",
+			});
+			setPendingRemoval(undefined);
+			onDelete(pattern);
+		}
+	);
 
 	const handleRemoval = (pattern: Pattern) => {
 		setPendingRemoval(pattern);
-
 		const snackbar = enqueueSnackbar(`SUPPRESSION : ${pattern.name}`, {
 			variant: "info",
-
 			autoHideDuration: DELAY_REMOVAL_MS,
-			onExited: async () => {
-				await fetch(`pattern?id=${pattern.id}`, {
-					method: "DELETE",
-				});
-				setPendingRemoval(undefined);
-				onDelete(pattern);
-			},
+			onExited: () => triggerDeleteRequest(pattern),
 			action: (
-				<UndoButton
-					onUndo={() => {
-						setPendingRemoval(undefined);
-						closeSnackbar(snackbar);
-					}}
-					onClose={() => closeSnackbar(snackbar)}
-					htmlColor="whitesmoke"
-				/>
+				<SnackbarContentLayout onClose={() => closeSnackbar(snackbar)}>
+					<UndoButton
+						onClick={() => {
+							setPendingRemoval(undefined);
+							closeSnackbar(snackbar);
+						}}
+						htmlColor="whitesmoke"
+					/>
+				</SnackbarContentLayout>
 			),
 		});
 	};
