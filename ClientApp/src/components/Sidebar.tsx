@@ -47,6 +47,7 @@ const Sidebar = ({ patterns, onDelete, isVisible }: IProps) => {
 	const classes = useStyles();
 	const [pendingRemoval, setPendingRemoval] = useState<Pattern>();
 	const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+
 	const [, triggerDeleteRequest] = useRequest<Pattern>(async (pattern: Pattern) => {
 		await fetch(`pattern?id=${pattern.id}`, {
 			method: 'DELETE',
@@ -61,7 +62,6 @@ const Sidebar = ({ patterns, onDelete, isVisible }: IProps) => {
 			variant: 'info',
 			autoHideDuration: DELAY_REMOVAL_MS,
 			onExited: () => {
-				console.log('coucou');
 				triggerDeleteRequest(pattern);
 			},
 			action: (
