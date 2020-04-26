@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Pattern } from "../types/Patterns";
+import React, { useState } from 'react';
+import { Pattern } from '../types/Patterns';
 import {
 	List,
 	ListItem,
@@ -9,30 +9,28 @@ import {
 	ListItemSecondaryAction,
 	IconButton,
 	CircularProgress,
-	Snackbar,
-} from "@material-ui/core";
-import { Delete } from "@material-ui/icons";
-import { useSnackbar } from "notistack";
-import UndoButton from "./Buttons/UndoButton";
-import CloseButton from "./Buttons/CloseButton";
-import { useRequest } from "./Helpers/hooks";
-import SnackbarContentLayout from "./Layouts/SnackbarContentLayout";
+} from '@material-ui/core';
+import { Delete } from '@material-ui/icons';
+import { useSnackbar } from 'notistack';
+import UndoButton from './Buttons/UndoButton';
+import { useRequest } from './Helpers/hooks';
+import SnackbarContentLayout from './Layouts/SnackbarContentLayout';
 
 const useStyles = makeStyles((theme) => {
 	return {
 		list: {
-			position: "relative",
-			marginTop: "10px",
-			height: "85vh",
-			width: "300px",
-			overflow: "auto",
-			willChange: "transform",
-			direction: "ltr",
-			borderRadius: "5px",
+			position: 'relative',
+			marginTop: '10px',
+			height: '85vh',
+			width: '300px',
+			overflow: 'auto',
+			willChange: 'transform',
+			direction: 'ltr',
+			borderRadius: '5px',
 			backgroundColor: theme.palette.primary.dark,
 		},
 		listItem: {
-			color: "whitesmoke",
+			color: 'whitesmoke',
 		},
 	};
 });
@@ -49,22 +47,23 @@ const Sidebar = ({ patterns, onDelete, isVisible }: IProps) => {
 	const classes = useStyles();
 	const [pendingRemoval, setPendingRemoval] = useState<Pattern>();
 	const { enqueueSnackbar, closeSnackbar } = useSnackbar();
-	const [isRequestPending, triggerDeleteRequest] = useRequest<Pattern>(
-		async (pattern: Pattern) => {
-			await fetch(`pattern?id=${pattern.id}`, {
-				method: "DELETE",
-			});
-			setPendingRemoval(undefined);
-			onDelete(pattern);
-		}
-	);
+	const [, triggerDeleteRequest] = useRequest<Pattern>(async (pattern: Pattern) => {
+		await fetch(`pattern?id=${pattern.id}`, {
+			method: 'DELETE',
+		});
+		setPendingRemoval(undefined);
+		onDelete(pattern);
+	});
 
 	const handleRemoval = (pattern: Pattern) => {
 		setPendingRemoval(pattern);
 		const snackbar = enqueueSnackbar(`SUPPRESSION : ${pattern.name}`, {
-			variant: "info",
+			variant: 'info',
 			autoHideDuration: DELAY_REMOVAL_MS,
-			onExited: () => triggerDeleteRequest(pattern),
+			onExited: () => {
+				console.log('coucou');
+				triggerDeleteRequest(pattern);
+			},
 			action: (
 				<SnackbarContentLayout onClose={() => closeSnackbar(snackbar)}>
 					<UndoButton
@@ -72,7 +71,7 @@ const Sidebar = ({ patterns, onDelete, isVisible }: IProps) => {
 							setPendingRemoval(undefined);
 							closeSnackbar(snackbar);
 						}}
-						htmlColor="whitesmoke"
+						htmlColor='whitesmoke'
 					/>
 				</SnackbarContentLayout>
 			),
@@ -80,29 +79,25 @@ const Sidebar = ({ patterns, onDelete, isVisible }: IProps) => {
 	};
 
 	return (
-		<Slide in={!!patterns.length && isVisible} direction="right">
+		<Slide in={!!patterns.length && isVisible} direction='right'>
 			<List className={classes.list}>
 				{patterns.map((p) => (
 					<ListItem button key={p.id}>
 						<ListItemText
 							primary={p.name}
-							secondary={p.tags.map((t) => t.name).join(", ")}
+							secondary={p.tags.map((t) => t.name).join(', ')}
 							secondaryTypographyProps={{
 								className: classes.listItem,
 							}}
 							className={classes.listItem}
 						/>
 						{pendingRemoval && pendingRemoval === p ? (
-							<CircularProgress style={{ color: "whitesmoke" }} size="1.5rem" />
+							<CircularProgress style={{ color: 'whitesmoke' }} size='1.5rem' />
 						) : (
 							!pendingRemoval && (
 								<ListItemSecondaryAction>
-									<IconButton
-										edge="end"
-										aria-label="delete"
-										onClick={() => handleRemoval(p)}
-									>
-										<Delete htmlColor="whitesmoke" />
+									<IconButton edge='end' aria-label='delete' onClick={() => handleRemoval(p)}>
+										<Delete htmlColor='whitesmoke' />
 									</IconButton>
 								</ListItemSecondaryAction>
 							)

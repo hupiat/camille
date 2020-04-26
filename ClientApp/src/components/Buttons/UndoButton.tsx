@@ -1,6 +1,5 @@
-import React from "react";
-import { Button, IconButton } from "@material-ui/core";
-import { Close } from "@material-ui/icons";
+import React from 'react';
+import { Button } from '@material-ui/core';
 
 interface IProps {
 	onClick: () => void;

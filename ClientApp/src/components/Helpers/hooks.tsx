@@ -1,29 +1,23 @@
-import React, { useEffect, Dispatch, useState } from "react";
-import { Pattern } from "../../types/Patterns";
-import { useSnackbar } from "notistack";
-import SnackbarContentLayout from "../Layouts/SnackbarContentLayout";
+import React, { useEffect, Dispatch, useState } from 'react';
+import { Pattern } from '../../types/Patterns';
+import { useSnackbar } from 'notistack';
+import SnackbarContentLayout from '../Layouts/SnackbarContentLayout';
 
 export const useDebouncedEffect = (callback: Function, deps: any[]) =>
 	useEffect(() => {
 		const effect = setTimeout(callback, 300);
 		return () => clearTimeout(effect);
-	}, deps);
+	}, deps); // eslint-disable-line react-hooks/exhaustive-deps
 
-export const useSearchTrigger = (
-	patterns: Pattern[],
-	query: string,
-	setPatternsFiltered: Dispatch<Pattern[]>
-) => {
-	const filterCallback = (p: Pattern) => p.name.includes(query);
+export const useSearchTrigger = (patterns: Pattern[], query: string, setPatternsFiltered: Dispatch<Pattern[]>) => {
 	useEffect(() => {
+		const filterCallback = (p: Pattern) => p.name.includes(query);
 		const filtered = patterns.filter(filterCallback);
 		setPatternsFiltered(filtered);
-	}, [query]);
+	}, [patterns, query, setPatternsFiltered]);
 };
 
-export function useRequest<T>(
-	request: (param: T) => Promise<any>
-): [boolean, (param: T) => Promise<any>] {
+export function useRequest<T>(request: (param: T) => Promise<any>): [boolean, (param: T) => Promise<any>] {
 	const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 	const [isRequestPending, setIsRequestPending] = useState<boolean>(false);
 
@@ -32,15 +26,10 @@ export function useRequest<T>(
 		try {
 			await request(param);
 		} catch (e) {
-			const snackbar = enqueueSnackbar("Une erreur est survenue", {
-				variant: "error",
+			const snackbar = enqueueSnackbar('Une erreur est survenue', {
+				variant: 'error',
 				persist: true,
-				action: (
-					<SnackbarContentLayout
-						onClose={() => closeSnackbar(snackbar)}
-						details={e.message}
-					/>
-				),
+				action: <SnackbarContentLayout onClose={() => closeSnackbar(snackbar)} details={e.message} />,
 			});
 		} finally {
 			setIsRequestPending(false);
@@ -50,16 +39,12 @@ export function useRequest<T>(
 	return [isRequestPending, send];
 }
 
-export function useRequestEffect<T>(
-	request: (param?: T) => Promise<any>,
-	deps: any[],
-	param?: T
-): boolean {
+export function useRequestEffect<T>(request: (param?: T) => Promise<any>, deps: any[], param?: T): boolean {
 	const [isRequestPending, triggerRequest] = useRequest<T | undefined>(request);
 
 	useEffect(() => {
 		triggerRequest(param);
-	}, deps);
+	}, deps); // eslint-disable-line react-hooks/exhaustive-deps
 
 	return isRequestPending;
 }

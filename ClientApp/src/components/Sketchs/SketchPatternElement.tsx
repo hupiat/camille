@@ -1,13 +1,13 @@
-import React, { useState } from "react";
-import { makeStyles, Paper } from "@material-ui/core";
+import React from 'react';
+import { makeStyles, Paper } from '@material-ui/core';
 
 const useStyles = makeStyles({
 	paper: {
-		width: "550px",
-		height: "500px",
-		cursor: "grab",
-		"&:active": {
-			cursor: "grabbing",
+		width: '550px',
+		height: '500px',
+		cursor: 'grab',
+		'&:active': {
+			cursor: 'grabbing',
 		},
 	},
 });

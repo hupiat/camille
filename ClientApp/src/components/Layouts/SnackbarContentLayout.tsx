@@ -1,7 +1,7 @@
-import React, { PropsWithChildren, useState, ReactText } from "react";
-import CloseButton from "../Buttons/CloseButton";
-import { Button } from "@material-ui/core";
-import { useSnackbar } from "notistack";
+import React, { PropsWithChildren, useState, ReactText } from 'react';
+import CloseButton from '../Buttons/CloseButton';
+import { Button } from '@material-ui/core';
+import { useSnackbar } from 'notistack';
 
 interface IProps {
 	onClose: () => void;
@@ -17,31 +17,25 @@ const SnackbarContentLayout = (props: PropsWithChildren<IProps>) => {
 		setSnackbarInstance(undefined);
 	};
 
-	const handleOpenDetails = () => {
+	const handleOpenDetails = () =>
 		setSnackbarInstance(
 			enqueueSnackbar(props.details, {
-				variant: "error",
+				variant: 'error',
 				persist: true,
 				anchorOrigin: {
-					horizontal: "right",
-					vertical: "top",
+					horizontal: 'right',
+					vertical: 'top',
 				},
 				action: <SnackbarContentLayout onClose={handleCloseDetails} />,
 			})
 		);
-	};
 
 	return (
 		<>
 			{React.Children.toArray(props.children)}
 			{props.details && (
-				<Button
-					color="inherit"
-					onClick={() =>
-						snackbarInstance ? handleCloseDetails() : handleOpenDetails()
-					}
-				>
-					{snackbarInstance ? "Moins" : "Plus"}
+				<Button color='inherit' onClick={() => (snackbarInstance ? handleCloseDetails() : handleOpenDetails())}>
+					{snackbarInstance ? 'Moins' : 'Plus'}
 				</Button>
 			)}
 			<CloseButton onClick={props.onClose} />

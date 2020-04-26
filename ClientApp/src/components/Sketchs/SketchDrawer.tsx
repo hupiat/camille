@@ -1,5 +1,5 @@
-import React from "react";
-import SketchPatternElement from "./SketchPatternElement";
+import React from 'react';
+import SketchPatternElement from './SketchPatternElement';
 
 const SketchDrawer = () => <SketchPatternElement />;
 
