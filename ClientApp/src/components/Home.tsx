@@ -55,19 +55,33 @@ const Home = ({ query, isDrawing, setIsDrawing }: IProps) => {
 
 	return (
 		<Box>
-			{isRequestPending && <CircularProgress size='10rem' className={classes.loader} color='primary' />}
+			{isRequestPending && (
+				<CircularProgress size='10rem' className={classes.loader} color='primary' />
+			)}
 
 			{!isRequestPending && (
 				<Box className={classes.container}>
-					<Sidebar patterns={patternsFiltered} onDelete={handleDelete} isVisible={!isDrawing} />
+					<Sidebar
+						patterns={patternsFiltered}
+						onDelete={handleDelete}
+						isVisible={!isDrawing}
+					/>
 					{isDrawing && <SketchDrawer />}
 					<FabLayout>
-						<Fab color='secondary' aria-label='add' onClick={() => setIsDrawing(!isDrawing)}>
+						<Fab
+							color='secondary'
+							aria-label='add'
+							onClick={() => setIsDrawing(!isDrawing)}
+						>
 							<Add className={clsx(classes.fabIcon, isDrawing && classes.rotate)} />
 						</Fab>
 
 						<Slide direction='up' in={isDrawing} unmountOnExit>
-							<Fab color='secondary' aria-label='add' onClick={() => setIsDrawing(!isDrawing)}>
+							<Fab
+								color='secondary'
+								aria-label='add'
+								onClick={() => setIsDrawing(!isDrawing)}
+							>
 								<Add />
 							</Fab>
 						</Slide>

@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
 import { SnackbarProvider } from 'notistack';
 import Home from './components/Home';
-import { createMuiTheme, responsiveFontSizes, ThemeProvider } from '@material-ui/core/styles';
+import {
+	createMuiTheme,
+	responsiveFontSizes,
+	ThemeProvider,
+} from '@material-ui/core/styles';
 import SearchAppBar from './components/SearchAppBar';
 
 let theme = createMuiTheme({

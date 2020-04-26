@@ -34,7 +34,10 @@ const SnackbarContentLayout = (props: PropsWithChildren<IProps>) => {
 		<>
 			{Children.toArray(props.children)}
 			{props.details && (
-				<Button color='inherit' onClick={() => (snackbarInstance ? handleCloseDetails() : handleOpenDetails())}>
+				<Button
+					color='inherit'
+					onClick={() => (snackbarInstance ? handleCloseDetails() : handleOpenDetails())}
+				>
 					{snackbarInstance ? 'Moins' : 'Plus'}
 				</Button>
 			)}

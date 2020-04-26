@@ -13,7 +13,11 @@ const FabLayout = (props: PropsWithChildren<{}>) => {
 	return (
 		<>
 			{Children.toArray(props.children).map((child, i) => (
-				<Box key={i} className={classes.fab} style={{ right: `${i === 0 ? 50 : (i + 1) * 80}px` }}>
+				<Box
+					key={i}
+					className={classes.fab}
+					style={{ right: `${i === 0 ? 50 : (i + 1) * 80}px` }}
+				>
 					{child}
 				</Box>
 			))}

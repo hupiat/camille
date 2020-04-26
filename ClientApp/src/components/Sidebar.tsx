@@ -53,25 +53,22 @@ const Sidebar = ({ patterns, onDelete, isVisible }: IProps) => {
 			method: 'DELETE',
 		});
 		onDelete(pattern);
+		setPendingRemoval(undefined);
 	});
 
 	const handleRemoval = (pattern: Pattern) => {
+		let willRequest = true;
 		setPendingRemoval(pattern);
 		const snackbar = enqueueSnackbar(`SUPPRESSION : ${pattern.name}`, {
 			variant: 'info',
 			autoHideDuration: DELAY_REMOVAL_MS,
-			onExited: () => {
-				if (pendingRemoval) {
-					triggerDeleteRequest(pattern);
-				}
-				setPendingRemoval(undefined);
-			},
+			onExited: () => willRequest && triggerDeleteRequest(pattern),
 			action: (
 				<SnackbarContentLayout onClose={() => closeSnackbar(snackbar)}>
 					<UndoButton
 						onClick={() => {
-							setPendingRemoval(undefined);
 							closeSnackbar(snackbar);
+							willRequest = false;
 						}}
 						htmlColor='whitesmoke'
 					/>

@@ -9,7 +9,11 @@ export const useDebouncedEffect = (callback: Function, deps: any[]) =>
 		return () => clearTimeout(effect);
 	}, deps); // eslint-disable-line react-hooks/exhaustive-deps
 
-export const useSearchTrigger = (patterns: Pattern[], query: string, setPatternsFiltered: Dispatch<Pattern[]>) => {
+export const useSearchTrigger = (
+	patterns: Pattern[],
+	query: string,
+	setPatternsFiltered: Dispatch<Pattern[]>
+) => {
 	useEffect(() => {
 		const filterCallback = (p: Pattern) => p.name.includes(query);
 		const filtered = patterns.filter(filterCallback);
@@ -17,7 +21,9 @@ export const useSearchTrigger = (patterns: Pattern[], query: string, setPatterns
 	}, [patterns, query, setPatternsFiltered]);
 };
 
-export function useRequest<T>(request: (param: T) => Promise<any>): [boolean, (param: T) => Promise<any>] {
+export function useRequest<T>(
+	request: (param: T) => Promise<any>
+): [boolean, (param: T) => Promise<any>] {
 	const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 	const [isRequestPending, setIsRequestPending] = useState<boolean>(false);
 
@@ -29,7 +35,12 @@ export function useRequest<T>(request: (param: T) => Promise<any>): [boolean, (p
 			const snackbar = enqueueSnackbar('Une erreur est survenue', {
 				variant: 'error',
 				persist: true,
-				action: <SnackbarContentLayout onClose={() => closeSnackbar(snackbar)} details={e.message} />,
+				action: (
+					<SnackbarContentLayout
+						onClose={() => closeSnackbar(snackbar)}
+						details={e.message}
+					/>
+				),
 			});
 		} finally {
 			setIsRequestPending(false);
@@ -39,7 +50,11 @@ export function useRequest<T>(request: (param: T) => Promise<any>): [boolean, (p
 	return [isRequestPending, send];
 }
 
-export function useRequestEffect<T>(request: (param?: T) => Promise<any>, deps: any[], param?: T): boolean {
+export function useRequestEffect<T>(
+	request: (param?: T) => Promise<any>,
+	deps: any[],
+	param?: T
+): boolean {
 	const [isRequestPending, triggerRequest] = useRequest<T | undefined>(request);
 
 	useEffect(() => {
