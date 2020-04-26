@@ -6,6 +6,9 @@ namespace camille.DTO
 {
     public class PatternElementDTO : BaseElementDTO
     {
+        public int X { get; set; }
+        public int Y { get; set; }
+
         public ICollection<int> NextElementsIds { get; set; } = new HashSet<int>();
 
         public override bool Equals(object other)

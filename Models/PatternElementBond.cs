@@ -8,6 +8,12 @@ namespace camille.Models
     public class PatternElementBond : DatabaseElement
     {
         [Required]
+        public int X { get; set; }
+
+        [Required]
+        public int Y { get; set; }
+
+        [Required]
         [ForeignKey("Pattern")]
         public int PatternId { get; set; }
 

@@ -42,7 +42,7 @@ interface IProps {
 	isVisible: boolean;
 }
 
-const DELAY_REMOVAL_MS = 1500;
+const DELAY_REMOVAL_MS = 4000;
 
 const Sidebar = ({ patterns, onDelete, isVisible }: IProps) => {
 	const classes = useStyles();

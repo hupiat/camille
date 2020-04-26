@@ -45,6 +45,8 @@ namespace camille.DAL
                         PatternId = pattern.ID,
                         PatternElementId = element.ID,
                         NextPatternElementId = nextElement.ID,
+                        X = rand.Next(0, 101),
+                        Y = rand.Next(0, 101)
                     });
                 }
 

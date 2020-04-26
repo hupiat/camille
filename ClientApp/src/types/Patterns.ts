@@ -1,20 +1,16 @@
-export type IdentifiedElement = {
-	id: number;
-};
+export type IdentifiedElement = { id: number };
 
-export type NamedElement = {
-	name: string;
-};
+export type NamedElement = { name: string };
 
-export type DatedElement = {
-	dateCreation: Date;
-};
+export type DatedElement = { dateCreation: Date };
 
 export type BaseElement = IdentifiedElement & NamedElement & DatedElement;
 
 export type Tag = BaseElement;
 
 export type PatternElement = BaseElement & {
+	x: number;
+	y: number;
 	nextElementsIds: number[];
 };
 

@@ -40,11 +40,17 @@ namespace camille.Mappers
 
             foreach (PatternElement element in elementsForPattern)
             {
+                PatternElementBond bond = element.Bonds
+                    .Where(b => b.PatternElementId == element.ID)
+                    .First();
+
                 PatternElementDTO dto = new PatternElementDTO
                 {
                     ID = element.ID,
                     DateCreation = element.DateCreation,
-                    Name = element.Name
+                    Name = element.Name,
+                    X = bond.X,
+                    Y = bond.Y
                 };
 
                 dtos.Add(dto);
