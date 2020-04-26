@@ -34,10 +34,11 @@ export function useRequest<T>(
 		} catch (e) {
 			const snackbar = enqueueSnackbar("Une erreur est survenue", {
 				variant: "error",
+				persist: true,
 				action: (
 					<SnackbarContentLayout
 						onClose={() => closeSnackbar(snackbar)}
-						details={e}
+						details={e.message}
 					/>
 				),
 			});
