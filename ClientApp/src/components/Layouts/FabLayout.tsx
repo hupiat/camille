@@ -1,5 +1,5 @@
 import React, { PropsWithChildren, Children } from 'react';
-import { makeStyles } from '@material-ui/core';
+import { makeStyles, Box } from '@material-ui/core';
 
 const useStyles = makeStyles({
 	fab: {
@@ -13,9 +13,9 @@ const FabLayout = (props: PropsWithChildren<{}>) => {
 	return (
 		<>
 			{Children.toArray(props.children).map((child, i) => (
-				<div key={i} className={classes.fab} style={{ right: `${i === 0 ? 50 : (i + 1) * 80}px` }}>
+				<Box key={i} className={classes.fab} style={{ right: `${i === 0 ? 50 : (i + 1) * 80}px` }}>
 					{child}
-				</div>
+				</Box>
 			))}
 		</>
 	);

@@ -1,4 +1,4 @@
-import React, { PropsWithChildren, useState, ReactText } from 'react';
+import React, { PropsWithChildren, useState, ReactText, Children } from 'react';
 import CloseButton from '../Buttons/CloseButton';
 import { Button } from '@material-ui/core';
 import { useSnackbar } from 'notistack';
@@ -32,7 +32,7 @@ const SnackbarContentLayout = (props: PropsWithChildren<IProps>) => {
 
 	return (
 		<>
-			{React.Children.toArray(props.children)}
+			{Children.toArray(props.children)}
 			{props.details && (
 				<Button color='inherit' onClick={() => (snackbarInstance ? handleCloseDetails() : handleOpenDetails())}>
 					{snackbarInstance ? 'Moins' : 'Plus'}

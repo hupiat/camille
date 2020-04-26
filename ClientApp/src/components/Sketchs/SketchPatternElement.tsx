@@ -14,7 +14,6 @@ const useStyles = makeStyles({
 
 const SketchPatternElement = () => {
 	const classes = useStyles();
-
 	return <Paper elevation={24} className={classes.paper}></Paper>;
 };
 

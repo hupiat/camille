@@ -52,7 +52,6 @@ const Sidebar = ({ patterns, onDelete, isVisible }: IProps) => {
 		await fetch(`pattern?id=${pattern.id}`, {
 			method: 'DELETE',
 		});
-		setPendingRemoval(undefined);
 		onDelete(pattern);
 	});
 
@@ -62,7 +61,10 @@ const Sidebar = ({ patterns, onDelete, isVisible }: IProps) => {
 			variant: 'info',
 			autoHideDuration: DELAY_REMOVAL_MS,
 			onExited: () => {
-				triggerDeleteRequest(pattern);
+				if (pendingRemoval) {
+					triggerDeleteRequest(pattern);
+				}
+				setPendingRemoval(undefined);
 			},
 			action: (
 				<SnackbarContentLayout onClose={() => closeSnackbar(snackbar)}>
@@ -96,7 +98,11 @@ const Sidebar = ({ patterns, onDelete, isVisible }: IProps) => {
 						) : (
 							!pendingRemoval && (
 								<ListItemSecondaryAction>
-									<IconButton edge='end' aria-label='delete' onClick={() => handleRemoval(p)}>
+									<IconButton
+										edge='end'
+										aria-label='delete'
+										onClick={() => handleRemoval(p)}
+									>
 										<Delete htmlColor='whitesmoke' />
 									</IconButton>
 								</ListItemSecondaryAction>
