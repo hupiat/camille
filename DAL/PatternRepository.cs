@@ -66,6 +66,46 @@ namespace camille.DAL
             return tags;
         }
 
+        public void Insert(Pattern pattern)
+        {
+            foreach (PatternElementBond bond in pattern.Bonds)
+            {
+                if (!_context.PatternElements.Any(e => e.ID == bond.PatternElementId))
+                {
+                    _context.PatternElements.Add(new PatternElement
+                    {
+                        Name = bond.Name,
+                    });
+                }
+            }
+
+            foreach (PatternTag tag in pattern.PatternTags)
+            {
+                if (!_context.Tags.Any(t => t.ID == tag.ID))
+                {
+                    _context.Tags.Add(new Tag
+                    {
+                        Name = tag.Name,
+                    });
+                }
+            }
+
+            _context.Patterns.Add(pattern);
+            _context.SaveChanges();
+        }
+
+        public void Update(Pattern pattern)
+        {
+            Pattern patternInDb = _context.Patterns.Find(pattern.ID);
+
+            patternInDb.Name = pattern.Name;
+            patternInDb.DateCreation = pattern.DateCreation;
+            patternInDb.Bonds = pattern.Bonds;
+            patternInDb.PatternTags = pattern.PatternTags;
+
+            _context.SaveChanges();
+        }
+
         public void RemovePattern(int id)
         {
             Pattern pattern = _context.Patterns.Find(id);

@@ -24,6 +24,9 @@ namespace camille.Models
         [ForeignKey("PatternElement")]
         public int NextPatternElementId { get; set; }
 
+        [NotMapped]
+        public string Name { get; set; }
+
         public override bool Equals(object other)
         {
             if (other == null) return false;

@@ -15,6 +15,9 @@ namespace camille.Models
         [ForeignKey("Tag")]
         public int TagId { get; set; }
 
+        [NotMapped]
+        public string Name { get; set; }
+
         public override bool Equals(object other)
         {
             if (other == null) return false;

@@ -8,26 +8,69 @@ namespace camille.Mappers
 {
     public abstract class PatternMapper
     {
-        public static ICollection<PatternDTO> Map(ICollection<Pattern> patterns, ICollection<PatternElement> elements,
+        public static ICollection<PatternDTO> Map(
+            ICollection<Pattern> patterns,
+            ICollection<PatternElement> elements,
             ICollection<Tag> tags)
         {
             ICollection<PatternDTO> dtos = new HashSet<PatternDTO>();
 
             foreach (Pattern pattern in patterns)
             {
-                PatternDTO dto = new PatternDTO
-                {
-                    ID = pattern.ID,
-                    DateCreation = pattern.DateCreation,
-                    Name = pattern.Name,
-                    Elements = Map(elements, pattern.ID),
-                    Tags = Map(tags, pattern.ID)
-                };
-
-                dtos.Add(dto);
+                dtos.Add(Map(pattern, elements, tags));
             }
 
             return dtos;
+        }
+
+        public static PatternDTO Map(
+            Pattern pattern,
+            ICollection<PatternElement> elements,
+            ICollection<Tag> tags) => new PatternDTO
+            {
+                ID = pattern.ID,
+                DateCreation = pattern.DateCreation,
+                Name = pattern.Name,
+                Elements = Map(elements, pattern.ID),
+                Tags = Map(tags, pattern.ID)
+            };
+
+        public static Pattern Map(PatternDTO patternDTO)
+        {
+            Pattern pattern = new Pattern
+            {
+                ID = patternDTO.ID,
+                Name = patternDTO.Name,
+                DateCreation = patternDTO.DateCreation
+            };
+
+            foreach (PatternElementDTO element in patternDTO.Elements)
+            {
+                foreach (int nextId in element.NextElementsIds)
+                {
+                    pattern.Bonds.Add(new PatternElementBond
+                    {
+                        Name = element.Name,
+                        PatternId = patternDTO.ID,
+                        PatternElementId = element.ID,
+                        NextPatternElementId = nextId,
+                        X = element.X,
+                        Y = element.Y
+                    });
+                }
+            }
+
+            foreach (TagDTO tag in patternDTO.Tags)
+            {
+                pattern.PatternTags.Add(new PatternTag
+                {
+                    Name = tag.Name,
+                    PatternId = pattern.ID,
+                    TagId = tag.ID
+                });
+            }
+
+            return pattern;
         }
 
         public static ICollection<PatternElementDTO> Map(ICollection<PatternElement> elements, int patternId)

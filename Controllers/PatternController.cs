@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using camille.DAL;
 using camille.DTO;
 using camille.Mappers;
+using camille.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace camille.Controllers
@@ -22,7 +23,22 @@ namespace camille.Controllers
             _repository.FetchAllTags()
         );
 
+        [HttpPost]
+        public PatternDTO Insert(PatternDTO patternDTO) => ApplyThenReturnPattern(patternDTO, _repository.Insert);
+
+        [HttpPut]
+        public PatternDTO Update(PatternDTO patternDTO) => ApplyThenReturnPattern(patternDTO, _repository.Update);
+
         [HttpDelete]
         public void Delete(int id) => _repository.RemovePattern(id);
+
+        private PatternDTO ApplyThenReturnPattern(PatternDTO patternDTO, Action<Pattern> action)
+        {
+            Pattern pattern = PatternMapper.Map(patternDTO);
+            action.Invoke(pattern);
+            return PatternMapper.Map(pattern,
+                _repository.FetchAllPatternElements(),
+                _repository.FetchAllTags());
+        }
     }
 }
