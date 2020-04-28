@@ -16,7 +16,7 @@ namespace camille.Models
         public int TagId { get; set; }
 
         [NotMapped]
-        public string Name { get; set; }
+        public string NameTag { get; set; }
 
         public override bool Equals(object other)
         {

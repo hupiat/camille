@@ -25,7 +25,7 @@ namespace camille.Models
         public int NextPatternElementId { get; set; }
 
         [NotMapped]
-        public string Name { get; set; }
+        public string NameElement { get; set; }
 
         public override bool Equals(object other)
         {

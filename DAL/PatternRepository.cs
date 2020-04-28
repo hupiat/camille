@@ -68,28 +68,7 @@ namespace camille.DAL
 
         public void Insert(Pattern pattern)
         {
-            foreach (PatternElementBond bond in pattern.Bonds)
-            {
-                if (!_context.PatternElements.Any(e => e.ID == bond.PatternElementId))
-                {
-                    _context.PatternElements.Add(new PatternElement
-                    {
-                        Name = bond.Name,
-                    });
-                }
-            }
-
-            foreach (PatternTag tag in pattern.PatternTags)
-            {
-                if (!_context.Tags.Any(t => t.ID == tag.ID))
-                {
-                    _context.Tags.Add(new Tag
-                    {
-                        Name = tag.Name,
-                    });
-                }
-            }
-
+            InsertMissingBondsAndTags(pattern);
             _context.Patterns.Add(pattern);
             _context.SaveChanges();
         }
@@ -98,11 +77,17 @@ namespace camille.DAL
         {
             Pattern patternInDb = _context.Patterns.Find(pattern.ID);
 
+            if (patternInDb == null)
+            {
+                throw new ArgumentException($"No pattern matching with {pattern.ID}");
+            }
+
             patternInDb.Name = pattern.Name;
             patternInDb.DateCreation = pattern.DateCreation;
             patternInDb.Bonds = pattern.Bonds;
             patternInDb.PatternTags = pattern.PatternTags;
 
+            InsertMissingBondsAndTags(pattern);
             _context.SaveChanges();
         }
 
@@ -169,6 +154,31 @@ namespace camille.DAL
             }
 
             _context.SaveChanges();
+        }
+
+        private void InsertMissingBondsAndTags(Pattern pattern)
+        {
+            foreach (PatternElementBond bond in pattern.Bonds)
+            {
+                if (!_context.PatternElements.Any(e => e.ID == bond.PatternElementId))
+                {
+                    _context.PatternElements.Add(new PatternElement
+                    {
+                        Name = bond.NameElement,
+                    });
+                }
+            }
+
+            foreach (PatternTag tag in pattern.PatternTags)
+            {
+                if (!_context.Tags.Any(t => t.ID == tag.ID))
+                {
+                    _context.Tags.Add(new Tag
+                    {
+                        Name = tag.NameTag,
+                    });
+                }
+            }
         }
     }
 }
