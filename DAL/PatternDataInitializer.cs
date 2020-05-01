@@ -5,19 +5,19 @@ using camille.Models;
 
 namespace camille.DAL
 {
-    public abstract class PatternDataInitializer
+    public class PatternDataInitializer
     {
-        private readonly static int PATTERNS = 100;
-        private readonly static int MAX_ELEMENTS_BY_PATTERN = 15;
+        private readonly int PATTERNS = 100;
+        private readonly int MAX_ELEMENTS_BY_PATTERN = 15;
 
-        private readonly static ICollection<PatternElement> _elements = new HashSet<PatternElement>();
-        private readonly static ICollection<Tag> _tags = new HashSet<Tag>();
+        private readonly ICollection<PatternElement> _elements = new HashSet<PatternElement>();
+        private readonly ICollection<Tag> _tags = new HashSet<Tag>();
 
-        public static void Inject(PatternContext context)
+        public PatternDataInitializer(PatternContext context)
         {
-            if (_elements.Count == 0 || _tags.Count == 0)
+            if (!IsFilled())
             {
-                FillData();
+                FakeData();
                 context.PatternElements.AddRange(_elements.ToArray());
                 context.Tags.AddRange(_tags.ToArray());
             }
@@ -45,8 +45,11 @@ namespace camille.DAL
                         PatternId = pattern.ID,
                         PatternElementId = element.ID,
                         NextPatternElementId = nextElement.ID,
-                        X = rand.Next(0, 101),
-                        Y = rand.Next(0, 101)
+                        Position = new PatternElementPosition
+                        {
+                            X = rand.Next(0, 101),
+                            Y = rand.Next(0, 101)
+                        }
                     });
                 }
 
@@ -63,11 +66,14 @@ namespace camille.DAL
             context.SaveChanges();
         }
 
-        private static void FillData()
+        private void FakeData()
         {
-            _tags.Add(new Tag() { Name = "Behaviour" });
-            _tags.Add(new Tag() { Name = "Face changes" });
-            _tags.Add(new Tag() { Name = "Spoken" });
+            _tags.Add(new Tag { Name = "Behaviour" });
+            _tags.Add(new Tag { Name = "Face changes" });
+            _tags.Add(new Tag { Name = "Spoken" });
+            _tags.Add(new Tag { Name = "Anger" });
+            _tags.Add(new Tag { Name = "Fear" });
+            _tags.Add(new Tag { Name = "Happiness" });
 
             _elements.Add(new PatternElement { Name = "Escaping mood" });
             _elements.Add(new PatternElement { Name = "Happy answering" });
@@ -78,6 +84,12 @@ namespace camille.DAL
             _elements.Add(new PatternElement { Name = "Looking the sky" });
             _elements.Add(new PatternElement { Name = "Hungry as fuck" });
             _elements.Add(new PatternElement { Name = "Driving faster" });
+            _elements.Add(new PatternElement { Name = "Eating" });
+            _elements.Add(new PatternElement { Name = "Drinking" });
+            _elements.Add(new PatternElement { Name = "Crying" });
+            _elements.Add(new PatternElement { Name = "Going to run" });
         }
+
+        private bool IsFilled() => _elements.Count != 0 && _tags.Count != 0;
     }
 }

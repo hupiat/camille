@@ -40,10 +40,10 @@ namespace camille
                 app.UseDeveloperExceptionPage();
 
                 // Setting up database with test data
-                using var db = new PatternContext();
+                using PatternContext db = new PatternContext();
                 db.Database.EnsureDeleted();
                 db.Database.EnsureCreated();
-                PatternDataInitializer.Inject(db);
+                new PatternDataInitializer(db);
             }
             else
             {

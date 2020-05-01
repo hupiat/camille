@@ -8,12 +8,6 @@ namespace camille.Models
     public class PatternElementBond : DatabaseElement
     {
         [Required]
-        public int X { get; set; }
-
-        [Required]
-        public int Y { get; set; }
-
-        [Required]
         [ForeignKey("Pattern")]
         public int PatternId { get; set; }
 
@@ -22,10 +16,12 @@ namespace camille.Models
         public int PatternElementId { get; set; }
 
         [ForeignKey("PatternElement")]
-        public int NextPatternElementId { get; set; }
+        public int? NextPatternElementId { get; set; }
 
         [NotMapped]
         public string NameElement { get; set; }
+
+        public PatternElementPosition Position { get; set; } = new PatternElementPosition();
 
         public override bool Equals(object other)
         {
@@ -38,9 +34,6 @@ namespace camille.Models
             return o.ID == ID;
         }
 
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(PatternId, PatternElementId, NextPatternElementId);
-        }
+        public override int GetHashCode() => HashCode.Combine(ID, PatternId, PatternElementId, NextPatternElementId, NameElement);
     }
 }

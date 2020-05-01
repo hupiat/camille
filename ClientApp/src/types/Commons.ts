@@ -1,1 +1,8 @@
-export type CommonOperation = 'suppression' | 'ajout' | 'mise à jour';
+export type CommonOperation = 'deletion' | 'insertion' | 'update';
+
+export type WorkflowStep = 'reading' | 'drawing' | 'adding' | 'updating';
+
+export type Position = {
+	x: number;
+	y: number;
+};

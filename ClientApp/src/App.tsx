@@ -6,7 +6,7 @@ import {
 	responsiveFontSizes,
 	ThemeProvider,
 } from '@material-ui/core/styles';
-import SearchAppBar from './components/SearchAppBar';
+import { WorkflowStep } from './types/Commons';
 
 let theme = createMuiTheme({
 	palette: {
@@ -26,8 +26,8 @@ let theme = createMuiTheme({
 theme = responsiveFontSizes(theme);
 
 export const App = () => {
-	const [isDrawing, setIsDrawing] = useState<boolean>(false);
 	const [query, setQuery] = useState<string>('');
+	const [workflow, setWorkflow] = useState<WorkflowStep>('reading');
 
 	return (
 		<ThemeProvider theme={theme}>
@@ -38,8 +38,12 @@ export const App = () => {
 					horizontal: 'center',
 				}}
 			>
-				<SearchAppBar query={query} onSearch={setQuery} isVisible={!isDrawing} />
-				<Home query={query} isDrawing={isDrawing} setIsDrawing={setIsDrawing} />
+				<Home
+					query={query}
+					setQuery={setQuery}
+					workflow={workflow}
+					setWorkflow={setWorkflow}
+				/>
 			</SnackbarProvider>
 		</ThemeProvider>
 	);

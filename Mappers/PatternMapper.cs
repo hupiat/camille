@@ -8,19 +8,15 @@ namespace camille.Mappers
 {
     public abstract class PatternMapper
     {
-        public static ICollection<PatternDTO> Map(
+        public static IEnumerable<PatternDTO> Map(
             ICollection<Pattern> patterns,
             ICollection<PatternElement> elements,
             ICollection<Tag> tags)
         {
-            ICollection<PatternDTO> dtos = new HashSet<PatternDTO>();
-
             foreach (Pattern pattern in patterns)
             {
-                dtos.Add(Map(pattern, elements, tags));
+                yield return Map(pattern, elements, tags);
             }
-
-            return dtos;
         }
 
         public static PatternDTO Map(
@@ -50,12 +46,15 @@ namespace camille.Mappers
                 {
                     pattern.Bonds.Add(new PatternElementBond
                     {
-                        Name = element.Name,
+                        NameElement = element.Name,
                         PatternId = patternDTO.ID,
                         PatternElementId = element.ID,
                         NextPatternElementId = nextId,
-                        X = element.X,
-                        Y = element.Y
+                        Position = new PatternElementPosition
+                        {
+                            X = element.X,
+                            Y = element.Y
+                        }
                     });
                 }
             }
@@ -64,7 +63,7 @@ namespace camille.Mappers
             {
                 pattern.PatternTags.Add(new PatternTag
                 {
-                    Name = tag.Name,
+                    NameTag = tag.Name,
                     PatternId = pattern.ID,
                     TagId = tag.ID
                 });
@@ -92,14 +91,14 @@ namespace camille.Mappers
                     ID = element.ID,
                     DateCreation = element.DateCreation,
                     Name = element.Name,
-                    X = bond.X,
-                    Y = bond.Y
+                    X = bond.Position.X,
+                    Y = bond.Position.Y
                 };
 
                 dtos.Add(dto);
             }
 
-            // Building sorted elements with bonds
+            // Sorting elements using bonds
 
             foreach (int i in Enumerable.Range(0, dtos.Count))
             {
@@ -112,7 +111,7 @@ namespace camille.Mappers
 
                 foreach (PatternElementBond bond in bonds)
                 {
-                    if (bond.NextPatternElementId != 0)
+                    if (bond.NextPatternElementId != null)
                     {
                         ICollection<PatternElementDTO> matching = dtos
                             .Where(dto => dto.ID == bond.NextPatternElementId)

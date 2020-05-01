@@ -1,0 +1,9 @@
+{
+	"translation": {
+		"common.operation.insertion": "CREATION",
+		"common.operation.update": "UPDATE",
+		"common.operation.deletion": "DELETION",
+		"common.error.generic": "An error occurred",
+		"common.button.undo": "Undo"
+	}
+}

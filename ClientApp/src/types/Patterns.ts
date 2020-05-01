@@ -8,11 +8,7 @@ export type BaseElement = IdentifiedElement & NamedElement & DatedElement;
 
 export type Tag = BaseElement;
 
-export type PatternElement = BaseElement & {
-	x: number;
-	y: number;
-	nextElementsIds: number[];
-};
+export type PatternElement = BaseElement & Position & { nextElementsIds: number[] };
 
 export type Pattern = BaseElement & {
 	tags: Tag[];

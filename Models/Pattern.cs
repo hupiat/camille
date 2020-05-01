@@ -22,9 +22,6 @@ namespace camille.Models
             return o.ID == ID;
         }
 
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(ID, Name, DateCreation);
-        }
+        public override int GetHashCode() => HashCode.Combine(ID, Name, DateCreation);
     }
 }

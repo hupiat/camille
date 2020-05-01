@@ -29,9 +29,6 @@ namespace camille.Models
             return o.ID == ID;
         }
 
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(PatternId, TagId);
-        }
+        public override int GetHashCode() => HashCode.Combine(ID, PatternId, TagId, NameTag);
     }
 }

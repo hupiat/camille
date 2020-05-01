@@ -13,9 +13,9 @@ import {
 import { Delete } from '@material-ui/icons';
 import { useSnackbar } from 'notistack';
 import UndoButton from './Buttons/UndoButton';
-import { useRequest } from './Helpers/hooks';
+import { useRequest } from './Hooks/commons';
 import SnackbarContentLayout from './Layouts/SnackbarContentLayout';
-import { toastOperationMessage } from './Helpers/strings';
+import { useToastOperationMessage } from './Hooks/strings';
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -30,8 +30,8 @@ const useStyles = makeStyles((theme) => {
 			borderRadius: '5px',
 			backgroundColor: theme.palette.primary.dark,
 		},
-		listItem: {
-			color: 'whitesmoke',
+		white: {
+			color: 'white',
 		},
 	};
 });
@@ -48,22 +48,25 @@ const Sidebar = ({ patterns, onDelete, isVisible }: IProps) => {
 	const classes = useStyles();
 	const [pendingRemoval, setPendingRemoval] = useState<Pattern>();
 	const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+	const toastOperationMessage = useToastOperationMessage();
 
 	const [, triggerDeleteRequest] = useRequest<Pattern>(async (pattern: Pattern) => {
 		await fetch(`pattern?id=${pattern.id}`, {
 			method: 'DELETE',
 		});
 		onDelete(pattern);
-		setPendingRemoval(undefined);
 	});
 
 	const handleRemoval = (pattern: Pattern) => {
 		let willRequest = true;
 		setPendingRemoval(pattern);
-		const snackbar = enqueueSnackbar(toastOperationMessage('suppression', pattern), {
+		const snackbar = enqueueSnackbar(toastOperationMessage('deletion', pattern), {
 			variant: 'info',
 			autoHideDuration: DELAY_REMOVAL_MS,
-			onExited: () => willRequest && triggerDeleteRequest(pattern),
+			onExited: () => {
+				willRequest && triggerDeleteRequest(pattern);
+				setPendingRemoval(undefined);
+			},
 			action: (
 				<SnackbarContentLayout onClose={() => closeSnackbar(snackbar)}>
 					<UndoButton
@@ -71,7 +74,7 @@ const Sidebar = ({ patterns, onDelete, isVisible }: IProps) => {
 							closeSnackbar(snackbar);
 							willRequest = false;
 						}}
-						htmlColor='whitesmoke'
+						htmlColor='white'
 					/>
 				</SnackbarContentLayout>
 			),
@@ -87,21 +90,17 @@ const Sidebar = ({ patterns, onDelete, isVisible }: IProps) => {
 							primary={p.name}
 							secondary={p.tags.map((t) => t.name).join(', ')}
 							secondaryTypographyProps={{
-								className: classes.listItem,
+								className: classes.white,
 							}}
-							className={classes.listItem}
+							className={classes.white}
 						/>
 						{pendingRemoval && pendingRemoval === p ? (
-							<CircularProgress style={{ color: 'whitesmoke' }} size='1.5rem' />
+							<CircularProgress className={classes.white} size='1.5rem' />
 						) : (
 							!pendingRemoval && (
 								<ListItemSecondaryAction>
-									<IconButton
-										edge='end'
-										aria-label='delete'
-										onClick={() => handleRemoval(p)}
-									>
-										<Delete htmlColor='whitesmoke' />
+									<IconButton edge='end' onClick={() => handleRemoval(p)}>
+										<Delete htmlColor='white' />
 									</IconButton>
 								</ListItemSecondaryAction>
 							)

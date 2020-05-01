@@ -9,10 +9,7 @@ namespace camille.DAL
     {
         private readonly PatternContext _context;
 
-        public PatternRepository(PatternContext context)
-        {
-            _context = context;
-        }
+        public PatternRepository(PatternContext context) => _context = context;
 
         public ICollection<Pattern> FetchAllPatterns()
         {
@@ -79,7 +76,7 @@ namespace camille.DAL
 
             if (patternInDb == null)
             {
-                throw new ArgumentException($"No pattern matching with {pattern.ID}");
+                throw new ArgumentException($"No pattern found matching with {pattern.ID}");
             }
 
             patternInDb.Name = pattern.Name;
@@ -171,7 +168,7 @@ namespace camille.DAL
 
             foreach (PatternTag tag in pattern.PatternTags)
             {
-                if (!_context.Tags.Any(t => t.ID == tag.ID))
+                if (!_context.Tags.Any(t => t.ID == tag.TagId))
                 {
                     _context.Tags.Add(new Tag
                     {

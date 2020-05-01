@@ -1,24 +1,34 @@
-import React, { useEffect, Dispatch, useState } from 'react';
+import React, { useEffect, Dispatch, useState, useRef } from 'react';
 import { Pattern } from '../../types/Patterns';
 import { useSnackbar } from 'notistack';
 import SnackbarContentLayout from '../Layouts/SnackbarContentLayout';
+import { useTranslation } from 'react-i18next';
+import { DEBOUCE_VALUE_MS } from './constants';
 
-export const useDebouncedEffect = (callback: Function, deps: any[]) =>
-	useEffect(() => {
-		const effect = setTimeout(callback, 300);
-		return () => clearTimeout(effect);
-	}, deps); // eslint-disable-line react-hooks/exhaustive-deps
+export const useDebounce = (): ((callback: Function) => void) => {
+	const ref = useRef<NodeJS.Timeout>();
+	return (callback: Function) => {
+		if (ref.current) {
+			clearTimeout(ref.current);
+			ref.current = undefined;
+		}
+		ref.current = setTimeout(() => {
+			callback();
+			ref.current = undefined;
+		}, DEBOUCE_VALUE_MS);
+	};
+};
 
 export const useSearchTrigger = (
 	patterns: Pattern[],
 	query: string,
-	setPatternsFiltered: Dispatch<Pattern[]>
-) => {
+	setIdsPatternsFiltered: Dispatch<number[]>
+): void => {
 	useEffect(() => {
 		const filterCallback = (p: Pattern) => p.name.includes(query);
-		const filtered = patterns.filter(filterCallback);
-		setPatternsFiltered(filtered);
-	}, [patterns, query, setPatternsFiltered]);
+		const filtered = patterns.filter(filterCallback).map((p) => p.id);
+		setIdsPatternsFiltered(filtered);
+	}, [patterns, query, setIdsPatternsFiltered]);
 };
 
 export function useRequest<T>(
@@ -26,13 +36,14 @@ export function useRequest<T>(
 ): [boolean, (param: T) => Promise<any>] {
 	const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 	const [isRequestPending, setIsRequestPending] = useState<boolean>(false);
+	const { t } = useTranslation();
 
 	const send = async (param: T) => {
 		setIsRequestPending(true);
 		try {
 			await request(param);
 		} catch (e) {
-			const snackbar = enqueueSnackbar('Une erreur est survenue', {
+			const snackbar = enqueueSnackbar(t('common.error.generic'), {
 				variant: 'error',
 				persist: true,
 				action: (
@@ -48,18 +59,4 @@ export function useRequest<T>(
 	};
 
 	return [isRequestPending, send];
-}
-
-export function useRequestEffect<T>(
-	request: (param?: T) => Promise<any>,
-	deps: any[],
-	param?: T
-): boolean {
-	const [isRequestPending, triggerRequest] = useRequest<T | undefined>(request);
-
-	useEffect(() => {
-		triggerRequest(param);
-	}, deps); // eslint-disable-line react-hooks/exhaustive-deps
-
-	return isRequestPending;
 }

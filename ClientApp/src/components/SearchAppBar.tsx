@@ -5,8 +5,9 @@ import Typography from '@material-ui/core/Typography';
 import InputBase from '@material-ui/core/InputBase';
 import { fade, makeStyles } from '@material-ui/core/styles';
 import SearchIcon from '@material-ui/icons/Search';
-import { useDebouncedEffect } from './Helpers/hooks';
+import { useDebouncedEffect } from './Hooks/effects';
 import { Slide } from '@material-ui/core';
+import LanguageButton from './Buttons/LanguageButton';
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -67,11 +68,11 @@ const useStyles = makeStyles((theme) => ({
 
 interface IProps {
 	query?: string;
-	isVisible: boolean;
+	willShow: boolean;
 	onSearch: (query: string) => void;
 }
 
-const SearchAppBar = ({ query, onSearch, isVisible = true }: IProps) => {
+const SearchAppBar = ({ query, onSearch, willShow = true }: IProps) => {
 	const classes = useStyles();
 	const [internalQuery, setInternalQuery] = useState<string>(query || '');
 
@@ -79,12 +80,13 @@ const SearchAppBar = ({ query, onSearch, isVisible = true }: IProps) => {
 
 	return (
 		<div className={classes.root}>
-			<Slide direction='down' in={isVisible}>
+			<Slide direction='down' in={willShow}>
 				<AppBar position='static'>
 					<Toolbar>
 						<Typography className={classes.title} variant='h6' noWrap>
 							Camille
 						</Typography>
+						<LanguageButton />
 						<div className={classes.search}>
 							<div className={classes.searchIcon}>
 								<SearchIcon />
