@@ -15,11 +15,11 @@ const LanguageButton = () => {
 		<IconDropdown
 			items={[
 				{
-					value: 'ENGLISH',
+					value: 'EN',
 					onClick: () => setLang('en'),
 				},
 				{
-					value: 'FRANÇAIS',
+					value: 'FR',
 					onClick: () => setLang('fr'),
 				},
 			]}

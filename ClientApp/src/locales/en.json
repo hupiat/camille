@@ -4,6 +4,8 @@
 		"common.operation.update": "UPDATE",
 		"common.operation.deletion": "DELETION",
 		"common.error.generic": "An error occurred",
-		"common.button.undo": "Undo"
+		"common.button.undo": "Undo",
+		"common.button.undo.less": "Less",
+		"common.button.undo.plus": "See more"
 	}
 }

@@ -31,7 +31,10 @@ namespace camille.Mappers
                 Tags = Map(tags, pattern.ID)
             };
 
-        public static Pattern Map(PatternDTO patternDTO)
+        public static Pattern Map(PatternDTO patternDTO,
+            ICollection<PatternElementPosition> positions,
+            ICollection<PatternElementBond> bonds,
+            ICollection<PatternTag> patternTags)
         {
             Pattern pattern = new Pattern
             {
@@ -44,29 +47,61 @@ namespace camille.Mappers
             {
                 foreach (int nextId in element.NextElementsIds)
                 {
-                    pattern.Bonds.Add(new PatternElementBond
+                    PatternElementPosition position = positions
+                        .FirstOrDefault(p => p.X == element.X && p.Y == element.Y);
+
+                    if (position == null)
                     {
-                        NameElement = element.Name,
-                        PatternId = patternDTO.ID,
-                        PatternElementId = element.ID,
-                        NextPatternElementId = nextId,
-                        Position = new PatternElementPosition
+                        position = new PatternElementPosition
                         {
                             X = element.X,
                             Y = element.Y
-                        }
-                    });
+                        };
+                    }
+
+                    PatternElementBond bond = pattern.Bonds
+                        .FirstOrDefault(b =>
+                            b.NameElement == element.Name &&
+                            b.PatternId == patternDTO.ID &&
+                            b.PatternElementId == element.ID &&
+                            b.NextPatternElementId == nextId &&
+                            position.Equals(position));
+
+                    if (bond == null)
+                    {
+                        bond = new PatternElementBond
+                        {
+                            NameElement = element.Name,
+                            PatternId = patternDTO.ID,
+                            PatternElementId = element.ID,
+                            NextPatternElementId = nextId,
+                            Position = position
+                        };
+                    }
+
+                    pattern.Bonds.Add(bond);
                 }
             }
 
             foreach (TagDTO tag in patternDTO.Tags)
             {
-                pattern.PatternTags.Add(new PatternTag
+                PatternTag patternTag = patternTags
+                    .FirstOrDefault(pt =>
+                        pt.NameTag == tag.Name &&
+                        pt.PatternId == pattern.ID &&
+                        pt.TagId == tag.ID);
+
+                if (patternTag == null)
                 {
-                    NameTag = tag.Name,
-                    PatternId = pattern.ID,
-                    TagId = tag.ID
-                });
+                    patternTag = new PatternTag
+                    {
+                        NameTag = tag.Name,
+                        PatternId = pattern.ID,
+                        TagId = tag.ID
+                    };
+                }
+
+                pattern.PatternTags.Add(patternTag);
             }
 
             return pattern;
@@ -103,8 +138,7 @@ namespace camille.Mappers
             foreach (int i in Enumerable.Range(0, dtos.Count))
             {
                 ICollection<PatternElementBond> bonds = elements.ElementAt(i).Bonds
-                    .Where(b => b.PatternId == patternId)
-                    .Where(b => b.PatternElementId == elements.ElementAt(i).ID)
+                    .Where(b => b.PatternId == patternId && b.PatternElementId == elements.ElementAt(i).ID)
                     .ToList();
 
                 ICollection<int> nextIds = new HashSet<int>();

@@ -6,7 +6,7 @@ import InputBase from '@material-ui/core/InputBase';
 import { fade, makeStyles } from '@material-ui/core/styles';
 import SearchIcon from '@material-ui/icons/Search';
 import { useDebouncedEffect } from './Hooks/effects';
-import { Slide } from '@material-ui/core';
+import { Slide, Box } from '@material-ui/core';
 import LanguageButton from './Buttons/LanguageButton';
 
 const useStyles = makeStyles((theme) => ({
@@ -79,7 +79,7 @@ const SearchAppBar = ({ query, onSearch, willShow = true }: IProps) => {
 	useDebouncedEffect(() => onSearch(internalQuery), [internalQuery]);
 
 	return (
-		<div className={classes.root}>
+		<Box className={classes.root}>
 			<Slide direction='down' in={willShow}>
 				<AppBar position='static'>
 					<Toolbar>
@@ -87,10 +87,10 @@ const SearchAppBar = ({ query, onSearch, willShow = true }: IProps) => {
 							Camille
 						</Typography>
 						<LanguageButton />
-						<div className={classes.search}>
-							<div className={classes.searchIcon}>
+						<Box className={classes.search}>
+							<Box className={classes.searchIcon}>
 								<SearchIcon />
-							</div>
+							</Box>
 							<InputBase
 								classes={{
 									root: classes.inputRoot,
@@ -100,11 +100,11 @@ const SearchAppBar = ({ query, onSearch, willShow = true }: IProps) => {
 								onChange={(e) => setInternalQuery(e.target.value)}
 								inputProps={{ 'aria-label': 'search' }}
 							/>
-						</div>
+						</Box>
 					</Toolbar>
 				</AppBar>
 			</Slide>
-		</div>
+		</Box>
 	);
 };
 

@@ -63,6 +63,42 @@ namespace camille.DAL
             return tags;
         }
 
+        public ICollection<PatternElementBond> FetchAllBonds()
+        {
+            ICollection<PatternElementBond> bonds = new HashSet<PatternElementBond>();
+
+            foreach (PatternElementBond bond in _context.PatternElementsBonds)
+            {
+                bonds.Add(bond);
+            }
+
+            return bonds;
+        }
+
+        public ICollection<PatternElementPosition> FetchAllPositions()
+        {
+            ICollection<PatternElementPosition> positions = new HashSet<PatternElementPosition>();
+
+            foreach (PatternElementPosition position in _context.PatternElementPositions)
+            {
+                positions.Add(position);
+            }
+
+            return positions;
+        }
+
+        public ICollection<PatternTag> FetchAllPatternTags()
+        {
+            ICollection<PatternTag> patternTags = new HashSet<PatternTag>();
+
+            foreach (PatternTag patternTag in _context.PatternTags)
+            {
+                patternTags.Add(patternTag);
+            }
+
+            return patternTags;
+        }
+
         public void Insert(Pattern pattern)
         {
             InsertMissingBondsAndTags(pattern);
@@ -96,7 +132,10 @@ namespace camille.DAL
             {
                 if (pattern.Bonds.Any(b => b.PatternElementId == element.ID))
                 {
-                    RemovePatternElement(element.ID);
+                    if (!_context.PatternElementsBonds.Any(b => b.PatternElementId == element.ID))
+                    {
+                        RemovePatternElement(element.ID);
+                    }
                 }
             }
 
@@ -104,7 +143,10 @@ namespace camille.DAL
             {
                 if (pattern.PatternTags.Any(pt => pt.TagId == tag.ID))
                 {
-                    RemoveTag(tag.ID);
+                    if (!_context.PatternTags.Any(pt => pt.TagId == tag.ID))
+                    {
+                        RemoveTag(tag.ID);
+                    }
                 }
             }
 
@@ -114,7 +156,6 @@ namespace camille.DAL
 
         public void RemovePatternElement(int id)
         {
-            _context.PatternElements.Remove(_context.PatternElements.Find(id));
 
             ICollection<PatternElementBond> bonds = _context.PatternElementsBonds
                 .Where(b => b.PatternElementId == id)
@@ -134,13 +175,12 @@ namespace camille.DAL
                 bond.NextPatternElementId = 0;
             }
 
+            _context.PatternElements.Remove(_context.PatternElements.Find(id));
             _context.SaveChanges();
         }
 
         public void RemoveTag(int id)
         {
-            _context.Tags.Remove(_context.Tags.Find(id));
-
             ICollection<PatternTag> patternTags = _context.PatternTags
                 .Where(pt => pt.TagId == id)
                 .ToList();
@@ -150,6 +190,7 @@ namespace camille.DAL
                 _context.PatternTags.Remove(patternTag);
             }
 
+            _context.Tags.Remove(_context.Tags.Find(id));
             _context.SaveChanges();
         }
 

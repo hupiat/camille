@@ -4,6 +4,8 @@
 		"common.operation.update": "MISE À JOUR",
 		"common.operation.deletion": "SUPPRESSION",
 		"common.error.generic": "Une erreur est survenue",
-		"common.button.undo": "Annuler"
+		"common.button.undo": "Annuler",
+		"common.button.undo.less": "Moins",
+		"common.button.undo.plus": "Voir plus"
 	}
 }

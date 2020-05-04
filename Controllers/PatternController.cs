@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections;
 using camille.DAL;
 using camille.DTO;
 using camille.Mappers;
@@ -31,12 +30,17 @@ namespace camille.Controllers
         public PatternDTO Update(PatternDTO patternDTO) => ApplyThenReturnPattern(patternDTO, _repository.Update);
 
         [HttpDelete]
-        public void Delete(int id) => _repository.RemovePattern(id);
+        public void Remove(int id) => _repository.RemovePattern(id);
 
         private PatternDTO ApplyThenReturnPattern(PatternDTO patternDTO, Action<Pattern> action)
         {
-            Pattern pattern = PatternMapper.Map(patternDTO);
+            Pattern pattern = PatternMapper.Map(patternDTO,
+                _repository.FetchAllPositions(),
+                _repository.FetchAllBonds(),
+                _repository.FetchAllPatternTags());
+
             action.Invoke(pattern);
+
             return PatternMapper.Map(pattern,
                 _repository.FetchAllPatternElements(),
                 _repository.FetchAllTags());

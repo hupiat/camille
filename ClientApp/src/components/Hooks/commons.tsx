@@ -1,9 +1,17 @@
-import React, { useEffect, Dispatch, useState, useRef } from 'react';
+import React, {
+	useEffect,
+	Dispatch,
+	useState,
+	useRef,
+	useMemo,
+	useCallback,
+} from 'react';
 import { Pattern } from '../../types/Patterns';
 import { useSnackbar } from 'notistack';
 import SnackbarContentLayout from '../Layouts/SnackbarContentLayout';
 import { useTranslation } from 'react-i18next';
-import { DEBOUCE_VALUE_MS } from './constants';
+
+const DEBOUCE_VALUE_MS = 300;
 
 export const useDebounce = (): ((callback: Function) => void) => {
 	const ref = useRef<NodeJS.Timeout>();
@@ -19,16 +27,22 @@ export const useDebounce = (): ((callback: Function) => void) => {
 	};
 };
 
+export const useSearchFunction = (patterns: Pattern[], query: string): Pattern[] => {
+	const filterCallback = (p: Pattern) => p.name.includes(query);
+	return useMemo(() => patterns.filter(filterCallback), [patterns, query]);
+};
+
 export const useSearchTrigger = (
 	patterns: Pattern[],
 	query: string,
 	setIdsPatternsFiltered: Dispatch<number[]>
 ): void => {
-	useEffect(() => {
-		const filterCallback = (p: Pattern) => p.name.includes(query);
-		const filtered = patterns.filter(filterCallback).map((p) => p.id);
-		setIdsPatternsFiltered(filtered);
-	}, [patterns, query, setIdsPatternsFiltered]);
+	const filtered = useSearchFunction(patterns, query);
+	useEffect(() => setIdsPatternsFiltered(filtered.map((p) => p.id)), [
+		patterns,
+		query,
+		setIdsPatternsFiltered,
+	]);
 };
 
 export function useRequest<T>(

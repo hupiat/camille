@@ -2,6 +2,7 @@ import React, { PropsWithChildren, useState, ReactText, Children } from 'react';
 import CloseButton from '../Buttons/CloseButton';
 import { Button } from '@material-ui/core';
 import { useSnackbar } from 'notistack';
+import { useTranslation } from 'react-i18next';
 
 interface IProps {
 	onClose: () => void;
@@ -9,6 +10,7 @@ interface IProps {
 }
 
 const SnackbarContentLayout = (props: PropsWithChildren<IProps>) => {
+	const { t } = useTranslation();
 	const [snackbarInstance, setSnackbarInstance] = useState<ReactText>();
 	const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
@@ -38,7 +40,7 @@ const SnackbarContentLayout = (props: PropsWithChildren<IProps>) => {
 					color='inherit'
 					onClick={() => (snackbarInstance ? handleCloseDetails() : handleOpenDetails())}
 				>
-					{snackbarInstance ? 'Moins' : 'Plus'}
+					{snackbarInstance ? t('common.button.undo.less') : t('common.button.undo.plus')}
 				</Button>
 			)}
 			<CloseButton onClick={props.onClose} />

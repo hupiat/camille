@@ -9,6 +9,7 @@ namespace camille.DAL
         public DbSet<Pattern> Patterns { get; set; }
         public DbSet<PatternElement> PatternElements { get; set; }
         public DbSet<PatternElementBond> PatternElementsBonds { get; set; }
+        public DbSet<PatternElementPosition> PatternElementPositions { get; set; }
         public DbSet<Tag> Tags { get; set; }
         public DbSet<PatternTag> PatternTags { get; set; }
 

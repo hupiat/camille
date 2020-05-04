@@ -6,6 +6,7 @@ import {
 	FormControl,
 	Paper,
 	makeStyles,
+	ClickAwayListener,
 } from '@material-ui/core';
 import { useDebounce } from '../Hooks/commons';
 import { Position } from '../../types/Commons';
@@ -28,20 +29,16 @@ const useStyles = makeStyles((theme) => {
 	};
 });
 
-const ID_ICON = 'language-icon';
-
-const Item = ({ onClick, value }: { onClick: () => void; value: string }) => (
-	<Box onClick={onClick}>
-		<MenuItem>{value}</MenuItem>
-	</Box>
-);
+type Item = {
+	value: string;
+	onClick?: () => void;
+};
 
 interface IProps {
-	items: {
-		value: string;
-		onClick?: () => void;
-	}[];
+	items: Item[];
 }
+
+const ID_ICON = 'language-icon';
 
 const IconDropdown = ({ items }: IProps) => {
 	const classes = useStyles();
@@ -68,25 +65,35 @@ const IconDropdown = ({ items }: IProps) => {
 
 	useEffect(() => computePosition(), []);
 
-	return (
-		<>
-			<IconButton className={classes.white} onClick={toggle} onBlur={toggle}>
-				<FormControl>
-					<Language id={ID_ICON} />
-				</FormControl>
-			</IconButton>
+	const onItemClick = (item: Item) => {
+		item.onClick && item.onClick();
+		toggle();
+	};
 
-			{isToggled && (
-				<Paper
-					className={clsx(classes.menu, classes.white)}
-					style={position && { left: position.x, top: position.y }}
-				>
-					{items.map((item, i) => (
-						<Item key={i} value={item.value} onClick={item.onClick || (() => {})} />
-					))}
-				</Paper>
-			)}
-		</>
+	return (
+		<ClickAwayListener onClickAway={toggle}>
+			{/* The fragment is needed for the ClickAwayListener */}
+			<>
+				<IconButton className={classes.white} onClick={toggle}>
+					<FormControl>
+						<Language id={ID_ICON} />
+					</FormControl>
+				</IconButton>
+
+				{isToggled && (
+					<Paper
+						className={clsx(classes.menu, classes.white)}
+						style={position && { left: position.x, top: position.y }}
+					>
+						{items.map((item, i) => (
+							<Box key={i} onClick={() => onItemClick(item)}>
+								<MenuItem>{item.value}</MenuItem>
+							</Box>
+						))}
+					</Paper>
+				)}
+			</>
+		</ClickAwayListener>
 	);
 };
 
