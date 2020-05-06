@@ -1,11 +1,4 @@
-import React, {
-	useEffect,
-	Dispatch,
-	useState,
-	useRef,
-	useMemo,
-	useCallback,
-} from 'react';
+import React, { useEffect, Dispatch, useState, useRef, useMemo } from 'react';
 import { Pattern } from '../../types/Patterns';
 import { useSnackbar } from 'notistack';
 import SnackbarContentLayout from '../Layouts/SnackbarContentLayout';
@@ -27,10 +20,11 @@ export const useDebounce = (): ((callback: Function) => void) => {
 	};
 };
 
-export const useSearchFunction = (patterns: Pattern[], query: string): Pattern[] => {
-	const filterCallback = (p: Pattern) => p.name.includes(query);
-	return useMemo(() => patterns.filter(filterCallback), [patterns, query]);
-};
+export const useSearchFunction = (patterns: Pattern[], query: string): Pattern[] =>
+	useMemo(() => patterns.filter((p: Pattern) => p.name.includes(query)), [
+		patterns,
+		query,
+	]);
 
 export const useSearchTrigger = (
 	patterns: Pattern[],
@@ -39,6 +33,7 @@ export const useSearchTrigger = (
 ): void => {
 	const filtered = useSearchFunction(patterns, query);
 	useEffect(() => setIdsPatternsFiltered(filtered.map((p) => p.id)), [
+		filtered,
 		patterns,
 		query,
 		setIdsPatternsFiltered,

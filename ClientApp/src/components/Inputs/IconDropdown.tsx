@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
 	Box,
 	MenuItem,
@@ -9,11 +9,12 @@ import {
 	ClickAwayListener,
 } from '@material-ui/core';
 import { useDebounce } from '../Hooks/commons';
-import { Position } from '../../types/Commons';
-import { Language } from '@material-ui/icons';
-import clsx from 'clsx';
+import { Position, VerticalPos, HorizontalPos, DynamicTheme } from '../../types/Commons';
 
-const useStyles = makeStyles((theme) => {
+let theme: DynamicTheme;
+
+const useStyles = makeStyles((t) => {
+	theme = t as DynamicTheme;
 	return {
 		white: {
 			color: 'white',
@@ -24,7 +25,7 @@ const useStyles = makeStyles((theme) => {
 		menu: {
 			position: 'absolute',
 			padding: '5px',
-			backgroundColor: theme.palette.primary.main,
+			zIndex: 10,
 		},
 	};
 });
@@ -36,11 +37,23 @@ type Item = {
 
 interface IProps {
 	items: Item[];
+	icon: JSX.Element;
+	vPos?: VerticalPos;
+	hPos?: HorizontalPos;
+	menuColor?: 'primary' | 'secondary' | 'white';
+	menuColorAccent?: 'light' | 'main' | 'dark' | 'contrastText';
 }
 
 const ID_ICON = 'language-icon';
 
-const IconDropdown = ({ items }: IProps) => {
+const IconDropdown = ({
+	items,
+	icon,
+	vPos = 'bottom',
+	hPos = 'right',
+	menuColor = 'primary',
+	menuColorAccent = 'main',
+}: IProps) => {
 	const classes = useStyles();
 	const [position, setPosition] = useState<Position>();
 	const [isToggled, setIsToggled] = useState<boolean>(false);
@@ -48,22 +61,29 @@ const IconDropdown = ({ items }: IProps) => {
 
 	const toggle = () => setIsToggled(!isToggled);
 
-	const computePosition = () => {
-		const icon = document.getElementById(ID_ICON);
-		icon &&
-			setPosition({
-				x: (icon.getBoundingClientRect().left || 0) - 20,
-				y: (icon.getBoundingClientRect().top || 0) + 110,
-			});
-	};
+	const computePosition = useCallback(
+		() =>
+			debounce(() => {
+				const icon = document.getElementById(ID_ICON);
+				if (icon) {
+					const left = icon.getBoundingClientRect().left || 0;
+					const top = icon.getBoundingClientRect().top || 0;
+					setPosition({
+						x: hPos === 'right' ? left + 20 : left - 50,
+						y: vPos === 'bottom' ? top + 35 : top - 85,
+					});
+				}
+			}),
+		[debounce, setPosition]
+	);
 
 	useEffect(() => {
-		const listener = () => debounce(computePosition);
-		window.addEventListener('resize', listener);
-		return () => window.removeEventListener('resize', listener);
-	}, [debounce]);
-
-	useEffect(() => computePosition(), []);
+		if (!position) {
+			computePosition();
+		}
+		window.addEventListener('resize', computePosition);
+		return () => window.removeEventListener('resize', computePosition);
+	}, [computePosition]);
 
 	const onItemClick = (item: Item) => {
 		item.onClick && item.onClick();
@@ -71,19 +91,22 @@ const IconDropdown = ({ items }: IProps) => {
 	};
 
 	return (
-		<ClickAwayListener onClickAway={toggle}>
-			{/* The fragment is needed for the ClickAwayListener */}
-			<>
-				<IconButton className={classes.white} onClick={toggle}>
-					<FormControl>
-						<Language id={ID_ICON} />
-					</FormControl>
+		<ClickAwayListener onClickAway={() => isToggled && toggle()}>
+			<Box>
+				<IconButton className={classes.white} onClick={toggle} id={ID_ICON}>
+					<FormControl>{icon}</FormControl>
 				</IconButton>
 
 				{isToggled && (
 					<Paper
-						className={clsx(classes.menu, classes.white)}
-						style={position && { left: position.x, top: position.y }}
+						className={classes.menu}
+						style={Object.assign(position && { left: position.x, top: position.y }, {
+							color: menuColor !== 'white' && 'white',
+							backgroundColor:
+								menuColor !== 'white'
+									? theme.palette[menuColor][menuColorAccent]
+									: 'white',
+						})}
 					>
 						{items.map((item, i) => (
 							<Box key={i} onClick={() => onItemClick(item)}>
@@ -92,7 +115,7 @@ const IconDropdown = ({ items }: IProps) => {
 						))}
 					</Paper>
 				)}
-			</>
+			</Box>
 		</ClickAwayListener>
 	);
 };
