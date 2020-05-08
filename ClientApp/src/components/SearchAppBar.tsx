@@ -7,7 +7,7 @@ import { fade, makeStyles } from '@material-ui/core/styles';
 import SearchIcon from '@material-ui/icons/Search';
 import { useDebouncedEffect } from './Hooks/effects';
 import { Slide, Box } from '@material-ui/core';
-import LanguageButton from './Buttons/LanguageButton';
+import LanguageButton from './UI/Buttons/LanguageButton';
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -80,7 +80,7 @@ const SearchAppBar = ({ query, onSearch, willShow = true }: IProps) => {
 
 	return (
 		<Box className={classes.root}>
-			<Slide direction='down' in={willShow}>
+			<Slide direction='down' in={willShow} unmountOnExit>
 				<AppBar position='static'>
 					<Toolbar>
 						<Typography className={classes.title} variant='h6' noWrap>

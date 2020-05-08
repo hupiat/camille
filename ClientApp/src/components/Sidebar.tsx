@@ -12,9 +12,9 @@ import {
 } from '@material-ui/core';
 import { Delete } from '@material-ui/icons';
 import { useSnackbar } from 'notistack';
-import UndoButton from './Buttons/UndoButton';
+import UndoButton from './UI/Buttons/UndoButton';
 import { useRequest } from './Hooks/commons';
-import SnackbarContentLayout from './Layouts/SnackbarContentLayout';
+import SnackbarContentLayout from './UI/Layouts/SnackbarContentLayout';
 import { useToastOperationMessage } from './Hooks/strings';
 
 const useStyles = makeStyles((theme) => {
@@ -82,7 +82,7 @@ const Sidebar = ({ patterns, onDelete, isVisible }: IProps) => {
 	};
 
 	return (
-		<Slide in={!!patterns.length && isVisible} direction='right'>
+		<Slide in={!!patterns.length && isVisible} direction='right' unmountOnExit>
 			<List className={classes.list}>
 				{patterns.map((p) => (
 					<ListItem button key={p.id}>

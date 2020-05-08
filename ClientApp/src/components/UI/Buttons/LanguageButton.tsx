@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Lang } from '../../types/Commons';
+import { Lang } from '../../../types/Commons';
 import { useTranslation } from 'react-i18next';
 import IconDropdown from '../Inputs/IconDropdown';
 import { Language } from '@material-ui/icons';

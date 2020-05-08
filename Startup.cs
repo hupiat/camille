@@ -38,12 +38,6 @@ namespace camille
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-
-                // Setting up database with test data
-                using var context = new PatternContext();
-                context.Database.EnsureDeleted();
-                context.Database.EnsureCreated();
-                new PatternDataInitializer(context);
             }
             else
             {
@@ -76,6 +70,9 @@ namespace camille
                     spa.UseReactDevelopmentServer(npmScript: "start");
                 }
             });
+
+            using var context = new PatternContext();
+            context.SetupDatabase(env.IsDevelopment());
         }
     }
 }

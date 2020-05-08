@@ -23,6 +23,7 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="3.1.3" />
     <PackageReference Include="EntityFramework" Version="6.4.0" />
+    <PackageReference Include="NUnit" Version="3.12.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -76,9 +77,13 @@
     <Folder Include="DAL\" />
     <Folder Include="DTO\" />
     <Folder Include="Mappers\" />
+    <Folder Include="Tests\Mappers\" />
+    <Folder Include="Helpers\" />
+    <Folder Include="Tests\With\" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="ClientApp\package-lock.json" />
+    <None Remove="ClientApp\src\components\UI\Loader\Loader.svg" />
   </ItemGroup>
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">
     <!-- Ensure Node.js is installed -->

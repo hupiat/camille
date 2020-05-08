@@ -1,15 +1,16 @@
 import React, { useState, Dispatch } from 'react';
 import { Pattern } from '../types/Patterns';
-import { CircularProgress, makeStyles, Box, Fab, Slide } from '@material-ui/core';
+import { makeStyles, Box, Fab, Slide } from '@material-ui/core';
 import Sidebar from './Sidebar';
 import { useSearchTrigger } from './Hooks/commons';
 import { Add } from '@material-ui/icons';
 import clsx from 'clsx';
-import FabLayout from './Layouts/FabLayout';
+import FabLayout from './UI/Layouts/FabLayout';
 import SketchDrawer from './Sketchs/SketchDrawer';
 import { WorkflowStep } from '../types/Commons';
 import { useRequestEffect } from './Hooks/effects';
 import SearchAppBar from './SearchAppBar';
+import Loader from './UI/Loader/Loader';
 
 const useStyles = makeStyles({
 	container: {
@@ -17,7 +18,7 @@ const useStyles = makeStyles({
 	},
 	loader: {
 		position: 'absolute',
-		top: '40%',
+		top: '25%',
 		left: 0,
 		right: 0,
 		marginLeft: 'auto',
@@ -61,9 +62,7 @@ const Home = ({ query, setQuery, workflow, setWorkflow }: IProps) => {
 		<Box>
 			<SearchAppBar query={query} onSearch={setQuery} willShow={workflow !== 'drawing'} />
 
-			{isRequestPending && (
-				<CircularProgress size='10rem' className={classes.loader} color='primary' />
-			)}
+			{isRequestPending && <Loader className={classes.loader} />}
 
 			{!isRequestPending && (
 				<Box className={classes.container}>

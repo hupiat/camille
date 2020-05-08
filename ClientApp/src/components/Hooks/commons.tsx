@@ -1,7 +1,7 @@
 import React, { useEffect, Dispatch, useState, useRef, useMemo } from 'react';
 import { Pattern } from '../../types/Patterns';
 import { useSnackbar } from 'notistack';
-import SnackbarContentLayout from '../Layouts/SnackbarContentLayout';
+import SnackbarContentLayout from '../UI/Layouts/SnackbarContentLayout';
 import { useTranslation } from 'react-i18next';
 
 const DEBOUCE_VALUE_MS = 300;
@@ -55,12 +55,7 @@ export function useRequest<T>(
 			const snackbar = enqueueSnackbar(t('common.error.generic'), {
 				variant: 'error',
 				persist: true,
-				action: (
-					<SnackbarContentLayout
-						onClose={() => closeSnackbar(snackbar)}
-						details={e.message}
-					/>
-				),
+				action: <SnackbarContentLayout onClose={() => closeSnackbar(snackbar)} />,
 			});
 		} finally {
 			setIsRequestPending(false);

@@ -7,6 +7,9 @@ namespace camille.Models
     [Table("PatternElementPosition")]
     public class PatternElementPosition : DatabaseElement
     {
+        public static readonly int MAX_X = 1920;
+        public static readonly int MAX_Y = 1080;
+
         [Required]
         public int X { get; set; }
 

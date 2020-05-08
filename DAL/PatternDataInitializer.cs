@@ -7,7 +7,7 @@ namespace camille.DAL
 {
     public class PatternDataInitializer
     {
-        private readonly int PATTERNS = 100;
+        public static int PATTERNS = 100;
         private readonly int MAX_ELEMENTS_BY_PATTERN = 15;
 
         private readonly ICollection<PatternElement> _elements = new HashSet<PatternElement>();
@@ -47,8 +47,8 @@ namespace camille.DAL
                         NextPatternElementId = nextElement.ID,
                         Position = new PatternElementPosition
                         {
-                            X = rand.Next(0, 101),
-                            Y = rand.Next(0, 101)
+                            X = rand.Next(0, PatternElementPosition.MAX_X + 1),
+                            Y = rand.Next(0, PatternElementPosition.MAX_Y + 1)
                         }
                     });
                 }

@@ -8,8 +8,13 @@ import {
 	makeStyles,
 	ClickAwayListener,
 } from '@material-ui/core';
-import { useDebounce } from '../Hooks/commons';
-import { Position, VerticalPos, HorizontalPos, DynamicTheme } from '../../types/Commons';
+import { useDebounce } from '../../Hooks/commons';
+import {
+	Position,
+	VerticalPos,
+	HorizontalPos,
+	DynamicTheme,
+} from '../../../types/Commons';
 
 let theme: DynamicTheme;
 

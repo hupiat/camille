@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using camille.DTO;
+using camille.Helpers;
 using camille.Models;
 
 namespace camille.Mappers
@@ -59,7 +60,7 @@ namespace camille.Mappers
                         };
                     }
 
-                    PatternElementBond bond = pattern.Bonds
+                    PatternElementBond bond = bonds
                         .FirstOrDefault(b =>
                             b.NameElement == element.Name &&
                             b.PatternId == patternDTO.ID &&
@@ -111,9 +112,8 @@ namespace camille.Mappers
         {
             ICollection<PatternElementDTO> dtos = new HashSet<PatternElementDTO>();
 
-            ICollection<PatternElement> elementsForPattern = elements
-                .Where(e => e.Bonds.Any(b => b.PatternId == patternId))
-                .ToList();
+            ICollection<PatternElement> elementsForPattern = CollectionHelper<PatternElement>
+                .Where(elements, e => e.Bonds.Any(b => b.PatternId == patternId));
 
             foreach (PatternElement element in elementsForPattern)
             {
@@ -137,9 +137,8 @@ namespace camille.Mappers
 
             foreach (int i in Enumerable.Range(0, dtos.Count))
             {
-                ICollection<PatternElementBond> bonds = elements.ElementAt(i).Bonds
-                    .Where(b => b.PatternId == patternId && b.PatternElementId == elements.ElementAt(i).ID)
-                    .ToList();
+                ICollection<PatternElementBond> bonds = CollectionHelper<PatternElementBond>
+                    .Where(elements.ElementAt(i).Bonds, b => b.PatternId == patternId && b.PatternElementId == elements.ElementAt(i).ID);
 
                 ICollection<int> nextIds = new HashSet<int>();
 
@@ -147,9 +146,8 @@ namespace camille.Mappers
                 {
                     if (bond.NextPatternElementId != null)
                     {
-                        ICollection<PatternElementDTO> matching = dtos
-                            .Where(dto => dto.ID == bond.NextPatternElementId)
-                            .ToList();
+                        ICollection<PatternElementDTO> matching = CollectionHelper<PatternElementDTO>
+                            .Where(dtos, dto => dto.ID == bond.NextPatternElementId);
 
                         if (matching.Count > 0)
                         {
@@ -168,9 +166,8 @@ namespace camille.Mappers
         {
             ICollection<TagDTO> dtos = new HashSet<TagDTO>();
 
-            ICollection<Tag> tagsForPattern = tags
-                .Where(t => t.PatternTags.Any(pt => pt.PatternId == patternId))
-                .ToList();
+            ICollection<Tag> tagsForPattern = CollectionHelper<Tag>
+                .Where(tags, t => t.PatternTags.Any(pt => pt.PatternId == patternId));
 
             foreach (Tag tag in tagsForPattern)
             {

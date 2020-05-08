@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using camille.Models;
 using System.Linq;
+using camille.Helpers;
 
 namespace camille.DAL
 {
@@ -17,13 +18,11 @@ namespace camille.DAL
 
             foreach (Pattern pattern in _context.Patterns)
             {
-                pattern.Bonds = _context.PatternElementsBonds
-                    .Where(b => b.PatternId == pattern.ID)
-                    .ToList();
+                pattern.Bonds = CollectionHelper<PatternElementBond>
+                    .Where(_context.PatternElementBonds, b => b.PatternId == pattern.ID);
 
-                pattern.PatternTags = _context.PatternTags
-                    .Where(pt => pt.PatternId == pattern.ID)
-                    .ToList();
+                pattern.PatternTags = CollectionHelper<PatternTag>
+                    .Where(_context.PatternTags, pt => pt.PatternId == pattern.ID);
 
                 patterns.Add(pattern);
             }
@@ -37,9 +36,8 @@ namespace camille.DAL
 
             foreach (PatternElement element in _context.PatternElements)
             {
-                element.Bonds = _context.PatternElementsBonds
-                    .Where(b => b.PatternElementId == element.ID)
-                    .ToList();
+                element.Bonds = CollectionHelper<PatternElementBond>
+                    .Where(_context.PatternElementBonds, b => b.PatternElementId == element.ID);
 
                 elements.Add(element);
             }
@@ -53,9 +51,8 @@ namespace camille.DAL
 
             foreach (Tag tag in _context.Tags)
             {
-                tag.PatternTags = _context.PatternTags
-                    .Where(pt => pt.TagId == tag.ID)
-                    .ToList();
+                tag.PatternTags = CollectionHelper<PatternTag>
+                    .Where(_context.PatternTags, pt => pt.TagId == tag.ID);
 
                 tags.Add(tag);
             }
@@ -67,7 +64,7 @@ namespace camille.DAL
         {
             ICollection<PatternElementBond> bonds = new HashSet<PatternElementBond>();
 
-            foreach (PatternElementBond bond in _context.PatternElementsBonds)
+            foreach (PatternElementBond bond in _context.PatternElementBonds)
             {
                 bonds.Add(bond);
             }
@@ -99,12 +96,13 @@ namespace camille.DAL
             return patternTags;
         }
 
-        public void Insert(Pattern pattern)
+        public void Insert(Pattern pattern) => _context.Transaction(() =>
         {
-            InsertMissingBondsAndTags(pattern);
+            ApplyElementsInsertionReconciliation(pattern);
+            ApplyTagsInsertionReconciliation(pattern);
             _context.Patterns.Add(pattern);
             _context.SaveChanges();
-        }
+        });
 
         public void Update(Pattern pattern)
         {
@@ -120,102 +118,165 @@ namespace camille.DAL
             patternInDb.Bonds = pattern.Bonds;
             patternInDb.PatternTags = pattern.PatternTags;
 
-            InsertMissingBondsAndTags(pattern);
-            _context.SaveChanges();
+
+            _context.Transaction(() =>
+            {
+                ApplyElementsInsertionReconciliation(pattern);
+                ApplyTagsInsertionReconciliation(pattern);
+                _context.Patterns.Update(pattern);
+                _context.SaveChanges();
+            });
         }
 
         public void RemovePattern(int id)
         {
             Pattern pattern = _context.Patterns.Find(id);
 
-            foreach (PatternElement element in _context.PatternElements)
+            _context.Transaction(() =>
             {
-                if (pattern.Bonds.Any(b => b.PatternElementId == element.ID))
+                foreach (PatternElementBond bond in pattern.Bonds)
                 {
-                    if (!_context.PatternElementsBonds.Any(b => b.PatternElementId == element.ID))
+                    ICollection<PatternElement> elements = CollectionHelper<PatternElement>
+                        .Where(_context.PatternElements, e => e.Bonds.All(b => b.ID == bond.ID));
+
+                    foreach (PatternElement element in elements)
                     {
-                        RemovePatternElement(element.ID);
+                        RemovePatternElementWithoutTransaction(element.ID);
+                    }
+
+                }
+
+                foreach (PatternTag patternTag in pattern.PatternTags)
+                {
+                    ICollection<Tag> tags = CollectionHelper<Tag>
+                        .Where(_context.Tags, t => t.PatternTags.All(pt => pt.ID == patternTag.ID));
+
+                    foreach (Tag tag in tags)
+                    {
+                        RemoveTagWithoutTransaction(tag.ID);
                     }
                 }
-            }
 
-            foreach (Tag tag in _context.Tags)
-            {
-                if (pattern.PatternTags.Any(pt => pt.TagId == tag.ID))
-                {
-                    if (!_context.PatternTags.Any(pt => pt.TagId == tag.ID))
-                    {
-                        RemoveTag(tag.ID);
-                    }
-                }
-            }
+                pattern.Bonds.Clear();
+                pattern.PatternTags.Clear();
 
-            _context.Patterns.Remove(pattern);
-            _context.SaveChanges();
+                _context.Patterns.Remove(pattern);
+                _context.SaveChanges();
+            });
         }
 
-        public void RemovePatternElement(int id)
+        public void RemovePatternElement(int id) => _context.Transaction(() => RemovePatternElementWithoutTransaction(id));
+
+        public void RemoveTag(int id) => _context.Transaction(() => RemoveTagWithoutTransaction(id));
+
+        private void RemovePatternElementWithoutTransaction(int id)
         {
+            PatternElement element = _context.PatternElements.Find(id);
 
-            ICollection<PatternElementBond> bonds = _context.PatternElementsBonds
-                .Where(b => b.PatternElementId == id)
-                .ToList();
-
-            foreach (PatternElementBond bond in bonds)
+            if (element == null)
             {
-                _context.PatternElementsBonds.Remove(bond);
+                throw new ArgumentException($"No pattern element found matching with {id}");
             }
 
-            ICollection<PatternElementBond> bondsRelated = _context.PatternElementsBonds
-                .Where(b => b.NextPatternElementId == id)
-                .ToList();
+            ICollection<PatternElementBond> bondsRelated = CollectionHelper<PatternElementBond>
+                    .Where(_context.PatternElementBonds, b => b.NextPatternElementId == id);
 
             foreach (PatternElementBond bond in bondsRelated)
             {
                 bond.NextPatternElementId = 0;
             }
 
-            _context.PatternElements.Remove(_context.PatternElements.Find(id));
+            element.Bonds.Clear();
+
+            _context.PatternElements.Remove(element);
             _context.SaveChanges();
         }
 
-        public void RemoveTag(int id)
+        private void RemoveTagWithoutTransaction(int id)
         {
-            ICollection<PatternTag> patternTags = _context.PatternTags
-                .Where(pt => pt.TagId == id)
-                .ToList();
+            Tag tag = _context.Tags.Find(id);
 
-            foreach (PatternTag patternTag in patternTags)
+            if (tag == null)
             {
-                _context.PatternTags.Remove(patternTag);
+                throw new ArgumentException($"No tag found matching with {id}");
             }
 
-            _context.Tags.Remove(_context.Tags.Find(id));
+            ICollection<PatternTag> patternTags = CollectionHelper<PatternTag>
+                    .Where(_context.PatternTags, pt => pt.TagId == id);
+
+            tag.PatternTags.Clear();
+
+            _context.Tags.Remove(tag);
             _context.SaveChanges();
         }
 
-        private void InsertMissingBondsAndTags(Pattern pattern)
+        private void ApplyElementsInsertionReconciliation(Pattern pattern)
         {
             foreach (PatternElementBond bond in pattern.Bonds)
             {
-                if (!_context.PatternElements.Any(e => e.ID == bond.PatternElementId))
+                if (!_context.PatternElements.Any(el => el.Name == bond.NameElement))
                 {
-                    _context.PatternElements.Add(new PatternElement
+                    PatternElement element = new PatternElement
                     {
                         Name = bond.NameElement,
-                    });
-                }
-            }
+                    };
 
-            foreach (PatternTag tag in pattern.PatternTags)
-            {
-                if (!_context.Tags.Any(t => t.ID == tag.TagId))
-                {
-                    _context.Tags.Add(new Tag
-                    {
-                        Name = tag.NameTag,
-                    });
+                    _context.PatternElements.Add(element);
+                    _context.SaveChanges();
+                    bond.PatternElementId = element.ID;
                 }
+                else
+                {
+                    PatternElementBond existing = _context.PatternElementBonds
+                        .AsEnumerable()
+                        .FirstOrDefault(b => b.NameElement == bond.NameElement);
+
+                    if (existing == null)
+                    {
+                        throw new ArgumentException($"No bound found for id {bond.ID}");
+                    }
+
+                    bond.PatternElementId = existing.PatternElementId;
+                    bond.NameElement = existing.NameElement;
+                    bond.NextPatternElementId = existing.NextPatternElementId;
+                    bond.Position = existing.Position;
+                }
+
+                bond.PatternId = pattern.ID;
+            }
+        }
+
+        private void ApplyTagsInsertionReconciliation(Pattern pattern)
+        {
+            foreach (PatternTag patternTag in pattern.PatternTags)
+            {
+                if (!_context.Tags.Any(t => t.Name == patternTag.NameTag))
+                {
+                    Tag tag = new Tag
+                    {
+                        Name = patternTag.NameTag,
+                    };
+
+                    _context.Tags.Add(tag);
+                    _context.SaveChanges();
+                    patternTag.TagId = tag.ID;
+                }
+                else
+                {
+                    PatternTag existing = _context.PatternTags
+                        .AsEnumerable()
+                        .FirstOrDefault(pt => pt.NameTag == patternTag.NameTag);
+
+                    if (existing == null)
+                    {
+                        throw new ArgumentException($"No patternTag found for id {patternTag.ID}");
+                    }
+
+                    patternTag.NameTag = existing.NameTag;
+                    patternTag.TagId = existing.TagId;
+                }
+
+                patternTag.PatternId = pattern.ID;
             }
         }
     }
