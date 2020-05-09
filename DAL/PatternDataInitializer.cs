@@ -13,7 +13,7 @@ namespace camille.DAL
         private readonly ICollection<PatternElement> _elements = new HashSet<PatternElement>();
         private readonly ICollection<Tag> _tags = new HashSet<Tag>();
 
-        public PatternDataInitializer(PatternContext context)
+        public PatternDataInitializer(PatternContext context) => context.Transaction(() =>
         {
             if (!IsFilled())
             {
@@ -31,7 +31,6 @@ namespace camille.DAL
                 Pattern pattern = new Pattern()
                 {
                     Name = "Pattern " + i,
-
                 };
 
                 int elementsLength = rand.Next(1, MAX_ELEMENTS_BY_PATTERN);
@@ -40,31 +39,50 @@ namespace camille.DAL
                 {
                     PatternElement element = _elements.ElementAt(rand.Next(0, _elements.Count));
                     PatternElement nextElement = _elements.ElementAt(rand.Next(0, _elements.Count));
-                    pattern.Bonds.Add(new PatternElementBond
+                    Vector arrowVector = new Vector
                     {
-                        PatternId = pattern.ID,
-                        PatternElementId = element.ID,
-                        NextPatternElementId = nextElement.ID,
-                        Position = new PatternElementPosition
-                        {
-                            X = rand.Next(0, PatternElementPosition.MAX_X + 1),
-                            Y = rand.Next(0, PatternElementPosition.MAX_Y + 1)
-                        }
-                    });
+                        X = rand.Next(0, Vector.MAX_X_PX + 1),
+                        Y = rand.Next(0, Vector.MAX_Y_PX + 1),
+                        Z = rand.Next(0, 100)
+                    };
+
+                    Vector position = new Vector
+                    {
+                        X = rand.Next(0, Vector.MAX_X_PX + 1),
+                        Y = rand.Next(0, Vector.MAX_Y_PX + 1),
+                    };
+
+                    Size size = new Size
+                    {
+                        Width = rand.Next(0, Size.MAX_WIDTH_PX + 1),
+                        Height = rand.Next(0, Size.MAX_HEIGHT_PX + 1)
+                    };
+
+                    PatternElementBond bond = new PatternElementBond
+                    {
+                        PatternID = pattern.ID,
+                        PatternElementID = element.ID,
+                        NextPatternElementID = nextElement.ID,
+                        ArrowVector = arrowVector,
+                        Position = position,
+                        Size = size
+                    };
+
+                    pattern.Bonds.Add(bond);
                 }
 
                 Tag tag = _tags.ElementAt(rand.Next(0, _tags.Count));
                 pattern.PatternTags.Add(new PatternTag
                 {
-                    PatternId = pattern.ID,
-                    TagId = tag.ID,
+                    PatternID = pattern.ID,
+                    TagID = tag.ID,
                 });
 
                 context.Patterns.Add(pattern);
             }
 
             context.SaveChanges();
-        }
+        });
 
         private void FakeData()
         {

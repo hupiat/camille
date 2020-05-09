@@ -11,6 +11,15 @@ export type Position = {
 	y: number;
 };
 
+export type Size = {
+	width: number;
+	height: number;
+};
+
+export type Vector = Position & {
+	z?: number;
+};
+
 export type VerticalPos = 'top' | 'bottom';
 
 export type HorizontalPos = 'left' | 'right';

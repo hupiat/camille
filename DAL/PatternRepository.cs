@@ -19,10 +19,10 @@ namespace camille.DAL
             foreach (Pattern pattern in _context.Patterns)
             {
                 pattern.Bonds = CollectionHelper<PatternElementBond>
-                    .Where(_context.PatternElementBonds, b => b.PatternId == pattern.ID);
+                    .Where(_context.PatternElementBonds, b => b.PatternID == pattern.ID);
 
                 pattern.PatternTags = CollectionHelper<PatternTag>
-                    .Where(_context.PatternTags, pt => pt.PatternId == pattern.ID);
+                    .Where(_context.PatternTags, pt => pt.PatternID == pattern.ID);
 
                 patterns.Add(pattern);
             }
@@ -37,7 +37,7 @@ namespace camille.DAL
             foreach (PatternElement element in _context.PatternElements)
             {
                 element.Bonds = CollectionHelper<PatternElementBond>
-                    .Where(_context.PatternElementBonds, b => b.PatternElementId == element.ID);
+                    .Where(_context.PatternElementBonds, b => b.PatternElementID == element.ID);
 
                 elements.Add(element);
             }
@@ -52,7 +52,7 @@ namespace camille.DAL
             foreach (Tag tag in _context.Tags)
             {
                 tag.PatternTags = CollectionHelper<PatternTag>
-                    .Where(_context.PatternTags, pt => pt.TagId == tag.ID);
+                    .Where(_context.PatternTags, pt => pt.TagID == tag.ID);
 
                 tags.Add(tag);
             }
@@ -60,41 +60,13 @@ namespace camille.DAL
             return tags;
         }
 
-        public ICollection<PatternElementBond> FetchAllBonds()
-        {
-            ICollection<PatternElementBond> bonds = new HashSet<PatternElementBond>();
+        public ICollection<PatternElementBond> FetchAllBonds() => _context.PatternElementBonds.ToHashSet();
 
-            foreach (PatternElementBond bond in _context.PatternElementBonds)
-            {
-                bonds.Add(bond);
-            }
+        public ICollection<PatternTag> FetchAllPatternTags() => _context.PatternTags.ToHashSet();
 
-            return bonds;
-        }
+        public ICollection<Size> FetchAllSizes() => _context.Sizes.ToHashSet();
 
-        public ICollection<PatternElementPosition> FetchAllPositions()
-        {
-            ICollection<PatternElementPosition> positions = new HashSet<PatternElementPosition>();
-
-            foreach (PatternElementPosition position in _context.PatternElementPositions)
-            {
-                positions.Add(position);
-            }
-
-            return positions;
-        }
-
-        public ICollection<PatternTag> FetchAllPatternTags()
-        {
-            ICollection<PatternTag> patternTags = new HashSet<PatternTag>();
-
-            foreach (PatternTag patternTag in _context.PatternTags)
-            {
-                patternTags.Add(patternTag);
-            }
-
-            return patternTags;
-        }
+        public ICollection<Vector> FetchAllVectors() => _context.Vectors.ToHashSet();
 
         public void Insert(Pattern pattern) => _context.Transaction(() =>
         {
@@ -179,11 +151,11 @@ namespace camille.DAL
             }
 
             ICollection<PatternElementBond> bondsRelated = CollectionHelper<PatternElementBond>
-                    .Where(_context.PatternElementBonds, b => b.NextPatternElementId == id);
+                    .Where(_context.PatternElementBonds, b => b.NextPatternElementID == id);
 
             foreach (PatternElementBond bond in bondsRelated)
             {
-                bond.NextPatternElementId = 0;
+                bond.NextPatternElementID = 0;
             }
 
             element.Bonds.Clear();
@@ -202,7 +174,7 @@ namespace camille.DAL
             }
 
             ICollection<PatternTag> patternTags = CollectionHelper<PatternTag>
-                    .Where(_context.PatternTags, pt => pt.TagId == id);
+                    .Where(_context.PatternTags, pt => pt.TagID == id);
 
             tag.PatternTags.Clear();
 
@@ -214,7 +186,9 @@ namespace camille.DAL
         {
             foreach (PatternElementBond bond in pattern.Bonds)
             {
-                if (!_context.PatternElements.Any(el => el.Name == bond.NameElement))
+                bond.PatternID = pattern.ID;
+
+                if (!_context.PatternElements.AsEnumerable().Any(el => el.Name == bond.NameElement))
                 {
                     PatternElement element = new PatternElement
                     {
@@ -223,7 +197,7 @@ namespace camille.DAL
 
                     _context.PatternElements.Add(element);
                     _context.SaveChanges();
-                    bond.PatternElementId = element.ID;
+                    bond.PatternElementID = element.ID;
                 }
                 else
                 {
@@ -233,16 +207,16 @@ namespace camille.DAL
 
                     if (existing == null)
                     {
-                        throw new ArgumentException($"No bound found for id {bond.ID}");
+                        throw new ArgumentException($"No bound found matching with id {bond.ID}");
                     }
 
-                    bond.PatternElementId = existing.PatternElementId;
+                    bond.PatternElementID = existing.PatternElementID;
                     bond.NameElement = existing.NameElement;
-                    bond.NextPatternElementId = existing.NextPatternElementId;
+                    bond.NextPatternElementID = existing.NextPatternElementID;
+                    bond.ArrowVector = existing.ArrowVector;
                     bond.Position = existing.Position;
+                    bond.Size = existing.Size;
                 }
-
-                bond.PatternId = pattern.ID;
             }
         }
 
@@ -250,7 +224,7 @@ namespace camille.DAL
         {
             foreach (PatternTag patternTag in pattern.PatternTags)
             {
-                if (!_context.Tags.Any(t => t.Name == patternTag.NameTag))
+                if (!_context.Tags.AsEnumerable().Any(t => t.Name == patternTag.NameTag))
                 {
                     Tag tag = new Tag
                     {
@@ -259,7 +233,7 @@ namespace camille.DAL
 
                     _context.Tags.Add(tag);
                     _context.SaveChanges();
-                    patternTag.TagId = tag.ID;
+                    patternTag.TagID = tag.ID;
                 }
                 else
                 {
@@ -269,14 +243,14 @@ namespace camille.DAL
 
                     if (existing == null)
                     {
-                        throw new ArgumentException($"No patternTag found for id {patternTag.ID}");
+                        throw new ArgumentException($"No patternTag found matching with id {patternTag.ID}");
                     }
 
                     patternTag.NameTag = existing.NameTag;
-                    patternTag.TagId = existing.TagId;
+                    patternTag.TagID = existing.TagID;
                 }
 
-                patternTag.PatternId = pattern.ID;
+                patternTag.PatternID = pattern.ID;
             }
         }
     }

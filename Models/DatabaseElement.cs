@@ -1,10 +1,11 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using camille.Generics;
 
 namespace camille.Models
 {
-    public class DatabaseElement
+    public abstract class DatabaseElement : IID
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

@@ -24,12 +24,6 @@ const useStyles = makeStyles({
 		marginLeft: 'auto',
 		marginRight: 'auto',
 	},
-	fabIcon: {
-		transition: 'all .4s ease-in-out',
-	},
-	rotate: {
-		transform: 'rotate(45deg)',
-	},
 });
 
 interface IProps {
@@ -71,33 +65,8 @@ const Home = ({ query, setQuery, workflow, setWorkflow }: IProps) => {
 						onDelete={handleDelete}
 						isVisible={workflow !== 'drawing'}
 					/>
-					{workflow === 'drawing' && <SketchDrawer />}
-					<FabLayout>
-						<Fab
-							color='secondary'
-							aria-label='add'
-							onClick={() => setWorkflow(workflow === 'drawing' ? 'reading' : 'drawing')}
-						>
-							<Add
-								className={clsx(
-									classes.fabIcon,
-									workflow === 'drawing' && classes.rotate
-								)}
-							/>
-						</Fab>
 
-						<Slide direction='up' in={workflow === 'drawing'} unmountOnExit>
-							<Fab
-								color='secondary'
-								aria-label='add'
-								onClick={() =>
-									setWorkflow(workflow === 'drawing' ? 'reading' : 'drawing')
-								}
-							>
-								<Add />
-							</Fab>
-						</Slide>
-					</FabLayout>
+					<SketchDrawer workflow={workflow} setWorkflow={setWorkflow} />
 				</Box>
 			)}
 		</Box>

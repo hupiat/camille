@@ -1,39 +1,38 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using camille.Generics;
 
 namespace camille.Models
 {
-    [Table("PatternElementBond")]
-    public class PatternElementBond : DatabaseElement
+    [Tables(ETables.PATTERN_ELEMENT_BOND)]
+    public class PatternElementBond : DatabaseElement, IIDEquality<PatternElementBond>
     {
         [Required]
-        [ForeignKey("Pattern")]
-        public int PatternId { get; set; }
+        [TablesForeignKey(ETables.PATTERN)]
+        public int PatternID { get; set; }
 
         [Required]
-        [ForeignKey("PatternElement")]
-        public int PatternElementId { get; set; }
+        [TablesForeignKey(ETables.PATTERN_ELEMENT)]
+        public int PatternElementID { get; set; }
 
-        [ForeignKey("PatternElement")]
-        public int? NextPatternElementId { get; set; }
+        [TablesForeignKey(ETables.PATTERN_ELEMENT)]
+        public int? NextPatternElementID { get; set; }
+
+        [Required]
+        public Vector Position { get; set; } = new Vector();
+
+        [Required]
+        public Size Size { get; set; } = new Size();
 
         [NotMapped]
         public string NameElement { get; set; }
 
-        public PatternElementPosition Position { get; set; } = new PatternElementPosition();
+        public Vector ArrowVector { get; set; }
 
-        public override bool Equals(object other)
-        {
-            if (other == null) return false;
+        public override bool Equals(object other) => IIDEquality<PatternElementBond>.EqualsUsingId(this, other);
 
-            if (!(other is PatternElementBond)) return false;
-
-            PatternElementBond o = other as PatternElementBond;
-
-            return o.ID == ID;
-        }
-
-        public override int GetHashCode() => HashCode.Combine(ID, PatternId, PatternElementId, NextPatternElementId, NameElement);
+        public override int GetHashCode() =>
+            HashCode.Combine(ID, PatternID, PatternElementID, NextPatternElementID, NameElement, ArrowVector);
     }
 }

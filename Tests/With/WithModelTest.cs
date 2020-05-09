@@ -9,34 +9,59 @@ namespace Tests.With
         protected ICollection<Pattern> patterns;
         protected ICollection<PatternElement> elements;
         protected ICollection<PatternElementBond> bonds;
-        protected ICollection<PatternElementPosition> positions;
+        protected ICollection<Vector> vectors;
         protected ICollection<PatternTag> patternTags;
         protected ICollection<Tag> tags;
 
         public WithModelTest()
         {
-            var position = new PatternElementPosition
+            var vector = new Vector
             {
-                X = 100,
-                Y = 200
+                X = Vector.MAX_X_PX,
+                Y = Vector.MAX_Y_PX
+            };
+
+            var arrowVector = new Vector
+            {
+                X = Vector.MAX_X_PX,
+                Y = Vector.MAX_Y_PX,
+                Z = 100
+            };
+
+            var size = new Size
+            {
+                Width = Size.MAX_WIDTH_PX,
+                Height = Size.MAX_HEIGHT_PX
             };
 
             var bond = new PatternElementBond
             {
                 ID = 1,
                 NameElement = "Fake element",
-                PatternId = 1,
-                PatternElementId = 1,
-                NextPatternElementId = 2,
-                Position = position,
+                PatternID = 1,
+                PatternElementID = 1,
+                NextPatternElementID = 2,
+                Position = vector,
+                ArrowVector = arrowVector,
+                Size = size
+            };
+
+            var otherBond = new PatternElementBond
+            {
+                ID = 2,
+                NameElement = "Fake element 2",
+                PatternID = 1,
+                PatternElementID = 2,
+                Position = vector,
+                Size = size
             };
 
             var patternTag = new PatternTag
             {
                 ID = 1,
                 NameTag = "Fake tag",
-                PatternId = 1,
-                TagId = 1
+                PatternID = 1,
+                TagID = 1
             };
 
             patterns = new HashSet<Pattern>
@@ -68,6 +93,16 @@ namespace Tests.With
                     {
                         bond
                     },
+                },
+                new PatternElement
+                {
+                    ID = 2,
+                    Name = "Fake element 2",
+                    DateCreation = DateTime.UtcNow,
+                    Bonds = new HashSet<PatternElementBond>
+                    {
+                        otherBond
+                    },
                 }
             };
 
@@ -87,7 +122,7 @@ namespace Tests.With
 
             bonds = new HashSet<PatternElementBond> { bond };
 
-            positions = new HashSet<PatternElementPosition> { position };
+            vectors = new HashSet<Vector> { vector };
 
             patternTags = new HashSet<PatternTag> { patternTag };
         }

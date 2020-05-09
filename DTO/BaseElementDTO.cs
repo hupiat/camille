@@ -1,10 +1,8 @@
 ﻿using System;
 namespace camille.DTO
 {
-    public class BaseElementDTO
+    public abstract class BaseElementDTO : IdElementDTO
     {
-        public int ID { get; set; }
-
         public DateTime DateCreation { get; set; }
 
         public string Name { get; set; }

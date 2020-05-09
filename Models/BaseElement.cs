@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace camille.Models
 {
-    public class BaseElement : DatabaseElement
+    public abstract class BaseElement : DatabaseElement
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public DateTime DateCreation { get; set; } = DateTime.UtcNow;

@@ -80,6 +80,8 @@
     <Folder Include="Tests\Mappers\" />
     <Folder Include="Helpers\" />
     <Folder Include="Tests\With\" />
+    <Folder Include="Generics\" />
+    <Folder Include="Tests\Models\" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="ClientApp\package-lock.json" />

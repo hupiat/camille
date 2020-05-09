@@ -1,34 +1,26 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using camille.Generics;
 
 namespace camille.Models
 {
-    [Table("PatternTag")]
-    public class PatternTag : DatabaseElement
+    [Tables(ETables.PATTERN_TAG)]
+    public class PatternTag : DatabaseElement, IIDEquality<PatternTag>
     {
         [Required]
-        [ForeignKey("Pattern")]
-        public int PatternId { get; set; }
+        [TablesForeignKey(ETables.PATTERN)]
+        public int PatternID { get; set; }
 
         [Required]
-        [ForeignKey("Tag")]
-        public int TagId { get; set; }
+        [TablesForeignKey(ETables.TAG)]
+        public int TagID { get; set; }
 
         [NotMapped]
         public string NameTag { get; set; }
 
-        public override bool Equals(object other)
-        {
-            if (other == null) return false;
+        public override bool Equals(object other) => IIDEquality<PatternTag>.EqualsUsingId(this, other);
 
-            if (!(other is PatternTag)) return false;
-
-            PatternTag o = other as PatternTag;
-
-            return o.ID == ID;
-        }
-
-        public override int GetHashCode() => HashCode.Combine(ID, PatternId, TagId, NameTag);
+        public override int GetHashCode() => HashCode.Combine(ID, PatternID, TagID, NameTag);
     }
 }

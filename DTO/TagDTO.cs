@@ -1,22 +1,12 @@
 ﻿using System;
+using camille.Generics;
+
 namespace camille.DTO
 {
-    public class TagDTO : BaseElementDTO
+    public class TagDTO : BaseElementDTO, IIDEquality<TagDTO>
     {
-        public override bool Equals(object other)
-        {
-            if (other == null) return false;
+        public override bool Equals(object other) => IIDEquality<TagDTO>.EqualsUsingId(this, other);
 
-            if (!(other is TagDTO)) return false;
-
-            TagDTO o = other as TagDTO;
-
-            return o.ID == ID;
-        }
-
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(ID, Name, DateCreation);
-        }
+        public override int GetHashCode() => HashCode.Combine(ID, Name, DateCreation);
     }
 }

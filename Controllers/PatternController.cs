@@ -17,7 +17,7 @@ namespace camille.Controllers
         public PatternController(PatternContext context) => _repository = new PatternRepository(context);
 
         [HttpGet]
-        public IEnumerable<PatternDTO> Get() => PatternMapper.Map(
+        public IEnumerable<PatternDTO> Get() => PatternMapper.AsPatternsDTOEnumerable(
             _repository.FetchAllPatterns(),
             _repository.FetchAllPatternElements(),
             _repository.FetchAllTags()
@@ -34,14 +34,14 @@ namespace camille.Controllers
 
         private PatternDTO ApplyThenReturnPattern(PatternDTO patternDTO, Action<Pattern> action)
         {
-            Pattern pattern = PatternMapper.Map(patternDTO,
-                _repository.FetchAllPositions(),
+            Pattern pattern = PatternMapper.AsPattern(patternDTO,
+                _repository.FetchAllVectors(),
                 _repository.FetchAllBonds(),
                 _repository.FetchAllPatternTags());
 
             action.Invoke(pattern);
 
-            return PatternMapper.Map(pattern,
+            return PatternMapper.AsPatternDTO(pattern,
                 _repository.FetchAllPatternElements(),
                 _repository.FetchAllTags());
         }

@@ -17,9 +17,9 @@ namespace camille.Tests.Mappers
         }
 
         [Test]
-        public void ToDTOCollectionTest()
+        public void ToDTOCollection()
         {
-            IEnumerable<PatternDTO> dtos = PatternMapper.Map(patterns, elements, tags);
+            IEnumerable<PatternDTO> dtos = PatternMapper.AsPatternsDTOEnumerable(patterns, elements, tags);
 
             Pattern pattern = patterns.First();
             PatternDTO dto = dtos.FirstOrDefault();
@@ -33,20 +33,11 @@ namespace camille.Tests.Mappers
         }
 
         [Test]
-        public void ToDTOTest()
+        public void ToPattern()
         {
             Pattern pattern = patterns.First();
-            PatternDTO dto = PatternMapper.Map(pattern, elements, tags);
-
-            AssertPatternIsEqualToDTO(pattern, dto);
-        }
-
-        [Test]
-        public void ToPatternTest()
-        {
-            Pattern pattern = patterns.First();
-            PatternDTO dto = PatternMapper.Map(pattern, elements, tags);
-            pattern = PatternMapper.Map(dto, positions, bonds, patternTags);
+            PatternDTO dto = PatternMapper.AsPatternDTO(pattern, elements, tags);
+            pattern = PatternMapper.AsPattern(dto, vectors, bonds, patternTags);
 
             AssertPatternIsEqualToDTO(pattern, dto);
         }
@@ -59,13 +50,13 @@ namespace camille.Tests.Mappers
 
             foreach (PatternElementBond bond in pattern.Bonds)
             {
-                bool hasElement = dto.Elements.Any(e => e.ID == bond.PatternElementId);
+                bool hasElement = dto.Elements.Any(e => e.ID == bond.PatternElementID);
                 Assert.True(hasElement);
             }
 
             foreach (PatternTag patternTag in pattern.PatternTags)
             {
-                bool hasTag = dto.Tags.Any(t => t.ID == patternTag.TagId);
+                bool hasTag = dto.Tags.Any(t => t.ID == patternTag.TagID);
                 Assert.True(hasTag);
             }
         }

@@ -1,30 +1,19 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
+using camille.Generics;
 
 namespace camille.DTO
 {
-    public class PatternElementDTO : BaseElementDTO
+    public class PatternElementDTO : BaseElementDTO, IIDEquality<PatternElementDTO>
     {
-        public int X { get; set; }
-        public int Y { get; set; }
+        public VectorDTO Position = new VectorDTO();
 
-        public ICollection<int> NextElementsIds { get; set; } = new HashSet<int>();
+        public SizeDTO Size = new SizeDTO();
 
-        public override bool Equals(object other)
-        {
-            if (other == null) return false;
+        public Dictionary<int, VectorDTO> NextElements { get; set; } = new Dictionary<int, VectorDTO>();
 
-            if (!(other is PatternElementDTO)) return false;
+        public override bool Equals(object other) => IIDEquality<PatternElementDTO>.EqualsUsingId(this, other);
 
-            PatternElementDTO o = other as PatternElementDTO;
-
-            return o.ID == ID;
-        }
-
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(ID, Name, DateCreation);
-        }
+        public override int GetHashCode() => HashCode.Combine(ID, Name, DateCreation);
     }
 }

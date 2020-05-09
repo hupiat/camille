@@ -48,6 +48,7 @@ namespace Tests.DAL
             Assert.IsNotEmpty(tags);
         }
 
+
         [Test, Order(4)]
         public void FetchAllBonds()
         {
@@ -57,9 +58,9 @@ namespace Tests.DAL
         }
 
         [Test, Order(5)]
-        public void FetchAllPositions()
+        public void FetchAllVectors()
         {
-            ICollection<PatternElementPosition> positions = _repository.FetchAllPositions();
+            ICollection<Vector> positions = _repository.FetchAllVectors();
 
             Assert.IsNotEmpty(positions);
         }
@@ -73,6 +74,14 @@ namespace Tests.DAL
         }
 
         [Test, Order(7)]
+        public void FetchAllSizes()
+        {
+            ICollection<Size> sizes = _repository.FetchAllSizes();
+
+            Assert.IsNotEmpty(sizes);
+        }
+
+        [Test, Order(8)]
         public void Insert()
         {
             Pattern pattern = new Pattern
@@ -99,7 +108,7 @@ namespace Tests.DAL
             Assert.AreNotEqual(0, pattern.ID);
         }
 
-        [Test, Order(8)]
+        [Test, Order(9)]
         public void Update()
         {
             int id = 1;
@@ -116,7 +125,7 @@ namespace Tests.DAL
             {
                 new PatternTag
                 {
-                    PatternId = 1,
+                    PatternID = 1,
                     NameTag = "FooTag"
                 }
             };
@@ -124,17 +133,17 @@ namespace Tests.DAL
             {
                 new PatternElementBond
                 {
-                    PatternId = 1,
-                    NameElement = "FooElement"
+                    PatternID = 1,
+                    NameElement = "FooElement",
                 }
             };
 
             _repository.Update(pattern);
 
             ICollection<PatternTag> patternTagsUpdated = CollectionHelper<PatternTag>
-                .Where(context.PatternTags, pt => pt.PatternId == pattern.ID);
+                .Where(context.PatternTags, pt => pt.PatternID == pattern.ID);
             ICollection<PatternElementBond> bondsUpdated = CollectionHelper<PatternElementBond>
-                .Where(context.PatternElementBonds, b => b.PatternId == pattern.ID);
+                .Where(context.PatternElementBonds, b => b.PatternID == pattern.ID);
 
             Assert.AreEqual(name, pattern.Name);
 
@@ -151,7 +160,7 @@ namespace Tests.DAL
             }
         }
 
-        [Test, Order(9)]
+        [Test, Order(11)]
         public void RemovePatternElement()
         {
             int id = 1;
@@ -161,7 +170,7 @@ namespace Tests.DAL
             Assert.IsNull(element);
         }
 
-        [Test, Order(10)]
+        [Test, Order(12)]
         public void RemoveTag()
         {
             int id = 1;
@@ -171,7 +180,7 @@ namespace Tests.DAL
             Assert.IsNull(tag);
         }
 
-        [Test, Order(11)]
+        [Test, Order(13)]
         public void RemovePattern()
         {
             int id = 1;
