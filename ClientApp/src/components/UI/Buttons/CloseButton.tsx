@@ -4,10 +4,11 @@ import { Close } from '@material-ui/icons';
 
 interface IProps {
 	onClick: () => void;
+	className?: string;
 }
 
-const CloseButton = ({ onClick }: IProps) => (
-	<IconButton aria-label='close' color='inherit' onClick={onClick}>
+const CloseButton = ({ onClick, className }: IProps) => (
+	<IconButton aria-label='close' color='inherit' onClick={onClick} className={className}>
 		<Close />
 	</IconButton>
 );

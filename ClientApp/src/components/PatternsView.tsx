@@ -22,8 +22,8 @@ const useStyles = makeStyles((theme) => {
 		list: {
 			position: 'relative',
 			marginTop: 10,
-			height: '85vh',
-			width: 300,
+			height: '86.5vh',
+			width: '100vw',
 			overflow: 'auto',
 			willChange: 'transform',
 			direction: 'ltr',
@@ -44,7 +44,7 @@ interface IProps {
 
 const DELAY_REMOVAL_MS = 4000;
 
-const Sidebar = ({ patterns, onDelete, isVisible }: IProps) => {
+const PatternsView = ({ patterns, onDelete, isVisible }: IProps) => {
 	const classes = useStyles();
 	const [pendingRemoval, setPendingRemoval] = useState<Pattern>();
 	const { enqueueSnackbar, closeSnackbar } = useSnackbar();
@@ -82,7 +82,12 @@ const Sidebar = ({ patterns, onDelete, isVisible }: IProps) => {
 	};
 
 	return (
-		<Slide in={!!patterns.length && isVisible} direction='right' unmountOnExit>
+		<Slide
+			in={!!patterns.length && isVisible}
+			direction='right'
+			unmountOnExit
+			appear={false}
+		>
 			<List className={classes.list}>
 				{patterns.map((p) => (
 					<ListItem button key={p.id}>
@@ -112,4 +117,4 @@ const Sidebar = ({ patterns, onDelete, isVisible }: IProps) => {
 	);
 };
 
-export default Sidebar;
+export default PatternsView;

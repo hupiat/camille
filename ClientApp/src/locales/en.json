@@ -3,10 +3,12 @@
 		"common.operation.insertion": "CREATION",
 		"common.operation.update": "UPDATE",
 		"common.operation.deletion": "DELETION",
-		"common.error.generic": "An error occurred",
+		"common.error.generic": "A network related error occurred",
 		"common.button.undo": "Undo",
 		"common.button.undo.less": "Less",
 		"common.button.undo.plus": "See more",
-		"patterns.creation.titleField": "Name your cognitive pattern"
+		"common.search": "Search",
+		"patterns.creation.titleField": "Name your cognitive pattern",
+		"patterns.creation.tagsPickTitle": "Select at least one classification"
 	}
 }

@@ -2,61 +2,61 @@
 using System.Collections.Generic;
 using camille.Models;
 
-namespace Tests.With
+namespace camille.Tests.With
 {
-    internal abstract class WithModelTest
+  internal abstract class WithModelTest
+  {
+    protected ICollection<Pattern> patterns;
+    protected ICollection<PatternElement> elements;
+    protected ICollection<PatternElementBond> bonds;
+    protected ICollection<Vector> vectors;
+    protected ICollection<PatternTag> patternTags;
+    protected ICollection<Tag> tags;
+
+    public WithModelTest()
     {
-        protected ICollection<Pattern> patterns;
-        protected ICollection<PatternElement> elements;
-        protected ICollection<PatternElementBond> bonds;
-        protected ICollection<Vector> vectors;
-        protected ICollection<PatternTag> patternTags;
-        protected ICollection<Tag> tags;
+      var vector = new Vector
+      {
+        X = Vector.MAX_X_PX,
+        Y = Vector.MAX_Y_PX
+      };
 
-        public WithModelTest()
-        {
-            var vector = new Vector
-            {
-                X = Vector.MAX_X_PX,
-                Y = Vector.MAX_Y_PX
-            };
+      var arrowVector = new Vector
+      {
+        X = Vector.MAX_X_PX,
+        Y = Vector.MAX_Y_PX,
+        Z = 100
+      };
 
-            var arrowVector = new Vector
-            {
-                X = Vector.MAX_X_PX,
-                Y = Vector.MAX_Y_PX,
-                Z = 100
-            };
+      var bond = new PatternElementBond
+      {
+        ID = 1,
+        NameElement = "Fake element",
+        PatternID = 1,
+        PatternElementID = 1,
+        NextPatternElementID = 2,
+        Position = vector,
+        ArrowVector = arrowVector,
+      };
 
-            var bond = new PatternElementBond
-            {
-                ID = 1,
-                NameElement = "Fake element",
-                PatternID = 1,
-                PatternElementID = 1,
-                NextPatternElementID = 2,
-                Position = vector,
-                ArrowVector = arrowVector,
-            };
+      var otherBond = new PatternElementBond
+      {
+        ID = 2,
+        NameElement = "Fake element 2",
+        PatternID = 1,
+        PatternElementID = 2,
+        Position = vector,
+      };
 
-            var otherBond = new PatternElementBond
-            {
-                ID = 2,
-                NameElement = "Fake element 2",
-                PatternID = 1,
-                PatternElementID = 2,
-                Position = vector,
-            };
+      var patternTag = new PatternTag
+      {
+        ID = 1,
+        NameTag = "Fake tag",
+        PatternID = 1,
+        TagID = 1
+      };
 
-            var patternTag = new PatternTag
-            {
-                ID = 1,
-                NameTag = "Fake tag",
-                PatternID = 1,
-                TagID = 1
-            };
-
-            patterns = new HashSet<Pattern>
+      patterns = new HashSet<Pattern>
             {
                 new Pattern
                 {
@@ -65,7 +65,7 @@ namespace Tests.With
                     DateCreation = DateTime.UtcNow,
                     Bonds = new HashSet<PatternElementBond>
                     {
-                        bond
+                        bond, otherBond
                     },
                     PatternTags = new HashSet<PatternTag>
                     {
@@ -74,7 +74,7 @@ namespace Tests.With
                 }
             };
 
-            elements = new HashSet<PatternElement>
+      elements = new HashSet<PatternElement>
             {
                 new PatternElement
                 {
@@ -98,7 +98,7 @@ namespace Tests.With
                 }
             };
 
-            tags = new HashSet<Tag>
+      tags = new HashSet<Tag>
             {
                 new Tag
                 {
@@ -112,11 +112,11 @@ namespace Tests.With
                 }
             };
 
-            bonds = new HashSet<PatternElementBond> { bond };
+      bonds = new HashSet<PatternElementBond> { bond };
 
-            vectors = new HashSet<Vector> { vector };
+      vectors = new HashSet<Vector> { vector };
 
-            patternTags = new HashSet<PatternTag> { patternTag };
-        }
+      patternTags = new HashSet<PatternTag> { patternTag };
     }
+  }
 }

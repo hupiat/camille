@@ -9,23 +9,23 @@ import {
 	useTheme,
 	TextField,
 	Box,
-	IconButton,
 } from '@material-ui/core';
 import FabLayout from '../UI/Layouts/FabLayout';
-import { Add, Flag, FormatListBulleted, Backspace } from '@material-ui/icons';
+import { Add, SaveOutlined } from '@material-ui/icons';
 import clsx from 'clsx';
-import { WorkflowStep, Item, HorizontalPos } from '../../types/Commons';
+import { WorkflowStep } from '../../types/Commons';
 import { useFormState, useFormValidation } from 'form-hooks-light';
 import { Pattern, UnexistingElement } from '../../types/Patterns';
 import * as Yup from 'yup';
 import { useTranslation } from 'react-i18next';
-import TransferList from '../UI/Inputs/TransferList';
+import SketchTagsHandler from './SketchTagsHandler';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles({
 	container: {
 		display: 'flex',
 		flexDirection: 'row',
 		width: '100%',
+		justifyContent: 'center',
 	},
 	background: {
 		position: 'absolute',
@@ -44,23 +44,7 @@ const useStyles = makeStyles((theme) => ({
 	rotate: {
 		transform: 'rotate(45deg)',
 	},
-	tagsInput: {
-		position: 'absolute',
-		left: 20,
-		bottom: 20,
-	},
-	tagsIconContainer: {
-		position: 'absolute',
-		left: 0,
-		bottom: 300,
-		marginLeft: 5,
-	},
-	tagsIcon: {
-		width: 30,
-		height: 30,
-		color: theme.palette.secondary.main,
-	},
-}));
+});
 
 interface IProps {
 	workflow: WorkflowStep;
@@ -73,7 +57,6 @@ const SketchDrawer = ({ workflow, setWorkflow }: IProps) => {
 	const { t } = useTranslation();
 	const [willExit, setWillExit] = useState<boolean>(false);
 	const [willFadeOut, setWillFadeOut] = useState<boolean>(false);
-	const [willTagsShow, setWillTagsShow] = useState<boolean>(false);
 	const [pattern, setPattern] = useFormState<UnexistingElement<Pattern>>({
 		name: '',
 		elements: [],
@@ -89,28 +72,26 @@ const SketchDrawer = ({ workflow, setWorkflow }: IProps) => {
 	);
 
 	const onExitClick = () => {
-		if (!willExit && workflow === 'drawing') {
+		if (!willExit && (workflow === 'drawing' || workflow === 'adding')) {
 			setWillExit(true);
 		} else {
-			setWorkflow(workflow === 'drawing' ? 'reading' : 'drawing');
+			setWorkflow(
+				workflow === 'drawing' || workflow === 'adding' ? 'reading' : 'drawing'
+			);
 			setWillExit(false);
 		}
 	};
 
-	const onTransferTag = (direction: HorizontalPos, items: Item[]) => {
-		if (direction === 'left') {
-			setPattern(
-				'tags',
-				pattern.tags.filter((t) => !items.some((i) => i.value === t.id))
-			);
-		} else {
-			setPattern('tags', [...pattern.tags]);
+	const handleSave = () => {
+		if (workflow !== 'adding') {
+			setWorkflow('adding');
+			return;
 		}
 	};
 
 	return (
 		<>
-			{workflow === 'drawing' && (
+			{(workflow === 'drawing' || workflow === 'adding') && (
 				<Box className={classes.container}>
 					<Fade
 						in={!willFadeOut}
@@ -132,31 +113,12 @@ const SketchDrawer = ({ workflow, setWorkflow }: IProps) => {
 						/>
 					</Fade>
 
-					<Fade in={!willFadeOut} timeout={{ enter: 6000, exit: 500 }}>
-						<IconButton
-							onClick={() => setWillTagsShow(!willTagsShow)}
-							className={classes.tagsIconContainer}
-						>
-							{willTagsShow ? (
-								<Backspace className={classes.tagsIcon} />
-							) : (
-								<FormatListBulleted className={classes.tagsIcon} />
-							)}
-						</IconButton>
-					</Fade>
-
-					<Slide in={willTagsShow} direction='right'>
-						<Box className={classes.tagsInput}>
-							<TransferList
-								leftItems={[]}
-								rightItems={pattern.tags.map((t, i) => ({
-									value: t.id || i,
-									label: t.name,
-								}))}
-								onTransfer={onTransferTag}
-							/>
-						</Box>
-					</Slide>
+					<SketchTagsHandler
+						pattern={pattern}
+						setPattern={setPattern}
+						willShow={!willFadeOut && workflow === 'adding'}
+						onClose={() => setWorkflow('drawing')}
+					/>
 
 					{pattern.elements.map((e, i) => (
 						<SketchPatternElement key={i} />
@@ -166,26 +128,31 @@ const SketchDrawer = ({ workflow, setWorkflow }: IProps) => {
 
 			<FabLayout>
 				<Fab
-					color='secondary'
-					aria-label='add'
+					color='default'
 					onClick={onExitClick}
 					onMouseEnter={() => setWillFadeOut(true)}
 					onMouseLeave={() => setWillFadeOut(false)}
 					style={willExit ? { backgroundColor: theme.palette.error.main } : {}}
 				>
 					<Add
-						className={clsx(classes.fabIcon, workflow === 'drawing' && classes.rotate)}
+						className={clsx(
+							classes.fabIcon,
+							(workflow === 'drawing' || workflow === 'adding') && classes.rotate
+						)}
 					/>
 				</Fab>
 
-				<Slide direction='up' in={workflow === 'drawing'} unmountOnExit>
+				<Slide
+					direction='up'
+					in={workflow === 'drawing' || workflow === 'adding'}
+					unmountOnExit
+				>
 					<Fab
-						disabled={!canValidate}
-						color='secondary'
-						aria-label='add'
-						onClick={() => setWorkflow(workflow === 'drawing' ? 'reading' : 'drawing')}
+						disabled={!canValidate && workflow === 'adding'}
+						color='default'
+						onClick={handleSave}
 					>
-						<Add />
+						<SaveOutlined />
 					</Fab>
 				</Slide>
 			</FabLayout>

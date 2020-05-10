@@ -15,6 +15,7 @@ import {
 	HorizontalPos,
 	DynamicTheme,
 } from '../../../types/Commons';
+import clsx from 'clsx';
 
 let theme: DynamicTheme;
 
@@ -47,6 +48,7 @@ interface IProps {
 	hPos?: HorizontalPos;
 	menuColor?: 'primary' | 'secondary' | 'white';
 	menuColorAccent?: 'light' | 'main' | 'dark' | 'contrastText';
+	className?: string;
 }
 
 const ID_ICON = 'language-icon';
@@ -58,6 +60,7 @@ const IconDropdown = ({
 	hPos = 'right',
 	menuColor = 'primary',
 	menuColorAccent = 'main',
+	className,
 }: IProps) => {
 	const classes = useStyles();
 	const [position, setPosition] = useState<Position>();
@@ -98,7 +101,11 @@ const IconDropdown = ({
 	return (
 		<ClickAwayListener onClickAway={() => isToggled && toggle()}>
 			<Box>
-				<IconButton className={classes.white} onClick={toggle} id={ID_ICON}>
+				<IconButton
+					className={clsx(classes.white, className)}
+					onClick={toggle}
+					id={ID_ICON}
+				>
 					<FormControl>{icon}</FormControl>
 				</IconButton>
 

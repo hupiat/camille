@@ -3,8 +3,16 @@ import { Lang } from '../../../types/Commons';
 import { useTranslation } from 'react-i18next';
 import IconDropdown from '../Inputs/IconDropdown';
 import { Language } from '@material-ui/icons';
+import { makeStyles } from '@material-ui/core';
+
+const useStyles = makeStyles({
+	button: {
+		marginRight: '25px',
+	},
+});
 
 const LanguageButton = () => {
+	const classes = useStyles();
 	const { i18n } = useTranslation();
 	const [lang, setLang] = useState<Lang>(i18n.language as Lang);
 
@@ -25,8 +33,8 @@ const LanguageButton = () => {
 				},
 			]}
 			icon={<Language />}
-			hPos='left'
 			menuColor='white'
+			className={classes.button}
 		/>
 	);
 };

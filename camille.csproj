@@ -7,6 +7,7 @@
     <IsPackable>false</IsPackable>
     <SpaRoot>ClientApp\</SpaRoot>
     <DefaultItemExcludes>$(DefaultItemExcludes);$(SpaRoot)node_modules\**</DefaultItemExcludes>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
 
   <ItemGroup>
@@ -30,6 +31,7 @@
     <!-- Don't publish the SPA source files, but do show them in the project files list -->
     <Content Remove="$(SpaRoot)**" />
     <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
+    <Content Remove="mono_crash.42f6ec1fa.0.json" />
   </ItemGroup>
 
   <ItemGroup>
@@ -73,15 +75,14 @@
     <TypeScriptCompile Remove="ClientApp\src\types\Commons.ts" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Controllers\" />
     <Folder Include="Models\" />
     <Folder Include="DAL\" />
     <Folder Include="DTO\" />
     <Folder Include="Mappers\" />
-    <Folder Include="Tests\Mappers\" />
     <Folder Include="Helpers\" />
-    <Folder Include="Tests\With\" />
     <Folder Include="Generics\" />
-    <Folder Include="Tests\Models\" />
+    <Folder Include="Controls\" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="ClientApp\package-lock.json" />

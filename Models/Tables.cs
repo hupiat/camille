@@ -29,7 +29,6 @@ namespace camille.Models
         PATTERN_ELEMENT,
         PATTERN_ELEMENT_BOND,
         PATTERN_TAG,
-        SIZE,
         TAG,
         VECTOR
     }

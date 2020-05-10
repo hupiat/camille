@@ -21,10 +21,14 @@ export const useDebounce = (): ((callback: Function) => void) => {
 };
 
 export const useSearchFunction = (patterns: Pattern[], query: string): Pattern[] =>
-	useMemo(() => patterns.filter((p: Pattern) => p.name.includes(query)), [
-		patterns,
-		query,
-	]);
+	useMemo(
+		() =>
+			patterns.filter(
+				(p: Pattern) =>
+					p.name.includes(query) || p.tags.some((t) => t.name.includes(query))
+			),
+		[patterns, query]
+	);
 
 export const useSearchTrigger = (
 	patterns: Pattern[],
@@ -52,6 +56,7 @@ export function useRequest<T>(
 		try {
 			await request(param);
 		} catch (e) {
+			console.log(e);
 			const snackbar = enqueueSnackbar(t('common.error.generic'), {
 				variant: 'error',
 				persist: true,

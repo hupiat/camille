@@ -9,10 +9,23 @@ namespace camille.Mappers
 {
     public abstract class PatternMapper
     {
+        public static IEnumerable<TagDTO> AsTagDTOCollection(ICollection<Tag> tags)
+        {
+            foreach (Tag tag in tags)
+            {
+                yield return new TagDTO
+                {
+                    ID = tag.ID,
+                    DateCreation = tag.DateCreation,
+                    Name = tag.Name
+                };
+            }
+        }
+
         public static IEnumerable<PatternDTO> AsPatternsDTOEnumerable(
-            ICollection<Pattern> patterns,
-            ICollection<PatternElement> elements,
-            ICollection<Tag> tags)
+                ICollection<Pattern> patterns,
+                ICollection<PatternElement> elements,
+                ICollection<Tag> tags)
         {
             foreach (Pattern pattern in patterns)
             {
@@ -23,14 +36,20 @@ namespace camille.Mappers
         public static PatternDTO AsPatternDTO(
             Pattern pattern,
             ICollection<PatternElement> elements,
-            ICollection<Tag> tags) => new PatternDTO
+            ICollection<Tag> tags)
+        {
+            ICollection<Tag> tagsForPattern = CollectionHelper<Tag>
+                .Where(tags, t => t.PatternTags.Any(pt => pt.PatternID == pattern.ID));
+
+            return new PatternDTO
             {
                 ID = pattern.ID,
                 DateCreation = pattern.DateCreation,
                 Name = pattern.Name,
                 Elements = AsElementsDTOCollection(elements, pattern.ID),
-                Tags = AsTagDTOCollection(tags, pattern.ID)
+                Tags = AsTagDTOCollection(tagsForPattern).ToHashSet()
             };
+        }
 
         public static Pattern AsPattern(PatternDTO patternDTO,
             ICollection<Vector> positions,
@@ -182,28 +201,6 @@ namespace camille.Mappers
                 }
 
                 dtos.ElementAt(i).NextElements = nextElements;
-            }
-
-            return dtos;
-        }
-
-        private static ICollection<TagDTO> AsTagDTOCollection(ICollection<Tag> tags, int patternId)
-        {
-            ICollection<TagDTO> dtos = new HashSet<TagDTO>();
-
-            ICollection<Tag> tagsForPattern = CollectionHelper<Tag>
-                .Where(tags, t => t.PatternTags.Any(pt => pt.PatternID == patternId));
-
-            foreach (Tag tag in tagsForPattern)
-            {
-                TagDTO dto = new TagDTO
-                {
-                    ID = tag.ID,
-                    DateCreation = tag.DateCreation,
-                    Name = tag.Name
-                };
-
-                dtos.Add(dto);
             }
 
             return dtos;

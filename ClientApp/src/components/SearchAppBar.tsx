@@ -8,6 +8,7 @@ import SearchIcon from '@material-ui/icons/Search';
 import { useDebouncedEffect } from './Hooks/effects';
 import { Slide, Box } from '@material-ui/core';
 import LanguageButton from './UI/Buttons/LanguageButton';
+import { useTranslation } from 'react-i18next';
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -74,6 +75,7 @@ interface IProps {
 
 const SearchAppBar = ({ query, onSearch, willShow = true }: IProps) => {
 	const classes = useStyles();
+	const { t } = useTranslation();
 	const [internalQuery, setInternalQuery] = useState<string>(query || '');
 
 	useDebouncedEffect(() => onSearch(internalQuery), [internalQuery]);
@@ -98,6 +100,7 @@ const SearchAppBar = ({ query, onSearch, willShow = true }: IProps) => {
 								}}
 								value={internalQuery}
 								onChange={(e) => setInternalQuery(e.target.value)}
+								placeholder={t('common.search')}
 								inputProps={{ 'aria-label': 'search' }}
 							/>
 						</Box>

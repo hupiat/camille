@@ -3,10 +3,12 @@
 		"common.operation.insertion": "CRÉATION",
 		"common.operation.update": "MISE À JOUR",
 		"common.operation.deletion": "SUPPRESSION",
-		"common.error.generic": "Une erreur est survenue",
+		"common.error.generic": "Une erreur réseau est survenue",
 		"common.button.undo": "Annuler",
 		"common.button.undo.less": "Moins",
 		"common.button.undo.plus": "Voir plus",
-		"patterns.creation.titleField": "Nommez votre schéma mental"
+		"common.search": "Rechercher",
+		"patterns.creation.titleField": "Nommez votre schéma mental",
+		"patterns.creation.tagsPickTitle": "Sélectionnez au moins une classification"
 	}
 }
