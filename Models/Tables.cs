@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text;
 
 namespace camille.Models
 {
@@ -8,17 +9,17 @@ namespace camille.Models
         // Format : ETables.FOO_TEST = "FooTest"
         public static string GetTableName(this ETables t)
         {
-            string tableName = "";
+            StringBuilder nameBuilder = new StringBuilder();
             string[] strsArray = t.ToString().Split("_");
 
             foreach (string str in strsArray)
             {
                 char[] chars = str.ToLower().ToCharArray();
                 chars[0] = chars[0].ToString().ToUpper().ToCharArray()[0];
-                tableName += new string(chars);
+                nameBuilder.Append(new string(chars));
             }
 
-            return tableName;
+            return nameBuilder.ToString();
         }
     }
 

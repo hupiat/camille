@@ -6,6 +6,7 @@
 		"common.error.generic": "An error occurred",
 		"common.button.undo": "Undo",
 		"common.button.undo.less": "Less",
-		"common.button.undo.plus": "See more"
+		"common.button.undo.plus": "See more",
+		"patterns.creation.titleField": "Name your cognitive pattern"
 	}
 }

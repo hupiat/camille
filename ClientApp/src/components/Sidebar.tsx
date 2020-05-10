@@ -21,13 +21,13 @@ const useStyles = makeStyles((theme) => {
 	return {
 		list: {
 			position: 'relative',
-			marginTop: '10px',
+			marginTop: 10,
 			height: '85vh',
-			width: '300px',
+			width: 300,
 			overflow: 'auto',
 			willChange: 'transform',
 			direction: 'ltr',
-			borderRadius: '5px',
+			borderRadius: 5,
 			backgroundColor: theme.palette.primary.dark,
 		},
 		white: {

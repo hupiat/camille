@@ -6,6 +6,7 @@
 		"common.error.generic": "Une erreur est survenue",
 		"common.button.undo": "Annuler",
 		"common.button.undo.less": "Moins",
-		"common.button.undo.plus": "Voir plus"
+		"common.button.undo.plus": "Voir plus",
+		"patterns.creation.titleField": "Nommez votre schéma mental"
 	}
 }

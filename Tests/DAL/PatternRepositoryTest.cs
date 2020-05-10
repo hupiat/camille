@@ -74,14 +74,6 @@ namespace Tests.DAL
         }
 
         [Test, Order(7)]
-        public void FetchAllSizes()
-        {
-            ICollection<Size> sizes = _repository.FetchAllSizes();
-
-            Assert.IsNotEmpty(sizes);
-        }
-
-        [Test, Order(8)]
         public void Insert()
         {
             Pattern pattern = new Pattern
@@ -108,7 +100,7 @@ namespace Tests.DAL
             Assert.AreNotEqual(0, pattern.ID);
         }
 
-        [Test, Order(9)]
+        [Test, Order(8)]
         public void Update()
         {
             int id = 1;
@@ -160,7 +152,7 @@ namespace Tests.DAL
             }
         }
 
-        [Test, Order(11)]
+        [Test, Order(9)]
         public void RemovePatternElement()
         {
             int id = 1;
@@ -170,7 +162,7 @@ namespace Tests.DAL
             Assert.IsNull(element);
         }
 
-        [Test, Order(12)]
+        [Test, Order(10)]
         public void RemoveTag()
         {
             int id = 1;
@@ -180,7 +172,7 @@ namespace Tests.DAL
             Assert.IsNull(tag);
         }
 
-        [Test, Order(13)]
+        [Test, Order(11)]
         public void RemovePattern()
         {
             int id = 1;

@@ -46,7 +46,7 @@ namespace camille.Mappers
 
             foreach (PatternElementDTO element in patternDTO.Elements)
             {
-                foreach (KeyValuePair<int, VectorDTO> next in element.NextElements)
+                foreach (Tuple<int, VectorDTO> next in element.NextElements)
                 {
                     Vector position = positions.FirstOrDefault(p =>
                         p.X == element.Position.X &&
@@ -64,9 +64,9 @@ namespace camille.Mappers
 
                     Vector arrowVector = new Vector
                     {
-                        X = next.Value.X,
-                        Y = next.Value.Y,
-                        Z = next.Value.Z
+                        X = next.Item2.X,
+                        Y = next.Item2.Y,
+                        Z = next.Item2.Z
                     };
 
                     PatternElementBond bond = bonds
@@ -74,7 +74,7 @@ namespace camille.Mappers
                             b.NameElement == element.Name &&
                             b.PatternID == patternDTO.ID &&
                             b.PatternElementID == element.ID &&
-                            b.NextPatternElementID == next.Key &&
+                            b.NextPatternElementID == next.Item1 &&
                             b.ArrowVector != null &&
                             b.ArrowVector.X == arrowVector.X &&
                             b.ArrowVector.Y == arrowVector.Y &&
@@ -87,18 +87,13 @@ namespace camille.Mappers
                             NameElement = element.Name,
                             PatternID = patternDTO.ID,
                             PatternElementID = element.ID,
-                            NextPatternElementID = next.Key,
+                            NextPatternElementID = next.Item1,
                             ArrowVector = arrowVector,
                             Position = new Vector
                             {
                                 X = element.Position.X,
                                 Y = element.Position.Y
                             },
-                            Size = new Size
-                            {
-                                Width = element.Size.Width,
-                                Height = element.Size.Height
-                            }
                         };
                     }
 
@@ -153,11 +148,6 @@ namespace camille.Mappers
                         X = bond.Position.X,
                         Y = bond.Position.Y,
                     },
-                    Size = new SizeDTO
-                    {
-                        Width = bond.Size.Width,
-                        Height = bond.Size.Height
-                    }
                 };
 
                 dtos.Add(dto);
@@ -171,7 +161,7 @@ namespace camille.Mappers
                     .Where(elements.ElementAt(i).Bonds,
                         b => b.PatternID == patternId && b.PatternElementID == elements.ElementAt(i).ID);
 
-                Dictionary<int, VectorDTO> nextElements = new Dictionary<int, VectorDTO>(bonds.Count);
+                ICollection<Tuple<int, VectorDTO>> nextElements = new HashSet<Tuple<int, VectorDTO>>(bonds.Count);
 
                 foreach (PatternElementBond bond in bonds)
                 {
@@ -179,14 +169,14 @@ namespace camille.Mappers
                     {
                         PatternElementDTO matching = dtos.FirstOrDefault(dto => dto.ID == bond.NextPatternElementID);
 
-                        if (matching != null)
+                        if (matching != null && bond.ArrowVector != null)
                         {
-                            nextElements.Add(matching.ID, new VectorDTO
+                            nextElements.Add(Tuple.Create(matching.ID, new VectorDTO
                             {
                                 X = bond.ArrowVector.X,
                                 Y = bond.ArrowVector.Y,
                                 Z = bond.ArrowVector.Z
-                            });
+                            }));
                         }
                     }
                 }

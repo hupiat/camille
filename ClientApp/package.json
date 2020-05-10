@@ -5,7 +5,10 @@
 	"dependencies": {
 		"@material-ui/core": "^4.9.11",
 		"@material-ui/icons": "^4.9.1",
+		"@types/lodash": "^4.14.150",
+		"@types/yup": "^0.28.1",
 		"clsx": "^1.1.0",
+		"form-hooks-light": "^1.4.0",
 		"i18next": "^19.4.4",
 		"merge": "^1.2.1",
 		"notistack": "^0.9.11",
@@ -15,7 +18,8 @@
 		"react-i18next": "^11.4.0",
 		"react-router-dom": "^4.2.2",
 		"react-scripts": "^3.4.1",
-		"react-use-gesture": "^7.0.15"
+		"react-use-gesture": "^7.0.15",
+		"yup": "^0.28.5"
 	},
 	"devDependencies": {
 		"@types/react-dom": "^16.9.6",

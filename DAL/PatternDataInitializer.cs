@@ -52,12 +52,6 @@ namespace camille.DAL
                         Y = rand.Next(0, Vector.MAX_Y_PX + 1),
                     };
 
-                    Size size = new Size
-                    {
-                        Width = rand.Next(0, Size.MAX_WIDTH_PX + 1),
-                        Height = rand.Next(0, Size.MAX_HEIGHT_PX + 1)
-                    };
-
                     PatternElementBond bond = new PatternElementBond
                     {
                         PatternID = pattern.ID,
@@ -65,7 +59,6 @@ namespace camille.DAL
                         NextPatternElementID = nextElement.ID,
                         ArrowVector = arrowVector,
                         Position = position,
-                        Size = size
                     };
 
                     pattern.Bonds.Add(bond);

@@ -11,7 +11,6 @@ namespace camille.DAL
         public DbSet<PatternElementBond> PatternElementBonds { get; set; }
         public DbSet<Vector> Vectors { get; set; }
         public DbSet<Tag> Tags { get; set; }
-        public DbSet<Size> Sizes { get; set; }
         public DbSet<PatternTag> PatternTags { get; set; }
 
         public void SetupDatabase(bool withData)

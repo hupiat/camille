@@ -29,7 +29,7 @@ const useStyles = makeStyles((t) => {
 		},
 		menu: {
 			position: 'absolute',
-			padding: '5px',
+			padding: 5,
 			zIndex: 10,
 		},
 	};
@@ -79,7 +79,7 @@ const IconDropdown = ({
 					});
 				}
 			}),
-		[debounce, setPosition]
+		[debounce, setPosition, hPos, vPos]
 	);
 
 	useEffect(() => {
@@ -88,7 +88,7 @@ const IconDropdown = ({
 		}
 		window.addEventListener('resize', computePosition);
 		return () => window.removeEventListener('resize', computePosition);
-	}, [computePosition]);
+	}, [computePosition, position]);
 
 	const onItemClick = (item: Item) => {
 		item.onClick && item.onClick();

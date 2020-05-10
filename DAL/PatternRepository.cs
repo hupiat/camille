@@ -64,8 +64,6 @@ namespace camille.DAL
 
         public ICollection<PatternTag> FetchAllPatternTags() => _context.PatternTags.ToHashSet();
 
-        public ICollection<Size> FetchAllSizes() => _context.Sizes.ToHashSet();
-
         public ICollection<Vector> FetchAllVectors() => _context.Vectors.ToHashSet();
 
         public void Insert(Pattern pattern) => _context.Transaction(() =>
@@ -215,7 +213,6 @@ namespace camille.DAL
                     bond.NextPatternElementID = existing.NextPatternElementID;
                     bond.ArrowVector = existing.ArrowVector;
                     bond.Position = existing.Position;
-                    bond.Size = existing.Size;
                 }
             }
         }

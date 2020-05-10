@@ -28,12 +28,6 @@ namespace Tests.With
                 Z = 100
             };
 
-            var size = new Size
-            {
-                Width = Size.MAX_WIDTH_PX,
-                Height = Size.MAX_HEIGHT_PX
-            };
-
             var bond = new PatternElementBond
             {
                 ID = 1,
@@ -43,7 +37,6 @@ namespace Tests.With
                 NextPatternElementID = 2,
                 Position = vector,
                 ArrowVector = arrowVector,
-                Size = size
             };
 
             var otherBond = new PatternElementBond
@@ -53,7 +46,6 @@ namespace Tests.With
                 PatternID = 1,
                 PatternElementID = 2,
                 Position = vector,
-                Size = size
             };
 
             var patternTag = new PatternTag

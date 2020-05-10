@@ -8,9 +8,7 @@ namespace camille.DTO
     {
         public VectorDTO Position = new VectorDTO();
 
-        public SizeDTO Size = new SizeDTO();
-
-        public Dictionary<int, VectorDTO> NextElements { get; set; } = new Dictionary<int, VectorDTO>();
+        public ICollection<Tuple<int, VectorDTO>> NextElements { get; set; } = new HashSet<Tuple<int, VectorDTO>>();
 
         public override bool Equals(object other) => IIDEquality<PatternElementDTO>.EqualsUsingId(this, other);
 

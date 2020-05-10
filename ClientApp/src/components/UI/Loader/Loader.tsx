@@ -5,8 +5,8 @@ import clsx from 'clsx';
 
 const useStyles = makeStyles({
 	loader: {
-		width: '400px',
-		height: '400px',
+		width: 400,
+		height: 400,
 	},
 });
 

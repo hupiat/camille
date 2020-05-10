@@ -1,11 +1,8 @@
 import React, { useState, Dispatch } from 'react';
 import { Pattern } from '../types/Patterns';
-import { makeStyles, Box, Fab, Slide } from '@material-ui/core';
+import { makeStyles, Box } from '@material-ui/core';
 import Sidebar from './Sidebar';
 import { useSearchTrigger } from './Hooks/commons';
-import { Add } from '@material-ui/icons';
-import clsx from 'clsx';
-import FabLayout from './UI/Layouts/FabLayout';
 import SketchDrawer from './Sketchs/SketchDrawer';
 import { WorkflowStep } from '../types/Commons';
 import { useRequestEffect } from './Hooks/effects';

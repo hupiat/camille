@@ -22,9 +22,6 @@ namespace camille.Models
         [Required]
         public Vector Position { get; set; } = new Vector();
 
-        [Required]
-        public Size Size { get; set; } = new Size();
-
         [NotMapped]
         public string NameElement { get; set; }
 
