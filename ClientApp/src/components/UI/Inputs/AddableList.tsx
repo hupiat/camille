@@ -12,6 +12,7 @@ import {
 	IconButton,
 	InputAdornment,
 	Typography,
+	ClickAwayListener,
 } from '@material-ui/core';
 import { UnexistingElement, BaseElement } from '../../../types/Patterns';
 import { Add, LocalOffer } from '@material-ui/icons';
@@ -86,67 +87,70 @@ function AddableList<T extends BaseElement>({
 
 	const handleInsert = () => {
 		onInsert(insertingItem as T);
+		setItemsPicked([...itemsPicked, insertingItem as T]);
 		setInsertingItem({
 			name: '',
 		} as UnexistingElement<T>);
 	};
 
 	return (
-		<Paper elevation={24} className={clsx(classes.limitHeight, classes.container)}>
-			<Box className={classes.topBarContainer}>
-				<Typography component='h5' variant='h5'>
-					{title}
-				</Typography>
-				<CloseButton onClick={onClose ? onClose : () => {}} />
-			</Box>
+		<ClickAwayListener onClickAway={onClose ? onClose : () => {}}>
+			<Paper elevation={24} className={clsx(classes.limitHeight, classes.container)}>
+				<Box className={classes.topBarContainer}>
+					<Typography component='h5' variant='h5'>
+						{title}
+					</Typography>
+					<CloseButton onClick={onClose ? onClose : () => {}} />
+				</Box>
 
-			<Box className={classes.insertionContainer}>
-				<TextField
-					value={insertingItem.name}
-					onChange={(e) =>
-						setInsertingItem({
-							name: e.target.value,
-						} as UnexistingElement<T>)
-					}
-					className={classes.insertionField}
-					InputProps={{
-						startAdornment: (
-							<InputAdornment position='start'>
-								<LocalOffer color='primary' />
-							</InputAdornment>
-						),
-					}}
-				/>
+				<Box className={classes.insertionContainer}>
+					<TextField
+						value={insertingItem.name}
+						onChange={(e) =>
+							setInsertingItem({
+								name: e.target.value,
+							} as UnexistingElement<T>)
+						}
+						className={classes.insertionField}
+						InputProps={{
+							startAdornment: (
+								<InputAdornment position='start'>
+									<LocalOffer color='primary' />
+								</InputAdornment>
+							),
+						}}
+					/>
 
-				<IconButton
-					onClick={handleInsert}
-					disabled={isInsertionDisabled || !insertingItem.name}
-				>
-					<Add />
-				</IconButton>
+					<IconButton
+						onClick={handleInsert}
+						disabled={isInsertionDisabled || !insertingItem.name}
+					>
+						<Add />
+					</IconButton>
 
-				<Checkbox
-					edge='end'
-					onChange={(e) => setItemsPicked(e.target.checked ? items : [])}
-					checked={itemsPicked.length === items.length}
-				/>
-			</Box>
+					<Checkbox
+						edge='end'
+						onChange={(e) => setItemsPicked(e.target.checked ? items : [])}
+						checked={itemsPicked.length === items.length}
+					/>
+				</Box>
 
-			<List className={classes.limitHeight}>
-				{items.map((i) => (
-					<ListItem key={i.id} button>
-						<ListItemText primary={i.name} />
-						<ListItemSecondaryAction>
-							<Checkbox
-								edge='end'
-								onChange={(e) => handleCheck(i, e.target.checked)}
-								checked={itemsPicked.some((picked) => weakEgality(i, picked))}
-							/>
-						</ListItemSecondaryAction>
-					</ListItem>
-				))}
-			</List>
-		</Paper>
+				<List className={classes.limitHeight}>
+					{items.map((i) => (
+						<ListItem key={i.id} button>
+							<ListItemText primary={i.name} />
+							<ListItemSecondaryAction>
+								<Checkbox
+									edge='end'
+									onChange={(e) => handleCheck(i, e.target.checked)}
+									checked={itemsPicked.some((picked) => weakEgality(i, picked))}
+								/>
+							</ListItemSecondaryAction>
+						</ListItem>
+					))}
+				</List>
+			</Paper>
+		</ClickAwayListener>
 	);
 }
 

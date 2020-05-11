@@ -9,8 +9,7 @@ import { useTranslation } from 'react-i18next';
 const useStyles = makeStyles((theme) => ({
 	tagsInput: {
 		position: 'absolute',
-		margin: 50,
-		top: '10vh',
+		top: '15vh',
 		width: '60vw',
 	},
 }));
@@ -51,7 +50,7 @@ const SketchTagsHandler = ({ pattern, setPattern, willShow, onClose }: IProps) =
 	return (
 		<>
 			{!isRequestPending && (
-				<Grow in={willShow} mountOnEnter timeout={{ enter: 500, exit: 500 }}>
+				<Grow in={willShow} timeout={{ enter: 500, exit: 500 }} unmountOnExit>
 					<Box className={classes.tagsInput}>
 						<AddableList
 							title={t('patterns.creation.tagsPickTitle')}

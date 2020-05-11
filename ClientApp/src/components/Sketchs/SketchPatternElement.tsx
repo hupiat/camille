@@ -7,9 +7,6 @@ const useStyles = makeStyles((theme) => ({
 	container: {
 		display: 'flex',
 		cursor: 'grab',
-		'&:active': {
-			cursor: 'grabbing',
-		},
 		width: 300,
 		height: 300,
 		zIndex: 5,
@@ -18,8 +15,11 @@ const useStyles = makeStyles((theme) => ({
 		boxShadow: '0px 10px 30px -5px rgba(0, 0, 0, 0.3)',
 		transition: '0.5s',
 		border: '15px solid white',
+		'&:active': {
+			cursor: 'grabbing',
+		},
 	},
-	iconContainer: {
+	iconsContainer: {
 		display: 'flex',
 		flexDirection: 'row',
 		width: '100%',
@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
 		justifyContent: 'center',
 		marginBottom: 10,
 	},
-	iconExpand: {
+	expand: {
 		color: 'white',
 		position: 'relative',
 		width: 130,
@@ -56,12 +56,12 @@ const SketchPatternElement = () => {
 					: {}
 			}
 		>
-			<Box className={classes.iconContainer}>
+			<Box className={classes.iconsContainer}>
 				<IconButton onClick={() => setWillReduce(!willReduce)}>
 					{willReduce ? (
-						<ZoomIn className={classes.iconExpand} />
+						<ZoomIn className={classes.expand} />
 					) : (
-						<ZoomOut className={classes.iconExpand} />
+						<ZoomOut className={classes.expand} />
 					)}
 				</IconButton>
 			</Box>

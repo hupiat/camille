@@ -25,6 +25,7 @@ const useStyles = makeStyles({
 		display: 'flex',
 		flexDirection: 'row',
 		width: '100%',
+		height: '100vh',
 		justifyContent: 'center',
 	},
 	background: {
@@ -92,7 +93,7 @@ const SketchDrawer = ({ workflow, setWorkflow }: IProps) => {
 	return (
 		<>
 			{(workflow === 'drawing' || workflow === 'adding') && (
-				<Box className={classes.container}>
+				<Box className={classes.container} tabIndex={0}>
 					<Fade
 						in={!willFadeOut}
 						timeout={{ enter: 5000, exit: 500 }}
