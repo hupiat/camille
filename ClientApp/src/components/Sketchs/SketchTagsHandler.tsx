@@ -6,13 +6,13 @@ import AddableList from '../UI/Inputs/AddableList';
 import { weakEgality } from '../Functions/commons';
 import { useTranslation } from 'react-i18next';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles({
 	tagsInput: {
 		position: 'absolute',
 		top: '15vh',
 		width: '60vw',
 	},
-}));
+});
 
 interface IProps {
 	pattern: UnexistingElement<Pattern>;
@@ -20,6 +20,8 @@ interface IProps {
 	willShow: boolean;
 	onClose?: () => void;
 }
+
+// TODO : laggy when adding an element without closing
 
 const SketchTagsHandler = ({ pattern, setPattern, willShow, onClose }: IProps) => {
 	const { t } = useTranslation();
@@ -33,11 +35,9 @@ const SketchTagsHandler = ({ pattern, setPattern, willShow, onClose }: IProps) =
 	}, []);
 
 	const populate = (tag: Tag) => {
-		if (!pattern.tags.some((t) => weakEgality(t, tag))) {
-			setPattern('tags', [...pattern.tags, tag]);
-			if (!tag.id) {
-				setTags([...tags, tag]);
-			}
+		setPattern('tags', [...pattern.tags, tag]);
+		if (!tags.some((t) => weakEgality(t, tag))) {
+			setTags([...tags, tag]);
 		}
 	};
 

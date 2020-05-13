@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import {
 	Paper,
 	TextField,
@@ -69,9 +69,8 @@ function AddableList<T extends BaseElement>({
 	const [insertingItem, setInsertingItem] = useState<UnexistingElement<T>>({
 		name: '',
 	} as UnexistingElement<T>);
-
 	const isInsertionDisabled = useMemo(
-		() => items.some((i) => i.name === insertingItem.name),
+		() => !insertingItem.name || items.some((i) => weakEgality(i, insertingItem)),
 		[items, insertingItem]
 	);
 
@@ -93,14 +92,16 @@ function AddableList<T extends BaseElement>({
 		} as UnexistingElement<T>);
 	};
 
+	const handleClose = onClose || (() => {});
+
 	return (
-		<ClickAwayListener onClickAway={onClose ? onClose : () => {}}>
+		<ClickAwayListener onClickAway={handleClose}>
 			<Paper elevation={24} className={clsx(classes.limitHeight, classes.container)}>
 				<Box className={classes.topBarContainer}>
 					<Typography component='h5' variant='h5'>
 						{title}
 					</Typography>
-					<CloseButton onClick={onClose ? onClose : () => {}} />
+					<CloseButton onClick={handleClose} />
 				</Box>
 
 				<Box className={classes.insertionContainer}>
@@ -121,10 +122,7 @@ function AddableList<T extends BaseElement>({
 						}}
 					/>
 
-					<IconButton
-						onClick={handleInsert}
-						disabled={isInsertionDisabled || !insertingItem.name}
-					>
+					<IconButton onClick={handleInsert} disabled={isInsertionDisabled}>
 						<Add />
 					</IconButton>
 
@@ -136,14 +134,14 @@ function AddableList<T extends BaseElement>({
 				</Box>
 
 				<List className={classes.limitHeight}>
-					{items.map((i) => (
-						<ListItem key={i.id} button>
-							<ListItemText primary={i.name} />
+					{items.map((item, i) => (
+						<ListItem key={i} button>
+							<ListItemText primary={item.name} />
 							<ListItemSecondaryAction>
 								<Checkbox
 									edge='end'
-									onChange={(e) => handleCheck(i, e.target.checked)}
-									checked={itemsPicked.some((picked) => weakEgality(i, picked))}
+									onChange={(e) => handleCheck(item, e.target.checked)}
+									checked={itemsPicked.some((picked) => weakEgality(item, picked))}
 								/>
 							</ListItemSecondaryAction>
 						</ListItem>

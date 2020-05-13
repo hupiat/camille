@@ -25,12 +25,11 @@ const useStyles = makeStyles({
 
 interface IProps {
 	query: string;
-	setQuery: Dispatch<string>;
 	workflow: WorkflowStep;
 	setWorkflow: Dispatch<WorkflowStep>;
 }
 
-const Home = ({ query, setQuery, workflow, setWorkflow }: IProps) => {
+const Home = ({ query, workflow, setWorkflow }: IProps) => {
 	const classes = useStyles();
 	const [patterns, setPatterns] = useState<Pattern[]>([]);
 	const [idsPatternsFiltered, setIdsPatternsFiltered] = useState<number[]>([]);
@@ -51,12 +50,6 @@ const Home = ({ query, setQuery, workflow, setWorkflow }: IProps) => {
 
 	return (
 		<Box>
-			<SearchAppBar
-				query={query}
-				onSearch={setQuery}
-				willShow={workflow !== 'drawing' && workflow !== 'adding'}
-			/>
-
 			{isRequestPending && <Loader className={classes.loader} />}
 
 			{!isRequestPending && (

@@ -19,7 +19,7 @@ const FabLayout = (props: PropsWithChildren<{}>) => {
 				<Box
 					key={i}
 					className={classes.fab}
-					style={{ right: !i ? 120 : 120 + (i + 1) * 50 }}
+					style={{ right: !i ? 120 : 70 + (i + 1) * 100 }}
 				>
 					{child}
 				</Box>

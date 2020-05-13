@@ -1,0 +1,119 @@
+<mxfile host="localhost" modified="2020-05-13T12:06:53.966Z" agent="5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/537.36 (KHTML, like Gecko) Code/1.45.0 Chrome/78.0.3904.130 Electron/7.2.4 Safari/537.36" etag="OrJX4WCEIsveQ8lzAEOG" version="13.0.9">
+    <diagram id="sniHy3VPbQ9xRZhn2NIO" name="Page-1">
+        <mxGraphModel dx="898" dy="680" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="2" value="&lt;font face=&quot;Verdana&quot; style=&quot;background-color: rgb(255 , 255 , 255) ; line-height: 130% ; font-size: 16px&quot; color=&quot;#000000&quot;&gt;&amp;nbsp;Drawer&amp;nbsp;&lt;/font&gt;" style="shape=umlActor;verticalLabelPosition=bottom;labelBackgroundColor=#ffffff;verticalAlign=top;html=1;outlineConnect=0;fillColor=#e1d5e7;strokeColor=#9673a6;" parent="1" vertex="1">
+                    <mxGeometry x="280" y="430" width="40" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="300" y="410" as="sourcePoint"/>
+                        <mxPoint x="490" y="355" as="targetPoint"/>
+                        <Array as="points">
+                            <mxPoint x="300" y="380"/>
+                            <mxPoint x="400" y="380"/>
+                            <mxPoint x="400" y="355"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="9" value="Insert a point" style="html=1;" parent="1" vertex="1">
+                    <mxGeometry x="500" y="330" width="110" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="10" value="Bound two points" style="html=1;" parent="1" vertex="1">
+                    <mxGeometry x="390" y="510" width="110" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="11" value="" style="endArrow=classic;html=1;" parent="1" edge="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="340" y="460" as="sourcePoint"/>
+                        <mxPoint x="447" y="490" as="targetPoint"/>
+                        <Array as="points">
+                            <mxPoint x="360" y="460"/>
+                            <mxPoint x="360" y="430"/>
+                            <mxPoint x="447" y="430"/>
+                            <mxPoint x="447" y="460"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="12" value="Click on two point&lt;br&gt;anchors" style="html=1;" parent="1" vertex="1">
+                    <mxGeometry x="390" y="625" width="110" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="14" value="includes" style="endArrow=open;endSize=12;dashed=1;html=1;" parent="1" edge="1">
+                    <mxGeometry width="160" relative="1" as="geometry">
+                        <mxPoint x="445" y="616" as="sourcePoint"/>
+                        <mxPoint x="445" y="566" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="15" value="Drag and&lt;br&gt;drop an element" style="html=1;" parent="1" vertex="1">
+                    <mxGeometry x="114" y="650" width="110" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="16" value="" style="endArrow=classic;html=1;" parent="1" edge="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="300" y="550" as="sourcePoint"/>
+                        <mxPoint x="170" y="640" as="targetPoint"/>
+                        <Array as="points">
+                            <mxPoint x="300" y="560"/>
+                            <mxPoint x="300" y="580"/>
+                            <mxPoint x="210" y="580"/>
+                            <mxPoint x="170" y="580"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="17" value="Remove a point with&lt;br&gt;associated bonds" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="70" y="320" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="18" value="" style="endArrow=classic;html=1;" edge="1" parent="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="260" y="460" as="sourcePoint"/>
+                        <mxPoint x="130" y="390" as="targetPoint"/>
+                        <Array as="points">
+                            <mxPoint x="130" y="460"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="19" value="Bound orphan elements" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="290" y="220" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="20" value="extends" style="endArrow=open;endSize=12;dashed=1;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" edge="1" parent="1">
+                    <mxGeometry width="160" relative="1" as="geometry">
+                        <mxPoint x="129.5" y="305" as="sourcePoint"/>
+                        <mxPoint x="280" y="240" as="targetPoint"/>
+                        <Array as="points">
+                            <mxPoint x="130" y="240"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="21" value="includes" style="endArrow=open;endSize=12;dashed=1;html=1;" edge="1" parent="1">
+                    <mxGeometry width="160" relative="1" as="geometry">
+                        <mxPoint x="420" y="240" as="sourcePoint"/>
+                        <mxPoint x="560.5" y="315" as="targetPoint"/>
+                        <Array as="points">
+                            <mxPoint x="430" y="240"/>
+                            <mxPoint x="420" y="240"/>
+                            <mxPoint x="561" y="240"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="23" value="Bound two points bidirectionally&amp;nbsp;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="633" y="510" width="110" height="47.5" as="geometry"/>
+                </mxCell>
+                <mxCell id="24" value="includes" style="endArrow=open;endSize=12;dashed=1;html=1;" edge="1" parent="1">
+                    <mxGeometry width="160" relative="1" as="geometry">
+                        <mxPoint x="512" y="530" as="sourcePoint"/>
+                        <mxPoint x="622" y="530" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="25" value="" style="endArrow=classic;html=1;" edge="1" parent="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="390" y="430" as="sourcePoint"/>
+                        <mxPoint x="690" y="490" as="targetPoint"/>
+                        <Array as="points">
+                            <mxPoint x="690" y="430"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

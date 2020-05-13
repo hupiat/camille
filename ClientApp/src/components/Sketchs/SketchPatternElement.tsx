@@ -1,10 +1,13 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { useDrag } from 'react-use-gesture';
 import { makeStyles, TextField, Box, IconButton } from '@material-ui/core';
-import { AspectRatio, ZoomIn, ZoomOut } from '@material-ui/icons';
+import { ZoomIn, ZoomOut } from '@material-ui/icons';
+import { PatternElement, Pattern, UnexistingElement } from '../../types/Patterns';
+import { mapElementThenBreak } from '../Functions/commons';
 
 const useStyles = makeStyles((theme) => ({
 	container: {
+		position: 'absolute',
 		display: 'flex',
 		cursor: 'grab',
 		width: 300,
@@ -39,23 +42,45 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-const SketchPatternElement = () => {
+interface IProps {
+	element: UnexistingElement<PatternElement>;
+	pattern: UnexistingElement<Pattern>;
+	setPattern: (key: keyof UnexistingElement<Pattern>, attribute: any) => void;
+}
+
+const SketchPatternElement = ({ element, pattern, setPattern }: IProps) => {
 	const classes = useStyles();
 	const [willReduce, setWillReduce] = useState<boolean>(true);
+
+	const updateName = (event: any) =>
+		setPattern(
+			'elements',
+			mapElementThenBreak(
+				pattern.elements,
+				(e) => e.name === element.name,
+				(e) => (e.name = event.target.value)
+			)
+		);
 
 	return (
 		<Box
 			className={classes.container}
-			style={
+			style={Object.assign(
 				willReduce
 					? {
 							transform: 'scale(0.2)',
 							borderRadius: 400,
 							boxShadow: 'unset',
 					  }
-					: {}
-			}
+					: {},
+				{
+					left: `${element.x}vw`,
+					top: `${element.y}vh`,
+				}
+			)}
 		>
+			<TextField value={element.name} onChange={updateName} />
+
 			<Box className={classes.iconsContainer}>
 				<IconButton onClick={() => setWillReduce(!willReduce)}>
 					{willReduce ? (

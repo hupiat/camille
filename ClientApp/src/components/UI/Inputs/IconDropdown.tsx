@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import {
 	Box,
 	MenuItem,
@@ -7,33 +7,25 @@ import {
 	Paper,
 	makeStyles,
 	ClickAwayListener,
+	useTheme,
 } from '@material-ui/core';
 import { useDebounce } from '../../Hooks/commons';
-import {
-	Position,
-	VerticalPos,
-	HorizontalPos,
-	DynamicTheme,
-} from '../../../types/Commons';
+import { Position, VerticalPos, HorizontalPos } from '../../../types/Commons';
 import clsx from 'clsx';
+import { v4 as uuid } from 'uuid';
 
-let theme: DynamicTheme;
-
-const useStyles = makeStyles((t) => {
-	theme = t as DynamicTheme;
-	return {
-		white: {
-			color: 'white',
-		},
-		hidden: {
-			display: 'none',
-		},
-		menu: {
-			position: 'absolute',
-			padding: 5,
-			zIndex: 10,
-		},
-	};
+const useStyles = makeStyles({
+	white: {
+		color: 'white',
+	},
+	hidden: {
+		display: 'none',
+	},
+	menu: {
+		position: 'absolute',
+		padding: 5,
+		zIndex: 10,
+	},
 });
 
 type Item = {
@@ -51,8 +43,6 @@ interface IProps {
 	className?: string;
 }
 
-const ID_ICON = 'language-icon';
-
 const IconDropdown = ({
 	items,
 	icon,
@@ -63,11 +53,14 @@ const IconDropdown = ({
 	className,
 }: IProps) => {
 	const classes = useStyles();
+	const theme = useTheme();
 	const [position, setPosition] = useState<Position>();
 	const [isToggled, setIsToggled] = useState<boolean>(false);
 	const debounce = useDebounce();
 
 	const toggle = () => setIsToggled(!isToggled);
+
+	const ID_ICON = useMemo(() => `icon-${uuid()}`, []);
 
 	const computePosition = useCallback(
 		() =>
@@ -76,10 +69,14 @@ const IconDropdown = ({
 				if (icon) {
 					const left = icon.getBoundingClientRect().left || 0;
 					const top = icon.getBoundingClientRect().top || 0;
-					setPosition({
+					const position = {
 						x: hPos === 'right' ? left + 20 : left - 50,
 						y: vPos === 'bottom' ? top + 35 : top - 85,
-					});
+					};
+
+					// Adjusting to deal with any text
+
+					setPosition(position);
 				}
 			}),
 		[debounce, setPosition, hPos, vPos]

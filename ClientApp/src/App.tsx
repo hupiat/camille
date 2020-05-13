@@ -7,6 +7,7 @@ import {
 	ThemeProvider,
 } from '@material-ui/core/styles';
 import { WorkflowStep } from './types/Commons';
+import SearchAppBar from './components/SearchAppBar';
 
 let theme = createMuiTheme({
 	palette: {
@@ -38,12 +39,13 @@ export const App = () => {
 					horizontal: 'center',
 				}}
 			>
-				<Home
+				<SearchAppBar
 					query={query}
-					setQuery={setQuery}
-					workflow={workflow}
-					setWorkflow={setWorkflow}
+					onSearch={setQuery}
+					willShow={workflow !== 'drawing' && workflow !== 'adding'}
 				/>
+
+				<Home query={query} workflow={workflow} setWorkflow={setWorkflow} />
 			</SnackbarProvider>
 		</ThemeProvider>
 	);

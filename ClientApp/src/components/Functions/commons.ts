@@ -3,4 +3,20 @@ import { IdentifiedElement, NamedElement } from '../../types/Patterns';
 export const weakEgality = (
 	item1: Partial<IdentifiedElement & NamedElement>,
 	item2: Partial<IdentifiedElement & NamedElement>
-) => item1.name === item2.name || (item1.id && item1.id === item2.id);
+): boolean => !!(item1.name === item2.name || (item1.id && item1.id === item2.id));
+
+export const mapElementThenBreak = <T extends IdentifiedElement>(
+	elements: T[],
+	finder: (element: T) => boolean,
+	mapper: (element: T) => void
+): T[] => {
+	for (const element of elements) {
+		if (finder(element)) {
+			mapper(element);
+			break;
+		}
+	}
+	return elements;
+};
+
+export const rand = (min: number, max: number) => Math.random() * (max - min) + min;

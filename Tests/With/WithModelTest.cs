@@ -25,7 +25,6 @@ namespace camille.Tests.With
       {
         X = Vector.MAX_X_PX,
         Y = Vector.MAX_Y_PX,
-        Z = 100
       };
 
       var bond = new PatternElementBond

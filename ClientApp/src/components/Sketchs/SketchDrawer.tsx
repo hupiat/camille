@@ -11,7 +11,7 @@ import {
 	Box,
 } from '@material-ui/core';
 import FabLayout from '../UI/Layouts/FabLayout';
-import { Add, SaveOutlined } from '@material-ui/icons';
+import { Add, SaveOutlined, Queue } from '@material-ui/icons';
 import clsx from 'clsx';
 import { WorkflowStep } from '../../types/Commons';
 import { useFormState, useFormValidation } from 'form-hooks-light';
@@ -19,6 +19,7 @@ import { Pattern, UnexistingElement } from '../../types/Patterns';
 import * as Yup from 'yup';
 import { useTranslation } from 'react-i18next';
 import SketchTagsHandler from './SketchTagsHandler';
+import { rand } from '../Functions/commons';
 
 const useStyles = makeStyles({
 	container: {
@@ -66,13 +67,14 @@ const SketchDrawer = ({ workflow, setWorkflow }: IProps) => {
 	const { canValidate } = useFormValidation<UnexistingElement<Pattern>>(
 		{
 			name: Yup.string(),
-			elements: (pattern: UnexistingElement<Pattern>) => pattern.elements.length > 1,
+			elements: (pattern: UnexistingElement<Pattern>) =>
+				pattern.elements.length > 1 && pattern.elements.every((e) => e.name),
 			tags: (pattern: UnexistingElement<Pattern>) => !!pattern.tags.length,
 		},
 		pattern
 	);
 
-	const onExitClick = () => {
+	const handleExit = () => {
 		if (!willExit && (workflow === 'drawing' || workflow === 'adding')) {
 			setWillExit(true);
 		} else {
@@ -83,10 +85,26 @@ const SketchDrawer = ({ workflow, setWorkflow }: IProps) => {
 		}
 	};
 
-	const handleSave = () => {
+	const handleElementGeneration = () =>
+		setPattern('elements', [
+			...pattern.elements,
+			{
+				name: '',
+				x: rand(5, 80),
+				y: rand(5, 50),
+			},
+		]);
+
+	const handleSave = async () => {
 		if (workflow !== 'adding') {
 			setWorkflow('adding');
-			return;
+		} else {
+			await fetch('pattern', {
+				method: 'POST',
+				body: JSON.stringify(pattern),
+			});
+			// TODO : switch to updating workflow
+			setWorkflow('adding');
 		}
 	};
 
@@ -122,7 +140,12 @@ const SketchDrawer = ({ workflow, setWorkflow }: IProps) => {
 					/>
 
 					{pattern.elements.map((e, i) => (
-						<SketchPatternElement key={i} />
+						<SketchPatternElement
+							key={i}
+							element={e}
+							pattern={pattern}
+							setPattern={setPattern}
+						/>
 					))}
 				</Box>
 			)}
@@ -130,7 +153,7 @@ const SketchDrawer = ({ workflow, setWorkflow }: IProps) => {
 			<FabLayout>
 				<Fab
 					color='default'
-					onClick={onExitClick}
+					onClick={handleExit}
 					onMouseEnter={() => setWillFadeOut(true)}
 					onMouseLeave={() => setWillFadeOut(false)}
 					style={willExit ? { backgroundColor: theme.palette.error.main } : {}}
@@ -154,6 +177,20 @@ const SketchDrawer = ({ workflow, setWorkflow }: IProps) => {
 						onClick={handleSave}
 					>
 						<SaveOutlined />
+					</Fab>
+				</Slide>
+
+				<Slide
+					direction='up'
+					in={workflow === 'drawing' || workflow === 'adding'}
+					unmountOnExit
+				>
+					<Fab
+						disabled={!canValidate && workflow === 'adding'}
+						color='default'
+						onClick={handleElementGeneration}
+					>
+						<Queue />
 					</Fab>
 				</Slide>
 			</FabLayout>
