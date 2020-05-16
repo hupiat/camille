@@ -74,12 +74,12 @@ const IconDropdown = ({
 						y: vPos === 'bottom' ? top + 35 : top - 85,
 					};
 
-					// Adjusting to deal with any text
+					// TODO : Adjusting to deal with any text
 
 					setPosition(position);
 				}
 			}),
-		[debounce, setPosition, hPos, vPos]
+		[debounce, setPosition, hPos, vPos, ID_ICON]
 	);
 
 	useEffect(() => {

@@ -3,7 +3,8 @@ import { useRequest, useDebounce } from './commons';
 
 export const useDebouncedEffect = (callback: Function, deps: any[]): void => {
 	const debounce = useDebounce();
-	useEffect(() => debounce(callback), deps); // eslint-disable-line react-hooks/exhaustive-deps
+	// eslint-disable-next-line react-hooks/exhaustive-deps
+	useEffect(() => debounce(callback), deps);
 };
 
 export function useRequestEffect<T>(
@@ -14,7 +15,8 @@ export function useRequestEffect<T>(
 	const [isRequestPending, triggerRequest] = useRequest<T | undefined>(request);
 	useEffect(() => {
 		triggerRequest(param);
-	}, deps); // eslint-disable-line react-hooks/exhaustive-deps
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, deps);
 
 	return isRequestPending;
 }

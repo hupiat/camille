@@ -9,6 +9,7 @@ import {
 	useTheme,
 	TextField,
 	Box,
+	CircularProgress,
 } from '@material-ui/core';
 import FabLayout from '../UI/Layouts/FabLayout';
 import { Add, SaveOutlined, Queue } from '@material-ui/icons';
@@ -19,7 +20,15 @@ import { Pattern, UnexistingElement } from '../../types/Patterns';
 import * as Yup from 'yup';
 import { useTranslation } from 'react-i18next';
 import SketchTagsHandler from './SketchTagsHandler';
-import { rand } from '../Functions/commons';
+import {
+	rand,
+	isSketchingView,
+	isExistingElement,
+	isSketchingValidationView,
+} from '../Functions/commons';
+import { useRequest } from '../Hooks/commons';
+import { useSnackbarWithMessage } from '../Hooks/strings';
+import SnackbarContentLayout from '../UI/Layouts/SnackbarContentLayout';
 
 const useStyles = makeStyles({
 	container: {
@@ -51,9 +60,10 @@ const useStyles = makeStyles({
 interface IProps {
 	workflow: WorkflowStep;
 	setWorkflow: Dispatch<WorkflowStep>;
+	isInsertionDisabled: boolean;
 }
 
-const SketchDrawer = ({ workflow, setWorkflow }: IProps) => {
+const SketchDrawer = ({ workflow, setWorkflow, isInsertionDisabled }: IProps) => {
 	const classes = useStyles();
 	const theme = useTheme();
 	const { t } = useTranslation();
@@ -73,14 +83,24 @@ const SketchDrawer = ({ workflow, setWorkflow }: IProps) => {
 		},
 		pattern
 	);
+	const [isRequestPending, savePattern] = useRequest<UnexistingElement<Pattern>>(
+		async () =>
+			await fetch('pattern', {
+				method: 'POST',
+				body: JSON.stringify(pattern),
+			})
+	);
+	const {
+		enqueueSnackbar,
+		closeSnackbar,
+		toastOperationMessage,
+	} = useSnackbarWithMessage();
 
 	const handleExit = () => {
-		if (!willExit && (workflow === 'drawing' || workflow === 'adding')) {
+		if (!willExit && isSketchingView(workflow)) {
 			setWillExit(true);
 		} else {
-			setWorkflow(
-				workflow === 'drawing' || workflow === 'adding' ? 'reading' : 'drawing'
-			);
+			setWorkflow(isSketchingView(workflow) ? 'reading' : 'drawing');
 			setWillExit(false);
 		}
 	};
@@ -96,21 +116,32 @@ const SketchDrawer = ({ workflow, setWorkflow }: IProps) => {
 		]);
 
 	const handleSave = async () => {
+		const casted = pattern as Pattern;
 		if (workflow !== 'adding') {
-			setWorkflow('adding');
+			setWorkflow(isExistingElement(casted) ? 'updating' : 'adding');
 		} else {
-			await fetch('pattern', {
-				method: 'POST',
-				body: JSON.stringify(pattern),
-			});
-			// TODO : switch to updating workflow
-			setWorkflow('adding');
+			const response = await savePattern(pattern);
+			const data = await response.json();
+			setPattern('name', data.name);
+			setPattern('tags', data.tags);
+			setPattern('elements', data.elements);
+			const snackbar = enqueueSnackbar(
+				toastOperationMessage(
+					isExistingElement(casted) ? 'update' : 'insertion',
+					pattern
+				),
+				{
+					variant: 'info',
+					action: <SnackbarContentLayout onClose={() => closeSnackbar(snackbar)} />,
+				}
+			);
+			setWorkflow('drawing');
 		}
 	};
 
 	return (
 		<>
-			{(workflow === 'drawing' || workflow === 'adding') && (
+			{isSketchingView(workflow) && (
 				<Box className={classes.container} tabIndex={0}>
 					<Fade
 						in={!willFadeOut}
@@ -135,7 +166,7 @@ const SketchDrawer = ({ workflow, setWorkflow }: IProps) => {
 					<SketchTagsHandler
 						pattern={pattern}
 						setPattern={setPattern}
-						willShow={!willFadeOut && workflow === 'adding'}
+						willShow={!willFadeOut && isSketchingValidationView(workflow)}
 						onClose={() => setWorkflow('drawing')}
 					/>
 
@@ -152,6 +183,7 @@ const SketchDrawer = ({ workflow, setWorkflow }: IProps) => {
 
 			<FabLayout>
 				<Fab
+					disabled={isRequestPending || isInsertionDisabled}
 					color='default'
 					onClick={handleExit}
 					onMouseEnter={() => setWillFadeOut(true)}
@@ -159,34 +191,27 @@ const SketchDrawer = ({ workflow, setWorkflow }: IProps) => {
 					style={willExit ? { backgroundColor: theme.palette.error.main } : {}}
 				>
 					<Add
-						className={clsx(
-							classes.fabIcon,
-							(workflow === 'drawing' || workflow === 'adding') && classes.rotate
-						)}
+						className={clsx(classes.fabIcon, isSketchingView(workflow) && classes.rotate)}
 					/>
 				</Fab>
 
-				<Slide
-					direction='up'
-					in={workflow === 'drawing' || workflow === 'adding'}
-					unmountOnExit
-				>
+				<Slide direction='up' in={isSketchingView(workflow)} unmountOnExit>
 					<Fab
-						disabled={!canValidate && workflow === 'adding'}
+						disabled={
+							(!canValidate && isSketchingValidationView(workflow)) || isRequestPending
+						}
 						color='default'
 						onClick={handleSave}
 					>
-						<SaveOutlined />
+						{isRequestPending ? <CircularProgress /> : <SaveOutlined />}
 					</Fab>
 				</Slide>
 
-				<Slide
-					direction='up'
-					in={workflow === 'drawing' || workflow === 'adding'}
-					unmountOnExit
-				>
+				<Slide direction='up' in={isSketchingView(workflow)} unmountOnExit>
 					<Fab
-						disabled={!canValidate && workflow === 'adding'}
+						disabled={
+							(!canValidate && isSketchingValidationView(workflow)) || isRequestPending
+						}
 						color='default'
 						onClick={handleElementGeneration}
 					>

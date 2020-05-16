@@ -11,11 +11,11 @@ import {
 	CircularProgress,
 } from '@material-ui/core';
 import { Delete } from '@material-ui/icons';
-import { useSnackbar } from 'notistack';
 import UndoButton from './UI/Buttons/UndoButton';
 import { useRequest } from './Hooks/commons';
 import SnackbarContentLayout from './UI/Layouts/SnackbarContentLayout';
-import { useToastOperationMessage } from './Hooks/strings';
+import { useSnackbarWithMessage } from './Hooks/strings';
+import { namesWithCommas } from './Functions/commons';
 
 const useStyles = makeStyles((theme) => {
 	return {
@@ -47,8 +47,11 @@ const DELAY_REMOVAL_MS = 4000;
 const PatternsView = ({ patterns, onDelete, isVisible }: IProps) => {
 	const classes = useStyles();
 	const [pendingRemoval, setPendingRemoval] = useState<Pattern>();
-	const { enqueueSnackbar, closeSnackbar } = useSnackbar();
-	const toastOperationMessage = useToastOperationMessage();
+	const {
+		enqueueSnackbar,
+		closeSnackbar,
+		toastOperationMessage,
+	} = useSnackbarWithMessage();
 
 	const [, triggerDeleteRequest] = useRequest<Pattern>(async (pattern: Pattern) => {
 		await fetch(`pattern?id=${pattern.id}`, {
@@ -93,7 +96,7 @@ const PatternsView = ({ patterns, onDelete, isVisible }: IProps) => {
 					<ListItem button key={p.id}>
 						<ListItemText
 							primary={p.name}
-							secondary={p.tags.map((t) => t.name).join(', ')}
+							secondary={namesWithCommas(p.tags)}
 							secondaryTypographyProps={{
 								className: classes.white,
 							}}

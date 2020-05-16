@@ -27,7 +27,16 @@ namespace camille.Controllers
     public IEnumerable<TagDTO> GetTags() => PatternMapper.AsTagDTOCollection(_repository.FetchAllTags());
 
     [HttpPost]
-    public PatternDTO Insert(PatternDTO patternDTO) => ApplyThenReturnPattern(patternDTO, _repository.Insert);
+    public PatternDTO Insert(PatternDTO patternDTO)
+    {
+      // TODO : move this constant into Collections
+      if (_repository.CountPatterns() > 100)
+      {
+        Response.StatusCode = 403;
+        throw new ArgumentOutOfRangeException($"Too much patterns for this Collection (max: 100)");
+      }
+      return ApplyThenReturnPattern(patternDTO, _repository.Insert);
+    }
 
     [HttpPut]
     public PatternDTO Update(PatternDTO patternDTO) => ApplyThenReturnPattern(patternDTO, _repository.Update);

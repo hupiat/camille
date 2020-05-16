@@ -12,6 +12,8 @@ namespace camille.DAL
 
     public PatternRepository(PatternContext context) => _context = context;
 
+    public int CountPatterns() => _context.Patterns.Count();
+
     public ICollection<Pattern> FetchAllPatterns()
     {
       ICollection<Pattern> patterns = new HashSet<Pattern>();

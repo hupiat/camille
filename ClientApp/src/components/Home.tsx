@@ -6,7 +6,6 @@ import { useSearchTrigger } from './Hooks/commons';
 import SketchDrawer from './Sketchs/SketchDrawer';
 import { WorkflowStep } from '../types/Commons';
 import { useRequestEffect } from './Hooks/effects';
-import SearchAppBar from './SearchAppBar';
 import Loader from './UI/Loader/Loader';
 
 const useStyles = makeStyles({
@@ -60,7 +59,11 @@ const Home = ({ query, workflow, setWorkflow }: IProps) => {
 						isVisible={workflow !== 'drawing' && workflow !== 'adding'}
 					/>
 
-					<SketchDrawer workflow={workflow} setWorkflow={setWorkflow} />
+					<SketchDrawer
+						workflow={workflow}
+						setWorkflow={setWorkflow}
+						isInsertionDisabled={patterns.length > 100}
+					/>
 				</Box>
 			)}
 		</Box>

@@ -7,8 +7,8 @@ namespace camille.Models
   [Tables(ETables.VECTOR)]
   public class Vector : DatabaseElement, IIDEquality<Vector>
   {
-    public static readonly int MAX_X_PX = 1920;
-    public static readonly int MAX_Y_PX = 1080;
+    public static readonly int MAX_X_VW = 100;
+    public static readonly int MAX_Y_VH = 100;
 
     [Required]
     public int X { get; set; }

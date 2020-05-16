@@ -36,7 +36,7 @@ namespace camille.Controls
 
       foreach (PatternElementDTO element in pattern.Elements)
       {
-        if (element.Position.X > Vector.MAX_X_PX || element.Position.Y > Vector.MAX_Y_PX)
+        if (element.Position.X > Vector.MAX_X_VW || element.Position.Y > Vector.MAX_Y_VH)
         {
           throw new ArgumentException($"Elements should have corrects vector values (tried with id {element.ID})");
         }

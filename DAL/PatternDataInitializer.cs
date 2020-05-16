@@ -41,14 +41,14 @@ namespace camille.DAL
           PatternElement nextElement = _elements.ElementAt(rand.Next(0, _elements.Count));
           Vector arrowVector = new Vector
           {
-            X = rand.Next(0, Vector.MAX_X_PX + 1),
-            Y = rand.Next(0, Vector.MAX_Y_PX + 1),
+            X = rand.Next(0, Vector.MAX_X_VW + 1),
+            Y = rand.Next(0, Vector.MAX_Y_VH + 1),
           };
 
           Vector position = new Vector
           {
-            X = rand.Next(0, Vector.MAX_X_PX + 1),
-            Y = rand.Next(0, Vector.MAX_Y_PX + 1),
+            X = rand.Next(0, Vector.MAX_X_VW + 1),
+            Y = rand.Next(0, Vector.MAX_Y_VH + 1),
           };
 
           PatternElementBond bond = new PatternElementBond

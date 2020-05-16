@@ -17,14 +17,14 @@ namespace camille.Tests.With
     {
       var vector = new Vector
       {
-        X = Vector.MAX_X_PX,
-        Y = Vector.MAX_Y_PX
+        X = Vector.MAX_X_VW,
+        Y = Vector.MAX_Y_VH
       };
 
       var arrowVector = new Vector
       {
-        X = Vector.MAX_X_PX,
-        Y = Vector.MAX_Y_PX,
+        X = Vector.MAX_X_VW,
+        Y = Vector.MAX_Y_VH,
       };
 
       var bond = new PatternElementBond

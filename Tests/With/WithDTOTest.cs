@@ -16,14 +16,14 @@ namespace camille.Tests.With
     {
       var vector = new VectorDTO
       {
-        X = Vector.MAX_X_PX,
-        Y = Vector.MAX_Y_PX
+        X = Vector.MAX_X_VW,
+        Y = Vector.MAX_Y_VH
       };
 
       var arrowVector = new VectorDTO
       {
-        X = Vector.MAX_X_PX,
-        Y = Vector.MAX_Y_PX,
+        X = Vector.MAX_X_VW,
+        Y = Vector.MAX_Y_VH,
         Z = 100
       };
 
