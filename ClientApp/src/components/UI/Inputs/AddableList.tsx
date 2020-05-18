@@ -16,7 +16,7 @@ import {
 } from '@material-ui/core';
 import { UnexistingElement, BaseElement } from '../../../types/Patterns';
 import { Add, LocalOffer } from '@material-ui/icons';
-import { weakEgality } from '../../Functions/commons';
+import { weakEgality } from '../../Functions/entities';
 import clsx from 'clsx';
 import CloseButton from '../Buttons/CloseButton';
 
@@ -76,11 +76,11 @@ function AddableList<T extends BaseElement>({
 
 	const handleCheck = (item: T, isChecked: boolean) => {
 		if (isChecked) {
-			setItemsPicked([...itemsPicked, item]);
 			onPick(item);
+			setItemsPicked([...itemsPicked, item]);
 		} else {
-			setItemsPicked(itemsPicked.filter((picked) => !weakEgality(picked, item)));
 			onUnpick(item);
+			setItemsPicked(itemsPicked.filter((picked) => !weakEgality(picked, item)));
 		}
 	};
 
@@ -101,7 +101,7 @@ function AddableList<T extends BaseElement>({
 					<Typography component='h5' variant='h5'>
 						{title}
 					</Typography>
-					<CloseButton onClick={handleClose} />
+					{handleClose && <CloseButton onClick={handleClose} />}
 				</Box>
 
 				<Box className={classes.insertionContainer}>

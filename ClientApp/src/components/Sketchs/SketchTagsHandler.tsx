@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, Dispatch } from 'react';
 import { Box, makeStyles, Grow } from '@material-ui/core';
 import { Pattern, UnexistingElement, Tag } from '../../types/Patterns';
 import { useRequestEffect } from '../Hooks/effects';
 import AddableList from '../UI/Inputs/AddableList';
-import { weakEgality } from '../Functions/commons';
+import { weakEgality } from '../Functions/entities';
 import { useTranslation } from 'react-i18next';
 
 const useStyles = makeStyles({
@@ -16,7 +16,7 @@ const useStyles = makeStyles({
 
 interface IProps {
 	pattern: UnexistingElement<Pattern>;
-	setPattern: (key: keyof UnexistingElement<Pattern>, attribute: any) => void;
+	setPattern: Dispatch<UnexistingElement<Pattern>>;
 	willShow: boolean;
 	onClose?: () => void;
 }
@@ -35,17 +35,20 @@ const SketchTagsHandler = ({ pattern, setPattern, willShow, onClose }: IProps) =
 	}, []);
 
 	const populate = (tag: Tag) => {
-		setPattern('tags', [...pattern.tags, tag]);
+		setPattern({
+			...pattern,
+			tags: [...pattern.tags, tag],
+		});
 		if (!tags.some((t) => weakEgality(t, tag))) {
 			setTags([...tags, tag]);
 		}
 	};
 
 	const remove = (tag: Tag) =>
-		setPattern(
-			'tags',
-			pattern.tags.filter((t) => !weakEgality(t, tag))
-		);
+		setPattern({
+			...pattern,
+			tags: pattern.tags.filter((t) => !weakEgality(t, tag)),
+		});
 
 	return (
 		<>

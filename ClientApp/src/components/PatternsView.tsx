@@ -15,7 +15,7 @@ import UndoButton from './UI/Buttons/UndoButton';
 import { useRequest } from './Hooks/commons';
 import SnackbarContentLayout from './UI/Layouts/SnackbarContentLayout';
 import { useSnackbarWithMessage } from './Hooks/strings';
-import { namesWithCommas } from './Functions/commons';
+import { namesWithCommas } from './Functions/strings';
 
 const useStyles = makeStyles((theme) => {
 	return {

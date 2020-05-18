@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, Dispatch } from 'react';
 import { useDrag } from 'react-use-gesture';
 import { makeStyles, TextField, Box, IconButton } from '@material-ui/core';
 import { ZoomIn, ZoomOut } from '@material-ui/icons';
 import { PatternElement, Pattern, UnexistingElement } from '../../types/Patterns';
-import { mapElementThenBreak } from '../Functions/commons';
+import { mapElementThenBreak } from '../Functions/entities';
 
 const useStyles = makeStyles((theme) => ({
 	container: {
@@ -45,7 +45,7 @@ const useStyles = makeStyles((theme) => ({
 interface IProps {
 	element: UnexistingElement<PatternElement>;
 	pattern: UnexistingElement<Pattern>;
-	setPattern: (key: keyof UnexistingElement<Pattern>, attribute: any) => void;
+	setPattern: Dispatch<UnexistingElement<Pattern>>;
 }
 
 const SketchPatternElement = ({ element, pattern, setPattern }: IProps) => {
@@ -53,14 +53,14 @@ const SketchPatternElement = ({ element, pattern, setPattern }: IProps) => {
 	const [willReduce, setWillReduce] = useState<boolean>(true);
 
 	const updateName = (event: any) =>
-		setPattern(
-			'elements',
-			mapElementThenBreak(
+		setPattern({
+			...pattern,
+			elements: mapElementThenBreak(
 				pattern.elements,
 				(e) => e.name === element.name,
 				(e) => (e.name = event.target.value)
-			)
-		);
+			),
+		});
 
 	return (
 		<Box

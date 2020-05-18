@@ -15,20 +15,17 @@ import FabLayout from '../UI/Layouts/FabLayout';
 import { Add, SaveOutlined, Queue } from '@material-ui/icons';
 import clsx from 'clsx';
 import { WorkflowStep } from '../../types/Commons';
-import { useFormState, useFormValidation } from 'form-hooks-light';
-import { Pattern, UnexistingElement } from '../../types/Patterns';
+import { useFormValidation } from 'formook';
+import { Pattern, UnexistingElement, PatternElement } from '../../types/Patterns';
 import * as Yup from 'yup';
 import { useTranslation } from 'react-i18next';
 import SketchTagsHandler from './SketchTagsHandler';
-import {
-	rand,
-	isSketchingView,
-	isExistingElement,
-	isSketchingValidationView,
-} from '../Functions/commons';
+import { isSketchingView, isSketchingValidationView } from './helpers/commons';
 import { useRequest } from '../Hooks/commons';
 import { useSnackbarWithMessage } from '../Hooks/strings';
 import SnackbarContentLayout from '../UI/Layouts/SnackbarContentLayout';
+import { rand } from '../Functions/maths';
+import { isExistingElement } from '../Functions/entities';
 
 const useStyles = makeStyles({
 	container: {
@@ -69,7 +66,7 @@ const SketchDrawer = ({ workflow, setWorkflow, isInsertionDisabled }: IProps) =>
 	const { t } = useTranslation();
 	const [willExit, setWillExit] = useState<boolean>(false);
 	const [willFadeOut, setWillFadeOut] = useState<boolean>(false);
-	const [pattern, setPattern] = useFormState<UnexistingElement<Pattern>>({
+	const [pattern, setPattern] = useState<UnexistingElement<Pattern>>({
 		name: '',
 		elements: [],
 		tags: [],
@@ -86,7 +83,7 @@ const SketchDrawer = ({ workflow, setWorkflow, isInsertionDisabled }: IProps) =>
 	const [isRequestPending, savePattern] = useRequest<UnexistingElement<Pattern>>(
 		async () =>
 			await fetch('pattern', {
-				method: 'POST',
+				method: workflow === 'adding' ? 'POST' : 'PUT',
 				body: JSON.stringify(pattern),
 			})
 	);
@@ -106,14 +103,17 @@ const SketchDrawer = ({ workflow, setWorkflow, isInsertionDisabled }: IProps) =>
 	};
 
 	const handleElementGeneration = () =>
-		setPattern('elements', [
-			...pattern.elements,
-			{
-				name: '',
-				x: rand(5, 80),
-				y: rand(5, 50),
-			},
-		]);
+		setPattern({
+			...pattern,
+			elements: [
+				...pattern.elements,
+				{
+					name: '',
+					x: rand(5, 80),
+					y: rand(5, 50),
+				} as PatternElement,
+			],
+		});
 
 	const handleSave = async () => {
 		const casted = pattern as Pattern;
@@ -122,9 +122,12 @@ const SketchDrawer = ({ workflow, setWorkflow, isInsertionDisabled }: IProps) =>
 		} else {
 			const response = await savePattern(pattern);
 			const data = await response.json();
-			setPattern('name', data.name);
-			setPattern('tags', data.tags);
-			setPattern('elements', data.elements);
+			setPattern({
+				...pattern,
+				name: data.name,
+				tags: data.tags,
+				elements: data.elements,
+			});
 			const snackbar = enqueueSnackbar(
 				toastOperationMessage(
 					isExistingElement(casted) ? 'update' : 'insertion',
@@ -156,7 +159,12 @@ const SketchDrawer = ({ workflow, setWorkflow, isInsertionDisabled }: IProps) =>
 					<Fade in={!willFadeOut} timeout={{ enter: 6000, exit: 500 }}>
 						<TextField
 							value={pattern.name}
-							onChange={(e) => setPattern('name', e.target.value)}
+							onChange={(e) =>
+								setPattern({
+									...pattern,
+									name: e.target.value,
+								})
+							}
 							className={classes.titleField}
 							variant='outlined'
 							label={t('patterns.creation.titleField')}

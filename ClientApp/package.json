@@ -3,16 +3,16 @@
 	"version": "0.1.0",
 	"private": true,
 	"dependencies": {
-		"@material-ui/core": "^4.9.11",
+		"@material-ui/core": "^4.9.14",
 		"@material-ui/icons": "^4.9.1",
-		"@types/lodash": "^4.14.150",
+		"@types/lodash": "^4.14.151",
 		"@types/uuid": "^7.0.3",
-		"@types/yup": "^0.28.1",
+		"@types/yup": "^0.28.3",
 		"clsx": "^1.1.0",
-		"form-hooks-light": "^1.4.0",
+		"formook": "^1.5.3",
 		"i18next": "^19.4.4",
 		"merge": "^1.2.1",
-		"notistack": "^0.9.11",
+		"notistack": "^0.9.16",
 		"oidc-client": "^1.9.0",
 		"react": "^16.8.0",
 		"react-dom": "^16.8.0",
@@ -24,20 +24,20 @@
 		"yup": "^0.28.5"
 	},
 	"devDependencies": {
-		"@types/react-dom": "^16.9.6",
-		"@types/react-router": "^5.1.5",
-		"@types/react-router-dom": "^5.1.4",
+		"@types/react-dom": "^16.9.8",
+		"@types/react-router": "^5.1.7",
+		"@types/react-router-dom": "^5.1.5",
 		"ajv": "^6.9.1",
 		"cross-env": "^5.2.0",
 		"del": "^5.1.0",
 		"eslint": "^6.6.0",
 		"eslint-config-react-app": "^4.0.1",
 		"eslint-plugin-flowtype": "^2.0.0",
-		"eslint-plugin-import": "^2.14.0",
+		"eslint-plugin-import": "^2.20.2",
 		"eslint-plugin-jsx-a11y": "^6.2.1",
-		"eslint-plugin-react": "^7.11.1",
+		"eslint-plugin-react": "^7.20.0",
 		"gulp": "^4.0.2",
-		"typescript": "^3.8.3"
+		"typescript": "^3.9.2"
 	},
 	"eslintConfig": {
 		"extends": "react-app"
