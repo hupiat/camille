@@ -1,64 +1,64 @@
 {
-	"name": "camille",
-	"version": "0.1.0",
-	"private": true,
-	"dependencies": {
-		"@material-ui/core": "^4.9.14",
-		"@material-ui/icons": "^4.9.1",
-		"@types/lodash": "^4.14.151",
-		"@types/uuid": "^7.0.3",
-		"@types/yup": "^0.28.3",
-		"clsx": "^1.1.0",
-		"formook": "^1.5.3",
-		"i18next": "^19.4.4",
-		"merge": "^1.2.1",
-		"notistack": "^0.9.16",
-		"oidc-client": "^1.9.0",
-		"react": "^16.8.0",
-		"react-dom": "^16.8.0",
-		"react-i18next": "^11.4.0",
-		"react-router-dom": "^4.2.2",
-		"react-scripts": "^3.4.1",
-		"react-use-gesture": "^7.0.15",
-		"uuid": "^8.0.0",
-		"yup": "^0.28.5"
-	},
-	"devDependencies": {
-		"@types/react-dom": "^16.9.8",
-		"@types/react-router": "^5.1.7",
-		"@types/react-router-dom": "^5.1.5",
-		"ajv": "^6.9.1",
-		"cross-env": "^5.2.0",
-		"del": "^5.1.0",
-		"eslint": "^6.6.0",
-		"eslint-config-react-app": "^4.0.1",
-		"eslint-plugin-flowtype": "^2.0.0",
-		"eslint-plugin-import": "^2.20.2",
-		"eslint-plugin-jsx-a11y": "^6.2.1",
-		"eslint-plugin-react": "^7.20.0",
-		"gulp": "^4.0.2",
-		"typescript": "^3.9.2"
-	},
-	"eslintConfig": {
-		"extends": "react-app"
-	},
-	"scripts": {
-		"start": "rimraf ./build && react-scripts start",
-		"build": "react-scripts build",
-		"test": "cross-env CI=true react-scripts test --env=jsdom",
-		"eject": "react-scripts eject",
-		"lint": "eslint ./src/"
-	},
-	"browserslist": {
-		"production": [
-			">0.2%",
-			"not dead",
-			"not op_mini all"
-		],
-		"development": [
-			"last 1 chrome version",
-			"last 1 firefox version",
-			"last 1 safari version"
-		]
-	}
+  "name": "camille",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@material-ui/core": "^4.9.14",
+    "@material-ui/icons": "^4.9.1",
+    "@types/lodash": "^4.14.151",
+    "@types/uuid": "^7.0.3",
+    "@types/yup": "^0.28.3",
+    "clsx": "^1.1.0",
+    "formook": "^1.9.4",
+    "i18next": "^19.4.4",
+    "merge": "^1.2.1",
+    "notistack": "^0.9.16",
+    "oidc-client": "^1.9.0",
+    "react": "^16.8.0",
+    "react-dom": "^16.8.0",
+    "react-i18next": "^11.4.0",
+    "react-router-dom": "^4.2.2",
+    "react-scripts": "^3.4.1",
+    "react-use-gesture": "^7.0.15",
+    "uuid": "^8.0.0",
+    "yup": "^0.28.5"
+  },
+  "devDependencies": {
+    "@types/react-dom": "^16.9.8",
+    "@types/react-router": "^5.1.7",
+    "@types/react-router-dom": "^5.1.5",
+    "ajv": "^6.9.1",
+    "cross-env": "^5.2.0",
+    "del": "^5.1.0",
+    "eslint": "^6.6.0",
+    "eslint-config-react-app": "^4.0.1",
+    "eslint-plugin-flowtype": "^2.0.0",
+    "eslint-plugin-import": "^2.20.2",
+    "eslint-plugin-jsx-a11y": "^6.2.1",
+    "eslint-plugin-react": "^7.20.0",
+    "gulp": "^4.0.2",
+    "typescript": "^3.9.2"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "scripts": {
+    "start": "rimraf ./build && react-scripts start",
+    "build": "react-scripts build",
+    "test": "cross-env CI=true react-scripts test --env=jsdom",
+    "eject": "react-scripts eject",
+    "lint": "eslint ./src/"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
 }
