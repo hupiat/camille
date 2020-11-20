@@ -24,4 +24,4 @@ export const mapElementThenBreak = <T extends IdentifiedElement>(
 };
 
 export const isExistingElement = (element: BaseElement): boolean =>
-  !!(element.id && element.dateCreation && element.name);
+  !!(element.id && element.name);
