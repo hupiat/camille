@@ -1,5 +1,8 @@
 package hupiat.camille.models;
 
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
+
 import javax.persistence.*;
 import java.util.LinkedList;
 import java.util.List;
@@ -12,9 +15,13 @@ public class PatternElement {
 
   private String name;
 
-  @OneToOne private Vector vector;
+  @Cascade(CascadeType.ALL)
+  @OneToOne
+  private Vector vector;
 
-  @OneToMany private List<PatternElement> nextElements = new LinkedList<>();
+  @Cascade(CascadeType.ALL)
+  @OneToMany
+  private List<PatternElement> nextElements = new LinkedList<>();
 
   public PatternElement() {}
 

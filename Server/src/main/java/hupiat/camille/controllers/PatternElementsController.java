@@ -78,6 +78,7 @@ public class PatternElementsController {
     old.get().setName(element.getName());
     old.get().setVector(element.getVector());
     old.get().setNextElements(element.getNextElements());
+    patternRepository.save(pattern.get());
     return element;
   }
 
