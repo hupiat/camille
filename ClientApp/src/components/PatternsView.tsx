@@ -54,13 +54,14 @@ const PatternsView = ({ patterns, onDelete, isVisible }: IProps) => {
   } = useSnackbarWithMessage();
 
   const [, triggerDeleteRequest] = useRequest<Pattern>(async (pattern: Pattern) => {
-    await fetch(request(`patterns?id=${pattern.id}`), {
-      method: 'DELETE',
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-      }
-    });
-    onDelete(pattern);
+    try {
+      await fetch(request(`patterns?id=${pattern.id}`), {
+        method: 'DELETE'
+      });
+      onDelete(pattern);
+    } catch (e) {
+      console.log(e);
+    }
   });
 
   const handleRemoval = (pattern: Pattern) => {

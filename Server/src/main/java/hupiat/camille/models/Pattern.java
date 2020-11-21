@@ -21,7 +21,8 @@ public class Pattern implements Serializable {
   @OneToMany(orphanRemoval = true)
   private List<PatternElement> elements = new LinkedList<>();
 
-  @ManyToMany private List<Tag> tags = new ArrayList<>();
+  @ManyToMany(fetch = FetchType.EAGER)
+  private List<Tag> tags = new ArrayList<>();
 
   public Pattern() {}
 
