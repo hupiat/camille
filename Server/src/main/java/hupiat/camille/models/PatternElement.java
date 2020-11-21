@@ -19,7 +19,7 @@ public class PatternElement {
   @OneToOne
   private Vector vector;
 
-  @Cascade(CascadeType.ALL)
+  @Cascade(CascadeType.REMOVE)
   @OneToMany
   private List<PatternElement> nextElements = new LinkedList<>();
 

@@ -10,7 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 public class ParametersCheckerTests {
 
   @Test
-  public void forNameTest() {
+  void forName() {
     try {
       ParametersChecker.forName("de");
       Assertions.fail("Name check should have failed");
@@ -30,7 +30,7 @@ public class ParametersCheckerTests {
   }
 
   @Test
-  public void forElementTest() {
+  void forElement() {
     try {
       ParametersChecker.forElement(new PatternElement());
       Assertions.fail("Vector check should have failed");

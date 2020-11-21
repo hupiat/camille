@@ -1,0 +1,89 @@
+package hupiat.camille.controllers;
+
+import hupiat.camille.exceptions.BadValueException;
+import hupiat.camille.exceptions.NotFoundException;
+import hupiat.camille.models.Pattern;
+import hupiat.camille.models.PatternElement;
+import hupiat.camille.models.Vector;
+import org.junit.jupiter.api.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+
+@SpringBootTest
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+public class PatternsAndElementsControllersTests {
+  @Autowired PatternsController patternsController;
+  @Autowired PatternElementsController patternElementsController;
+
+  static Pattern pattern = new Pattern();
+  static PatternElement element = new PatternElement();
+
+  @BeforeAll
+  static void setup() {
+    element.setName("Foo");
+    element.setVector(new Vector());
+    pattern.setName("Foo");
+  }
+
+  @Test
+  @Order(1)
+  void insertPattern() {
+    try {
+      pattern = patternsController.insert(pattern);
+    } catch (BadValueException e) {
+      Assertions.fail(e.getMessage());
+    }
+  }
+
+  @Test
+  @Order(2)
+  void updatePattern() {
+    pattern.setName("New");
+    try {
+      pattern = patternsController.update(pattern);
+    } catch (NotFoundException | BadValueException e) {
+      Assertions.fail(e.getMessage());
+    }
+  }
+
+  @Test
+  @Order(3)
+  void insertPatternElement() {
+    try {
+      element = patternElementsController.insert(pattern.getId(), null, element);
+    } catch (NotFoundException | BadValueException e) {
+      Assertions.fail(e.getMessage());
+    }
+  }
+
+  @Test
+  @Order(4)
+  void updatePatternElement() {
+    element.setName("New");
+    try {
+      element = patternElementsController.update(pattern.getId(), element);
+    } catch (NotFoundException | BadValueException e) {
+      Assertions.fail(e.getMessage());
+    }
+  }
+
+  @Test
+  @Order(5)
+  void deletePatternElement() {
+    try {
+      element = patternElementsController.delete(pattern.getId(), element.getId());
+    } catch (NotFoundException e) {
+      Assertions.fail(e.getMessage());
+    }
+  }
+
+  @Test
+  @Order(6)
+  void deletePattern() {
+    try {
+      pattern = patternsController.delete(pattern.getId());
+    } catch (NotFoundException e) {
+      Assertions.fail(e.getMessage());
+    }
+  }
+}

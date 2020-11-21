@@ -17,11 +17,11 @@ public class Pattern {
   private String name;
 
   @OneToMany
-  @Cascade(CascadeType.ALL)
+  @Cascade(CascadeType.REMOVE)
   private List<PatternElement> elements = new LinkedList<>();
 
   @OneToMany
-  @Cascade(CascadeType.DELETE)
+  @Cascade(CascadeType.REMOVE)
   private List<Tag> tags = new ArrayList<>();
 
   public Pattern() {}
