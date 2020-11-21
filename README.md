@@ -1,8 +1,6 @@
-# camille
+# Camille
 
-Web software to draw and analyze cognitive patterns
-
-[DEV IN PAUSE]
+A web software to draw and analyze cognitive patterns
 
 ## Use case
 

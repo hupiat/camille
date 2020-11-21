@@ -37,7 +37,6 @@ const Home = ({ query, workflow, setWorkflow }: IProps) => {
   const isRequestPending = useRequestEffect<void>(async () => {
     const response = await fetch(request('patterns'));
     const data = await response.json();
-    console.log(data);
     setPatterns(data);
     setIdsPatternsFiltered(patterns.map((p) => p.id));
   }, []);

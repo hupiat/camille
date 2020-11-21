@@ -56,6 +56,9 @@ const PatternsView = ({ patterns, onDelete, isVisible }: IProps) => {
   const [, triggerDeleteRequest] = useRequest<Pattern>(async (pattern: Pattern) => {
     await fetch(request(`patterns?id=${pattern.id}`), {
       method: 'DELETE',
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+      }
     });
     onDelete(pattern);
   });

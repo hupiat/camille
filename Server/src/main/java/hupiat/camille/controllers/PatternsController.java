@@ -33,7 +33,7 @@ public class PatternsController {
   }
 
   @DeleteMapping
-  public Pattern delete(@RequestParam(value = "id") int id) throws NotFoundException {
+  public Pattern delete(@RequestParam int id) throws NotFoundException {
     return service.delete(id);
   }
 }
