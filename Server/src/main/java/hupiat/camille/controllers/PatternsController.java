@@ -12,10 +12,10 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("patterns")
-public class PatternController {
+public class PatternsController {
   private final PatternRepository repository;
 
-  public PatternController(PatternRepository repository) {
+  public PatternsController(PatternRepository repository) {
     this.repository = repository;
   }
 
@@ -27,7 +27,6 @@ public class PatternController {
   @PostMapping
   public Pattern insert(@RequestBody Pattern pattern) throws BadValueException {
     ParametersChecker.forName(pattern.getName());
-    ParametersChecker.forElements(pattern.getElements());
     repository.save(pattern);
     return pattern;
   }
@@ -39,18 +38,17 @@ public class PatternController {
       throw new NotFoundException("Pattern with id " + pattern.getId() + " has not been found");
     }
     ParametersChecker.forName(pattern.getName());
-    ParametersChecker.forElements(pattern.getElements());
     repository.save(pattern);
     return pattern;
   }
 
   @DeleteMapping
-  public Pattern delete(@PathVariable(value = "id") int id) throws NotFoundException {
-    Optional<Pattern> opt = repository.findById(id);
-    if (opt.isEmpty()) {
+  public Pattern delete(@RequestParam(value = "id") int id) throws NotFoundException {
+    Optional<Pattern> pattern = repository.findById(id);
+    if (pattern.isEmpty()) {
       throw new NotFoundException("Pattern with id " + id + " has not been found");
     }
-    repository.delete(opt.get());
-    return opt.get();
+    repository.delete(pattern.get());
+    return pattern.get();
   }
 }

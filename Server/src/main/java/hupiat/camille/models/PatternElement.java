@@ -12,8 +12,6 @@ public class PatternElement {
 
   private String name;
 
-  @OneToOne private Size size;
-
   @OneToOne private Vector vector;
 
   @OneToMany private List<PatternElement> nextElements = new LinkedList<>();
@@ -34,14 +32,6 @@ public class PatternElement {
 
   public void setName(String name) {
     this.name = name;
-  }
-
-  public Size getSize() {
-    return size;
-  }
-
-  public void setSize(Size size) {
-    this.size = size;
   }
 
   public Vector getVector() {
