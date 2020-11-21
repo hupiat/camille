@@ -5,6 +5,9 @@ import hupiat.camille.models.Tag;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.util.Assert;
+
+import java.util.List;
 
 @SpringBootTest
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -36,5 +39,12 @@ public class TagsControllerTests {
     } catch (BadValueException e) {
       Assertions.fail(e.getMessage());
     }
+  }
+
+  @Test
+  @Order(3)
+  void fetchAll() {
+    List<Tag> tags = tagsController.fetchAll();
+    Assert.notEmpty(tags, "Tags should not be empty");
   }
 }

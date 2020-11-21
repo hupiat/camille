@@ -8,6 +8,9 @@ import hupiat.camille.models.Vector;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.util.Assert;
+
+import java.util.List;
 
 @SpringBootTest
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -69,6 +72,13 @@ public class PatternsAndElementsControllersTests {
 
   @Test
   @Order(5)
+  void fetchAllPatterns() {
+    List<Pattern> patterns = patternsController.fetchAll();
+    Assert.notEmpty(patterns, "Patterns should not be empty");
+  }
+
+  @Test
+  @Order(6)
   void deletePatternElement() {
     try {
       element = patternElementsController.delete(pattern.getId(), element.getId());
@@ -78,7 +88,7 @@ public class PatternsAndElementsControllersTests {
   }
 
   @Test
-  @Order(6)
+  @Order(7)
   void deletePattern() {
     try {
       pattern = patternsController.delete(pattern.getId());

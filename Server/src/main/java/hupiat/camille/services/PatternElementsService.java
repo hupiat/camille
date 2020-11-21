@@ -35,7 +35,7 @@ public class PatternElementsService {
       // Adding after parent
       Optional<PatternElement> parentElement =
           pattern.get().getElements().stream()
-              .filter(e -> previousElementId == e.getId())
+              .filter(e -> e.find(previousElementId).isPresent())
               .findAny();
       if (parentElement.isEmpty()) {
         throw new BadValueException(
@@ -44,6 +44,7 @@ public class PatternElementsService {
                 + " does not exist for pattern with id "
                 + patternId);
       }
+      parentElement = parentElement.get().find(previousElementId);
       parentElement.get().getNextElements().add(element);
     } else {
       // First chain element

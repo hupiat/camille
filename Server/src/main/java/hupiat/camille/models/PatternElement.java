@@ -4,11 +4,13 @@ import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 @Entity
-public class PatternElement {
+public class PatternElement implements Serializable {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private int id;
@@ -16,11 +18,11 @@ public class PatternElement {
   private String name;
 
   @Cascade(CascadeType.ALL)
-  @OneToOne
+  @OneToOne(optional = false, orphanRemoval = true)
   private Vector vector;
 
   @Cascade(CascadeType.REMOVE)
-  @OneToMany
+  @OneToMany(orphanRemoval = true)
   private List<PatternElement> nextElements = new LinkedList<>();
 
   public PatternElement() {}
@@ -55,5 +57,24 @@ public class PatternElement {
 
   public void setNextElements(List<PatternElement> nextElements) {
     this.nextElements = nextElements;
+  }
+
+  /**
+   * Find an element in chain recursively
+   *
+   * @param id the id of element to find
+   * @return element if present, empty object otherwise
+   */
+  public Optional<PatternElement> find(int id) {
+    if (id == this.id) {
+      return Optional.of(this);
+    }
+    for (PatternElement next : nextElements) {
+      Optional<PatternElement> found = next.find(id);
+      if (found.isPresent()) {
+        return found;
+      }
+    }
+    return Optional.empty();
   }
 }

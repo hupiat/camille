@@ -4,25 +4,24 @@ import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 @Entity
-public class Pattern {
+public class Pattern implements Serializable {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private int id;
 
   private String name;
 
-  @OneToMany
   @Cascade(CascadeType.REMOVE)
+  @OneToMany(orphanRemoval = true)
   private List<PatternElement> elements = new LinkedList<>();
 
-  @OneToMany
-  @Cascade(CascadeType.REMOVE)
-  private List<Tag> tags = new ArrayList<>();
+  @ManyToMany private List<Tag> tags = new ArrayList<>();
 
   public Pattern() {}
 
