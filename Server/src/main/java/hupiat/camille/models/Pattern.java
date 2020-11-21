@@ -20,7 +20,9 @@ public class Pattern {
   @Cascade(CascadeType.ALL)
   private List<PatternElement> elements = new LinkedList<>();
 
-  @OneToMany private List<Tag> tags = new ArrayList<>();
+  @OneToMany
+  @Cascade(CascadeType.DELETE)
+  private List<Tag> tags = new ArrayList<>();
 
   public Pattern() {}
 

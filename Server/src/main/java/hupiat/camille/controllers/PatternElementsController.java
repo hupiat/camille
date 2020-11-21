@@ -5,8 +5,8 @@ import hupiat.camille.exceptions.BadValueException;
 import hupiat.camille.exceptions.NotFoundException;
 import hupiat.camille.models.Pattern;
 import hupiat.camille.models.PatternElement;
-import hupiat.camille.repositories.PatternElementRepository;
-import hupiat.camille.repositories.PatternRepository;
+import hupiat.camille.repositories.PatternElementsRepository;
+import hupiat.camille.repositories.PatternsRepository;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
@@ -15,12 +15,12 @@ import java.util.Optional;
 @RequestMapping("patterns/elements")
 public class PatternElementsController {
 
-  private final PatternRepository patternRepository;
-  private final PatternElementRepository repository;
+  private final PatternsRepository patternsRepository;
+  private final PatternElementsRepository repository;
 
   public PatternElementsController(
-      PatternRepository patternRepository, PatternElementRepository repository) {
-    this.patternRepository = patternRepository;
+      PatternsRepository patternsRepository, PatternElementsRepository repository) {
+    this.patternsRepository = patternsRepository;
     this.repository = repository;
   }
 
@@ -30,7 +30,7 @@ public class PatternElementsController {
       @RequestParam(value = "previousElementId", required = false) Integer previousElementId,
       @RequestBody PatternElement element)
       throws NotFoundException, BadValueException {
-    Optional<Pattern> pattern = patternRepository.findById(patternId);
+    Optional<Pattern> pattern = patternsRepository.findById(patternId);
     if (pattern.isEmpty()) {
       throw new NotFoundException("Pattern with id " + patternId + " has not been found");
     }
@@ -53,7 +53,7 @@ public class PatternElementsController {
       // First chain element
       pattern.get().getElements().add(element);
     }
-    patternRepository.save(pattern.get());
+    patternsRepository.save(pattern.get());
     return element;
   }
 
@@ -61,7 +61,7 @@ public class PatternElementsController {
   public PatternElement update(
       @PathVariable(value = "patternId") int patternId, @RequestBody PatternElement element)
       throws NotFoundException, BadValueException {
-    Optional<Pattern> pattern = patternRepository.findById(patternId);
+    Optional<Pattern> pattern = patternsRepository.findById(patternId);
     if (pattern.isEmpty()) {
       throw new NotFoundException("Pattern with id " + patternId + " has not been found");
     }
@@ -78,7 +78,7 @@ public class PatternElementsController {
     old.get().setName(element.getName());
     old.get().setVector(element.getVector());
     old.get().setNextElements(element.getNextElements());
-    patternRepository.save(pattern.get());
+    patternsRepository.save(pattern.get());
     return element;
   }
 

@@ -4,7 +4,7 @@ import hupiat.camille.consistencies.ParametersChecker;
 import hupiat.camille.exceptions.BadValueException;
 import hupiat.camille.exceptions.NotFoundException;
 import hupiat.camille.models.Pattern;
-import hupiat.camille.repositories.PatternRepository;
+import hupiat.camille.repositories.PatternsRepository;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,9 +13,9 @@ import java.util.Optional;
 @RestController
 @RequestMapping("patterns")
 public class PatternsController {
-  private final PatternRepository repository;
+  private final PatternsRepository repository;
 
-  public PatternsController(PatternRepository repository) {
+  public PatternsController(PatternsRepository repository) {
     this.repository = repository;
   }
 

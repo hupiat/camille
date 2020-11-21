@@ -1,8 +1,8 @@
 package hupiat.camille.repositories;
 
-import hupiat.camille.models.PatternElement;
+import hupiat.camille.models.Pattern;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface PatternElementRepository extends JpaRepository<PatternElement, Integer> {}
+public interface PatternsRepository extends JpaRepository<Pattern, Integer> {}
