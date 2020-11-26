@@ -1,4 +1,4 @@
-import { Position, Vector } from './Commons';
+import { Vector } from './Commons';
 
 export type IdentifiedElement = { id: number };
 
@@ -8,7 +8,9 @@ export type BaseElement = IdentifiedElement & NamedElement;
 
 export type Tag = BaseElement;
 
-export type PatternElement = BaseElement & Position & Array<{ [nextId: number]: Vector }>;
+export type PatternElement = BaseElement & Vector & {
+  nextElements: PatternElement[]
+};
 
 export type Pattern = BaseElement & {
   tags: Tag[];
@@ -17,5 +19,5 @@ export type Pattern = BaseElement & {
 
 export type UnexistingElement<T extends IdentifiedElement> = Omit<
   T,
-  'id' | 'dateCreation'
+  'id'
 >;

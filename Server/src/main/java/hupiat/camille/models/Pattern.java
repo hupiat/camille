@@ -1,8 +1,5 @@
 package hupiat.camille.models;
 
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -17,11 +14,10 @@ public class Pattern implements Serializable {
 
   private String name;
 
-  @Cascade(CascadeType.REMOVE)
   @OneToMany(orphanRemoval = true)
   private List<PatternElement> elements = new LinkedList<>();
 
-  @ManyToMany(fetch = FetchType.EAGER)
+  @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
   private List<Tag> tags = new ArrayList<>();
 
   public Pattern() {}

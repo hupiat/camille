@@ -1,6 +1,7 @@
 package hupiat.camille.controllers;
 
 import hupiat.camille.exceptions.BadValueException;
+import hupiat.camille.exceptions.NotFoundException;
 import hupiat.camille.models.Tag;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,5 +47,15 @@ public class TagsControllerTests {
   void fetchAll() {
     List<Tag> tags = tagsController.fetchAll();
     Assert.notEmpty(tags, "Tags should not be empty");
+  }
+
+  @Test
+  @Order(4)
+  void delete() {
+    try {
+      tag = tagsController.delete(tag.getId());
+    } catch (NotFoundException e) {
+      Assertions.fail(e.getMessage());
+    }
   }
 }

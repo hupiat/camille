@@ -1,6 +1,7 @@
 package hupiat.camille.controllers;
 
 import hupiat.camille.exceptions.BadValueException;
+import hupiat.camille.exceptions.NotFoundException;
 import hupiat.camille.models.Tag;
 import hupiat.camille.services.TagsService;
 import org.springframework.web.bind.annotation.*;
@@ -30,5 +31,10 @@ public class TagsController {
   @PutMapping
   public Tag update(@RequestBody Tag tag) throws BadValueException {
     return service.update(tag);
+  }
+
+  @DeleteMapping
+  public Tag delete(@RequestParam("id") int id) throws NotFoundException {
+    return service.delete(id);
   }
 }

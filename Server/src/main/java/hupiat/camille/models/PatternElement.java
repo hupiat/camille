@@ -1,8 +1,5 @@
 package hupiat.camille.models;
 
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.LinkedList;
@@ -17,11 +14,9 @@ public class PatternElement implements Serializable {
 
   private String name;
 
-  @Cascade(CascadeType.ALL)
-  @OneToOne(optional = false, orphanRemoval = true)
+  @OneToOne(optional = false, orphanRemoval = true, cascade = CascadeType.ALL)
   private Vector vector;
 
-  @Cascade(CascadeType.REMOVE)
   @OneToMany(orphanRemoval = true)
   private List<PatternElement> nextElements = new LinkedList<>();
 

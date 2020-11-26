@@ -52,8 +52,13 @@ public class PatternsAndElementsControllersTests {
   @Test
   @Order(3)
   void insertPatternElement() {
+    PatternElement other = new PatternElement();
+    other.setName("other");
+    other.setVector(new Vector());
     try {
       element = patternElementsController.insert(pattern.getId(), null, element);
+      other = patternElementsController.insert(pattern.getId(), element.getId(), other);
+      Assert.isTrue(other.getId() != 0, "Other element in chain should have an id");
     } catch (NotFoundException | BadValueException e) {
       Assertions.fail(e.getMessage());
     }
