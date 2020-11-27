@@ -15,7 +15,7 @@ const useStyles = makeStyles({
   },
   loader: {
     position: 'absolute',
-    top: '25%',
+    top: '35%',
     left: 0,
     right: 0,
     marginLeft: 'auto',

@@ -16,7 +16,7 @@ import { Add, SaveOutlined, Queue } from '@material-ui/icons';
 import clsx from 'clsx';
 import { WorkflowStep } from '../../types/Commons';
 import { useFormValidation } from 'formook';
-import { Pattern, UnexistingElement, PatternElement } from '../../types/Patterns';
+import { Pattern, MaybeExisting, PatternElement } from '../../types/Patterns';
 import * as Yup from 'yup';
 import { useTranslation } from 'react-i18next';
 import SketchTagsHandler from './SketchTagsHandler';
@@ -67,21 +67,21 @@ const SketchDrawer = ({ workflow, setWorkflow, isInsertionDisabled }: IProps) =>
   const { t } = useTranslation();
   const [willExit, setWillExit] = useState<boolean>(false);
   const [willFadeOut, setWillFadeOut] = useState<boolean>(false);
-  const [pattern, setPattern] = useState<UnexistingElement<Pattern>>({
+  const [pattern, setPattern] = useState<MaybeExisting<Pattern>>({
     name: '',
     elements: [],
     tags: [],
   });
-  const { canValidate } = useFormValidation<UnexistingElement<Pattern>>(
+  const { canValidate } = useFormValidation<MaybeExisting<Pattern>>(
     {
       name: Yup.string(),
-      elements: (pattern: UnexistingElement<Pattern>) =>
+      elements: (pattern: MaybeExisting<Pattern>) =>
         pattern.elements.length > 1 && pattern.elements.every((e) => e.name),
-      tags: (pattern: UnexistingElement<Pattern>) => !!pattern.tags.length,
+      tags: (pattern: MaybeExisting<Pattern>) => !!pattern.tags.length,
     },
     pattern
   );
-  const [isRequestPending, savePattern] = useRequest<UnexistingElement<Pattern>>(
+  const [isRequestPending, savePattern] = useRequest<MaybeExisting<Pattern>>(
     async () =>
       await fetch(request('patterns'), {
         method: workflow === 'adding' ? 'POST' : 'PUT',

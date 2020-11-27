@@ -19,7 +19,7 @@ public class ParametersCheckerTests {
     }
     try {
       String name = "";
-      for (int i = 0; i <= 256; i++) {
+      for (int i = 0; i <= ParametersChecker.MAX_LENGTH_NAME; i++) {
         name += "a";
       }
       ParametersChecker.forName(name);

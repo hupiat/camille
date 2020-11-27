@@ -21,3 +21,5 @@ export type UnexistingElement<T extends IdentifiedElement> = Omit<
   T,
   'id'
 >;
+
+export type MaybeExisting<T extends BaseElement> = UnexistingElement<T> | T;

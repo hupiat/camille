@@ -1,8 +1,8 @@
-import React, { useState, Dispatch, SetStateAction } from 'react';
+import React, { useState, Dispatch, useEffect } from 'react';
 import { useDrag } from 'react-use-gesture';
 import { makeStyles, TextField, Box, IconButton } from '@material-ui/core';
 import { ZoomIn, ZoomOut } from '@material-ui/icons';
-import { PatternElement, Pattern, UnexistingElement } from '../../types/Patterns';
+import { PatternElement, Pattern, UnexistingElement, MaybeExisting } from '../../types/Patterns';
 import { mapElementThenBreak } from '../Functions/entities';
 
 const useStyles = makeStyles((theme) => ({
@@ -43,20 +43,24 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 interface IProps {
-  element: UnexistingElement<PatternElement>;
-  setElement: SetStateAction<Dispatch<UnexistingElement<PatternElement>>>;
-  pattern: UnexistingElement<Pattern>;
-  setPattern: Dispatch<UnexistingElement<Pattern>>;
+  element: MaybeExisting<PatternElement>;
+  pattern: MaybeExisting<Pattern>;
+  setPattern: Dispatch<MaybeExisting<Pattern>>;
 }
 
-const SketchPatternElement = ({ element, setElement, pattern, setPattern }: IProps) => {
+const SketchPatternElement = ({ element, pattern, setPattern }: IProps) => {
   const classes = useStyles();
+  const [elementState, setElement] = useState<MaybeExisting<PatternElement>>(element);
   const [willReduce, setWillReduce] = useState<boolean>(true);
-  const bind = useDrag(state => setElement((element: UnexistingElement<PatternElement>) => {
-    element.x = state.xy[0];
-    element.y = state.xy[1];
-    return element;
-  }))
+  useEffect(() => setElement(element), [element]);
+  const bind = useDrag(state => {
+    setElement(
+      {
+        ...element,
+        x: state.xy[0],
+        y: state.xy[1]
+      });
+  });
 
   const updateName = (event: any) =>
     setPattern({
