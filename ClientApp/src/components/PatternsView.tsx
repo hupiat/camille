@@ -5,10 +5,11 @@ import {
   ListItem,
   ListItemText,
   makeStyles,
-  Slide,
   ListItemSecondaryAction,
   IconButton,
   CircularProgress,
+  Fade,
+  Box,
 } from '@material-ui/core';
 import { Delete } from '@material-ui/icons';
 import UndoButton from './UI/Buttons/UndoButton';
@@ -89,11 +90,13 @@ const PatternsView = ({ patterns, onDelete, isVisible }: IProps) => {
   };
 
   return (
-    <Slide
+    <Fade
       in={!!patterns.length && isVisible}
-      direction='right'
       unmountOnExit
-      appear={false}
+      style={{
+        position: 'fixed',
+        width: 'calc(100% - 16px)'
+      }}
     >
       <List className={classes.list}>
         {patterns.map((p) => (
@@ -120,7 +123,7 @@ const PatternsView = ({ patterns, onDelete, isVisible }: IProps) => {
           </ListItem>
         ))}
       </List>
-    </Slide>
+    </Fade>
   );
 };
 
