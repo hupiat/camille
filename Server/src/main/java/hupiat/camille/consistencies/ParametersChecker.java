@@ -5,8 +5,8 @@ import hupiat.camille.models.PatternElement;
 
 public abstract class ParametersChecker {
 
-  public static int MIN_LENGTH_NAME = 3;
-  public static int MAX_LENGTH_NAME = 255;
+  public static final int MIN_LENGTH_NAME = 3;
+  public static final int MAX_LENGTH_NAME = 255;
 
   public static void forName(String name) throws BadValueException {
     if (name == null || name.length() < MIN_LENGTH_NAME || name.length() > MAX_LENGTH_NAME) {

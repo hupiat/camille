@@ -5,6 +5,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.io.Serializable;
+import java.util.Objects;
 
 @Entity
 public class Vector implements Serializable {
@@ -40,5 +41,18 @@ public class Vector implements Serializable {
 
   public void setY(int y) {
     this.y = y;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    Vector vector = (Vector) o;
+    return id == vector.id && x == vector.x && y == vector.y;
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(id, x, y);
   }
 }

@@ -5,6 +5,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 public class Pattern implements Serializable {
@@ -17,7 +18,7 @@ public class Pattern implements Serializable {
   @OneToMany(orphanRemoval = true)
   private List<PatternElement> elements = new LinkedList<>();
 
-  @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+  @ManyToMany(fetch = FetchType.EAGER)
   private List<Tag> tags = new ArrayList<>();
 
   public Pattern() {}
@@ -52,5 +53,18 @@ public class Pattern implements Serializable {
 
   public void setTags(List<Tag> tags) {
     this.tags = tags;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    Pattern pattern = (Pattern) o;
+    return id == pattern.id && name.equals(pattern.name);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(id, name);
   }
 }

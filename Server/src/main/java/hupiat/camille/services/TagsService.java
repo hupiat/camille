@@ -4,6 +4,7 @@ import hupiat.camille.consistencies.ParametersChecker;
 import hupiat.camille.exceptions.BadValueException;
 import hupiat.camille.exceptions.NotFoundException;
 import hupiat.camille.models.Tag;
+import hupiat.camille.repositories.PatternsRepository;
 import hupiat.camille.repositories.TagsRepository;
 import org.springframework.stereotype.Service;
 
@@ -15,9 +16,11 @@ import java.util.Optional;
 @Transactional
 public class TagsService {
   private final TagsRepository repository;
+  private final PatternsRepository patternsRepository;
 
-  public TagsService(TagsRepository repository) {
+  public TagsService(TagsRepository repository, PatternsRepository patternsRepository) {
     this.repository = repository;
+    this.patternsRepository = patternsRepository;
   }
 
   public List<Tag> fetchAll() {
@@ -39,6 +42,11 @@ public class TagsService {
     if (tag.isEmpty()) {
       throw new NotFoundException("Tag with id " + id + " has not been found");
     }
+    // Removing old references
+    patternsRepository.findAll().stream()
+        .filter(p -> p.getTags().contains(tag.get()))
+        .forEach(patternsRepository::save);
+    repository.delete(tag.get());
     return tag.get();
   }
 }
