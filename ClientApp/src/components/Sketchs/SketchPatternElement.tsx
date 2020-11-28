@@ -1,14 +1,16 @@
 import React, { useState, Dispatch, useEffect } from 'react';
 import { useDrag } from 'react-use-gesture';
-import { makeStyles, TextField, Box, IconButton } from '@material-ui/core';
-import { ZoomIn, ZoomOut } from '@material-ui/icons';
-import { PatternElement, Pattern, UnexistingElement, MaybeExisting } from '../../types/Patterns';
-import { mapElementThenBreak } from '../Functions/entities';
+import { makeStyles, TextField, Box, IconButton, Popover, Popper } from '@material-ui/core';
+import { Add, Remove } from '@material-ui/icons';
+import { PatternElement, Pattern, MaybeExisting } from '../../types/Patterns';
+import { mapElementThenBreak, weakEgality } from '../Functions/entities';
 
 const useStyles = makeStyles((theme) => ({
   container: {
     position: 'absolute',
     display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
     cursor: 'grab',
     width: 300,
     height: 300,
@@ -17,7 +19,6 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: 5,
     boxShadow: '0px 10px 30px -5px rgba(0, 0, 0, 0.3)',
     transition: '0.5s',
-    border: '15px solid white',
     '&:active': {
       cursor: 'grabbing',
     },
@@ -48,6 +49,8 @@ interface IProps {
   setPattern: Dispatch<MaybeExisting<Pattern>>;
 }
 
+const DEBOUNCE_DELAY_MS = 350;
+
 const SketchPatternElement = ({ element, pattern, setPattern }: IProps) => {
   const classes = useStyles();
   const [elementState, setElement] = useState<MaybeExisting<PatternElement>>(element);
@@ -56,52 +59,73 @@ const SketchPatternElement = ({ element, pattern, setPattern }: IProps) => {
   const bind = useDrag(state => {
     setElement(
       {
-        ...element,
+        ...elementState,
         x: state.xy[0],
         y: state.xy[1]
       });
   });
 
-  const updateName = (event: any) =>
-    setPattern({
-      ...pattern,
-      elements: mapElementThenBreak(
-        pattern.elements,
-        (e) => e.name === element.name,
-        (e) => (e.name = event.target.value)
-      ),
-    });
+  const updateName = (event: any) => {
+    setElement({
+      ...elementState,
+      name: event.target.value
+    })
+  }
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setPattern({
+        ...pattern,
+        elements: mapElementThenBreak(
+          pattern.elements,
+          (e) => weakEgality(e, elementState),
+          (e) => (e.name = elementState.name)
+        ),
+      });
+    }, DEBOUNCE_DELAY_MS)
+    return () => clearTimeout(timeout);
+  })
 
   return (
-    <Box
-      className={classes.container}
-      style={Object.assign(
-        willReduce
-          ? {
-            transform: 'scale(0.2)',
-            borderRadius: 400,
-            boxShadow: 'unset',
+    <>
+        // TODO Indicator when reduced
+      <Box
+        className={classes.container}
+        style={Object.assign(
+          willReduce
+            ? {
+              transform: 'scale(0.2)',
+              borderRadius: 400,
+              boxShadow: 'unset',
+            }
+            : {},
+          {
+            left: `${elementState.x}vw`,
+            top: `${elementState.y}vh`,
           }
-          : {},
+        )}
+      // {...bind()}
+      >
         {
-          left: `${element.x}vw`,
-          top: `${element.y}vh`,
+          !willReduce &&
+          <TextField
+            value={elementState.name}
+            onChange={updateName}
+            className={classes.field}
+            color="secondary" />
         }
-      )}
-      {...bind()}
-    >
-      <TextField value={element.name} onChange={updateName} />
 
-      <Box className={classes.iconsContainer}>
-        <IconButton onClick={() => setWillReduce(!willReduce)}>
-          {willReduce ? (
-            <ZoomIn className={classes.expand} />
-          ) : (
-              <ZoomOut className={classes.expand} />
-            )}
-        </IconButton>
+        <Box className={classes.iconsContainer}>
+          <IconButton onClick={() => setWillReduce(!willReduce)}>
+            {willReduce ? (
+              <Add className={classes.expand} />
+            ) : (
+                <Remove className={classes.expand} />
+              )}
+          </IconButton>
+        </Box>
       </Box>
-    </Box>
+    </>
   );
 };
 

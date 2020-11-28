@@ -9,7 +9,6 @@ import {
   IconButton,
   CircularProgress,
   Fade,
-  Box,
 } from '@material-ui/core';
 import { Delete } from '@material-ui/icons';
 import UndoButton from './UI/Buttons/UndoButton';
