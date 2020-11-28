@@ -11,17 +11,21 @@ public class ParametersCheckerTests {
 
   @Test
   void forName() {
+    String name = "";
+    for (int i = 0; i < ParametersChecker.MIN_LENGTH_NAME - 1; i++) {
+      name += "a";
+    }
     try {
-      ParametersChecker.forName("de");
+      ParametersChecker.forName(name);
       Assertions.fail("Name check should have failed");
     } catch (BadValueException ignored) {
       // Passed
     }
+    name = "";
+    for (int i = 0; i <= ParametersChecker.MAX_LENGTH_NAME; i++) {
+      name += "a";
+    }
     try {
-      String name = "";
-      for (int i = 0; i <= ParametersChecker.MAX_LENGTH_NAME; i++) {
-        name += "a";
-      }
       ParametersChecker.forName(name);
       Assertions.fail("Name check should have failed");
     } catch (BadValueException ignored) {
