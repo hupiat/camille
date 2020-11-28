@@ -86,9 +86,9 @@ const SketchPatternElement = ({ element, pattern, setPattern }: IProps) => {
     return () => clearTimeout(timeout);
   })
 
+  // TODO Indicator when reduced
   return (
     <>
-        // TODO Indicator when reduced
       <Box
         className={classes.container}
         style={Object.assign(
