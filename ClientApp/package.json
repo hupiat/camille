@@ -19,7 +19,6 @@
     "react-i18next": "^11.7.3",
     "react-router-dom": "^4.2.2",
     "react-scripts": "^3.4.4",
-    "react-use-gesture": "^7.0.16",
     "uuid": "^8.3.1",
     "yup": "^0.28.5"
   },

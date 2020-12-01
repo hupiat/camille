@@ -1,5 +1,5 @@
 import React, { Dispatch, useState } from 'react';
-import SketchPatternElement from './SketchPatternElement';
+import SketchPatternElement, { ELEMENTS_SHIFT_RIGHT_PX, ELEMENTS_SHIFT_TOP_PX } from './SketchPatternElement';
 import Background from './SketchBackground.svg';
 import {
   makeStyles,
@@ -110,8 +110,8 @@ const SketchDrawer = ({ workflow, setWorkflow, isInsertionDisabled }: IProps) =>
         ...pattern.elements,
         {
           name: '',
-          x: rand(5, 80),
-          y: rand(5, 50),
+          x: rand(0, window.innerWidth - ELEMENTS_SHIFT_RIGHT_PX),
+          y: rand(ELEMENTS_SHIFT_TOP_PX, window.innerHeight),
         } as PatternElement,
       ],
     });
@@ -146,7 +146,7 @@ const SketchDrawer = ({ workflow, setWorkflow, isInsertionDisabled }: IProps) =>
   return (
     <>
       {isSketchingView(workflow) && (
-        <Box className={classes.container} tabIndex={0}>
+        <Box className={classes.container} tabIndex={0} onDragOver={(e) => e.preventDefault()}>
           <Fade
             in={!willFadeOut}
             timeout={{ enter: 5000, exit: 500 }}

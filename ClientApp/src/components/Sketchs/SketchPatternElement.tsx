@@ -1,9 +1,8 @@
-import React, { useState, Dispatch, useEffect } from 'react';
-import { useDrag } from 'react-use-gesture';
-import { makeStyles, TextField, Box, IconButton, Popover, Popper } from '@material-ui/core';
-import { Add, Remove } from '@material-ui/icons';
+import React, { useState, Dispatch, useEffect, useRef } from 'react';
+import { makeStyles, TextField, Box } from '@material-ui/core';
 import { PatternElement, Pattern, MaybeExisting } from '../../types/Patterns';
 import { mapElementThenBreak, weakEgality } from '../Functions/entities';
+import { Vector } from '../../types/Commons';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -12,9 +11,9 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
     justifyContent: 'center',
     cursor: 'grab',
-    width: 300,
-    height: 300,
     zIndex: 5,
+    height: '100px',
+    width: '200px',
     background: theme.palette.primary.main,
     borderRadius: 5,
     boxShadow: '0px 10px 30px -5px rgba(0, 0, 0, 0.3)',
@@ -23,23 +22,12 @@ const useStyles = makeStyles((theme) => ({
       cursor: 'grabbing',
     },
   },
-  iconsContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-    width: '100%',
-    alignSelf: 'flex-end',
-    justifyContent: 'center',
-    marginBottom: 10,
-  },
-  expand: {
-    color: 'white',
-    position: 'relative',
-    width: 130,
-    height: 130,
-  },
   field: {
     display: 'flex',
     margin: 20,
+    '& input': {
+      color: 'white'
+    }
   },
 }));
 
@@ -51,25 +39,36 @@ interface IProps {
 
 const DEBOUNCE_DELAY_MS = 350;
 
+export const ELEMENTS_SHIFT_TOP_PX = 100;
+export const ELEMENTS_SHIFT_RIGHT_PX = 200;
+
 const SketchPatternElement = ({ element, pattern, setPattern }: IProps) => {
   const classes = useStyles();
-  const [elementState, setElement] = useState<MaybeExisting<PatternElement>>(element);
-  const [willReduce, setWillReduce] = useState<boolean>(true);
-  useEffect(() => setElement(element), [element]);
-  const bind = useDrag(state => {
-    setElement(
-      {
-        ...elementState,
-        x: state.xy[0],
-        y: state.xy[1]
-      });
+  const positionRef = useRef<Vector>({
+    x: element.x,
+    y: element.y
   });
+  const [elementState, setElement] = useState<MaybeExisting<PatternElement>>(element);
+  useEffect(() => setElement(element), [element]);
 
   const updateName = (event: any) => {
     setElement({
       ...elementState,
       name: event.target.value
     })
+  }
+
+  const handleDrag = (e: React.DragEvent<HTMLElement>) => {
+    positionRef.current.x = e.pageX;
+    positionRef.current.y = e.pageY;
+  }
+
+  const handleDrop = () => {
+    setElement({
+      ...elementState,
+      x: positionRef.current.x > window.innerWidth - ELEMENTS_SHIFT_RIGHT_PX ? window.innerWidth - ELEMENTS_SHIFT_RIGHT_PX : positionRef.current.x,
+      y: positionRef.current.y < ELEMENTS_SHIFT_TOP_PX ? ELEMENTS_SHIFT_TOP_PX : positionRef.current.y
+    });
   }
 
   useEffect(() => {
@@ -84,48 +83,26 @@ const SketchPatternElement = ({ element, pattern, setPattern }: IProps) => {
       });
     }, DEBOUNCE_DELAY_MS)
     return () => clearTimeout(timeout);
-  })
+  }, [elementState.name, pattern, setPattern]);
 
-  // TODO Indicator when reduced
   return (
-    <>
-      <Box
-        className={classes.container}
-        style={Object.assign(
-          willReduce
-            ? {
-              transform: 'scale(0.2)',
-              borderRadius: 400,
-              boxShadow: 'unset',
-            }
-            : {},
-          {
-            left: `${elementState.x}vw`,
-            top: `${elementState.y}vh`,
-          }
-        )}
-      // {...bind()}
-      >
-        {
-          !willReduce &&
-          <TextField
-            value={elementState.name}
-            onChange={updateName}
-            className={classes.field}
-            color="secondary" />
-        }
-
-        <Box className={classes.iconsContainer}>
-          <IconButton onClick={() => setWillReduce(!willReduce)}>
-            {willReduce ? (
-              <Add className={classes.expand} />
-            ) : (
-                <Remove className={classes.expand} />
-              )}
-          </IconButton>
-        </Box>
-      </Box>
-    </>
+    <Box
+      className={classes.container}
+      style={{
+        left: `${elementState.x}px`,
+        top: `${elementState.y}px`,
+      }}
+      onDrag={handleDrag}
+      onDragEnd={handleDrop}
+      draggable
+    >
+      <TextField
+        value={elementState.name}
+        onChange={updateName}
+        className={classes.field}
+        color="secondary"
+      />
+    </Box>
   );
 };
 
