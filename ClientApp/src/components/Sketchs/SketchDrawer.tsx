@@ -111,7 +111,7 @@ const SketchDrawer = ({ workflow, setWorkflow, isInsertionDisabled }: IProps) =>
         {
           name: '',
           x: rand(0, window.innerWidth - ELEMENTS_SHIFT_RIGHT_PX),
-          y: rand(ELEMENTS_SHIFT_TOP_PX, window.innerHeight),
+          y: rand(ELEMENTS_SHIFT_TOP_PX, window.innerHeight - ELEMENTS_SHIFT_TOP_PX),
         } as PatternElement,
       ],
     });

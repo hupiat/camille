@@ -64,10 +64,20 @@ const SketchPatternElement = ({ element, pattern, setPattern }: IProps) => {
   }
 
   const handleDrop = () => {
+    let x = positionRef.current.x;
+    let y = positionRef.current.y;
+    if (positionRef.current.x > window.innerWidth - ELEMENTS_SHIFT_RIGHT_PX) {
+      x = window.innerWidth - ELEMENTS_SHIFT_RIGHT_PX;
+    }
+    if (y < ELEMENTS_SHIFT_TOP_PX) {
+      y = ELEMENTS_SHIFT_TOP_PX;
+    } else if (y > window.innerHeight - ELEMENTS_SHIFT_TOP_PX) {
+      y = window.innerHeight - ELEMENTS_SHIFT_TOP_PX;
+    }
     setElement({
       ...elementState,
-      x: positionRef.current.x > window.innerWidth - ELEMENTS_SHIFT_RIGHT_PX ? window.innerWidth - ELEMENTS_SHIFT_RIGHT_PX : positionRef.current.x,
-      y: positionRef.current.y < ELEMENTS_SHIFT_TOP_PX ? ELEMENTS_SHIFT_TOP_PX : positionRef.current.y
+      x,
+      y
     });
   }
 
@@ -83,7 +93,7 @@ const SketchPatternElement = ({ element, pattern, setPattern }: IProps) => {
       });
     }, DEBOUNCE_DELAY_MS)
     return () => clearTimeout(timeout);
-  }, [elementState.name, pattern, setPattern]);
+  }, [elementState, pattern, setPattern]);
 
   return (
     <Box
